@@ -246,6 +246,9 @@ After you type in the command, a question and a big "Answer" button will be gene
 
 To view the server leaderboard, type `"""+prefix+"""leaderboard`.
 To view how many points you have, type `"""+prefix+"""points`.
+
+
+This bot is open source! Help us improve it here: https://github.com/DevNotHackerCorporations/scibowlbot You are allowed to use this code under the conditions of the license: https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt
 		"""
 		await message.channel.send(helptxt)
 
@@ -287,12 +290,16 @@ app = Flask("app")
 def home():
     return open("index.html", "r").read()
 @app.route("/style.css")
-def s():
+def cssfile():
     return open("style.css", "r").read(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/atom.png")
-def i():
+def logopng():
     return send_file("atom.png", mimetype='image/png')
+
+@app.route("/LICENSE.txt")
+def license():
+    return open("LICENSE.txt", "r").read(), 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 def start_flask():
 	app.run(host='0.0.0.0', port=8080)
