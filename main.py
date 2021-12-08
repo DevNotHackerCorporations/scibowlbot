@@ -248,7 +248,7 @@ To view the server leaderboard, type `"""+prefix+"""leaderboard`.
 To view how many points you have, type `"""+prefix+"""points`.
 
 
-This bot is open source! Help us improve it here: https://github.com/DevNotHackerCorporations/scibowlbot You are allowed to use this code under the conditions of the license: https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt
+This bot is open source! Help us improve it here: <https://github.com/DevNotHackerCorporations/scibowlbot> You are allowed to use this code under the conditions of the license: <https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt>
 		"""
 		await message.channel.send(helptxt)
 
