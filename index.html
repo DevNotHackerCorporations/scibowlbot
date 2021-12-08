@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>scibowlbot</title>
+		<link
+			rel="icon"
+			href="/Gamebot/gamebot.png"
+		/>
+		<link rel="icon" href="/atom.png">
+		<link rel="stylesheet" href="style.css">
+		<!--<script>
+			window.onscroll = function(){
+				if (window.scrollY >= window.innerHeight){
+					document.getElementById("ac404").style.color = "red"
+					counter = 0
+					i = setInterval(()=>{
+						counter++
+						document.getElementById("ac404").style.filter = `hue-rotate(${counter}deg)`
+					}, 50)
+				}
+			}
+		</script>-->
+	</head>
+	<body>
+		<header>
+			<b
+				><span id="gtitle"
+					><img
+						src="/atom.png"
+						id="gbotpng"
+					/>Scibowlbot
+				</span></b
+			>
+			<h3>
+				<i><b>The best way to simulate a Science Bowl Round on Discord.</b></i>
+			</h3>
+		</header>
+		<hr />
+
+		<blockquote>test blockquote</blockquote>
+		<h1>Scibowlbot = cool</h1>
+		<code class="singleline"><pre>Single line code</pre></code>
+		<code class="multiline"><pre>Multi line code</pre></code>
+
+
+
+		<span id="copyright"
+			>Website made by <span style="color:rgb(202, 202, 202)" id="ac404">Actiniumn404</span>. Please give credit if you want to use
+			this.</span
+		>
+
+		<script defer>
+			document.querySelectorAll("h2, h3").forEach((e) => {
+				if (e.hasAtthibute("id")) {
+					e.innerHTML += `<a style="margin-left:5px;color:#fca21c;" href='${
+						window.location.pathname + "#" + e.id
+					}'>¶</a>`;
+				}
+			});
+		</script>
+	</body>
+</html>
