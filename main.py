@@ -7,8 +7,26 @@ import requests
 import re
 import json
 import random
+import pyrebase
+import time
 from datetime import datetime
-#from discord_slash import SlashCommand
+
+# setting up firebase
+config = {
+	"apiKey": os.environ['API_key'],
+	"authDomain": "https://scibowlbot-6226d.firebaseapp.com",
+	"projectId": "scibowlbot-6226d",
+	"storageBucket": "https://scibowlbot-6226d.appspot.com",
+	"messagingSenderId": "845301907304",
+	"databaseURL": "https://scibowlbot-6226d-default-rtdb.firebaseio.com/",
+	"appId": "1:845301907304:web:542d9a100ffac52576a0dd",
+	"measurementId": "G-17XY9EN63J"
+}
+firebase = pyrebase.initialize_app(config)
+#auth = firebase.auth()
+#user = auth.sign_in_with_email_and_password("devnothackercorporations@gmail.com", os.environ['email_psw'])
+#user = auth.refresh(user['refreshToken'])
+db = firebase.database()
 
 # This gets rid of the flask messages
 import logging
@@ -32,9 +50,13 @@ def changepoints(user, point):
 	points = json.loads(open("points.json", "r").read())
 	points[user] = points.get(user, 0) + point
 	open("points.json", "w").write(json.dumps(points))
+	db.set(points)
+
+
 def getpoints(user):
 	points = json.loads(open("points.json", "r").read())
 	return points.get(user, 0)
+
 
 @client.event
 async def on_ready():
@@ -323,7 +345,7 @@ async def points(ctx, target: discord.Member = None):
 
 
 from threading import Thread
-from flask import Flask,send_file
+from flask import Flask, send_file
 
 app = Flask("app")
 @app.route("/")
@@ -344,5 +366,14 @@ def license():
 def start_flask():
 	app.run(host='0.0.0.0', port=8080)
 
+def update_data_from_firebase():
+	#global user
+	#user = auth.refresh(user['refreshToken'])
+	open("points.json", "w").write(json.dumps(db.get().val()))
+	# five minutes
+	time.sleep(5*60)
+	update_data_from_firebase()
+
 Thread(target=start_flask).start()
+Thread(target=update_data_from_firebase).start()
 client.run(os.getenv("TOKEN"))
