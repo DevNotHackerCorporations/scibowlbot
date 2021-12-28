@@ -10,6 +10,7 @@ discord = "^1.7.3"
 discord-components = "^2.1.2"
 readtime = "^1.1.1"
 Flask = "^2.0.2"
+discord-py-slash-command = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 
