@@ -60,8 +60,7 @@ def getpoints(user):
 
 @client.event
 async def on_ready():
-	print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(client, len(client.guilds), datetime.now().strftime("%B %d, %Y %H:%M:%S"))
-)
+	print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(client, len(client.guilds), datetime.now().strftime("%B %d, %Y %H:%M:%S")))
 	await client.change_presence(status=discord.Status.online, activity=discord.Game(name=(prefix+"help"), type=discord.ActivityType.listening))
 
 
@@ -134,8 +133,10 @@ async def on_message(message):
 							answers.append(i[:70]+"...")
 			else:
 				answers = ["", "", "", ""]
+			answer_accept_bypass = correct_answer			
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
+			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
 			mc = False
 
 
@@ -235,7 +236,7 @@ async def on_message(message):
 				]))
 
 
-			if user_ans.strip()[3:].upper() == correct_answer:
+			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass]:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
@@ -260,32 +261,46 @@ async def on_message(message):
 
 	if message.content.strip() == prefix+"help":
 		helptxt = """
-**SciBowlBot**
+**Scibowlbot**
 *a bot to help run science bowl rounds*
 
+**How to obtain and answer a question**
 Scibowlbot is a bot built by AndrewC10#6072 et al. as an alternative to womogenes's scibowlbot (https://github.com/womogenes/ScibowlBot). To start a round, simply type `"""+prefix+"""SUBJECT`, with Subject being one of the below:
 
-:apple: PHY
-:test_tube: GEN
-:zap:  ENERGY
-:milky_way:  EAS
-:atom:  CHEM
-:dna:  BIO
-:ringed_planet:  ASTRO
-:1234:  MATH
-:desktop:  CS
-:earth_americas:  ES
-:microscope:  ALL
+:apple: PHY (**Phy**sics)
+:test_tube: GEN (**Gen**eral Science)
+:zap:  ENERGY (**Energy**)
+:night_with_stars:  EAS (**E**arth **a**nd **S**pace)
+:atom:  CHEM (**Chem**istry)
+:dna:  BIO (**Bio**logy)
+:ringed_planet:  ASTRO (**Astro**nomy)
+:1234:  MATH (**Math**ematics)
+:desktop:  CS (**C**omputer **S**cience)
+:earth_americas:  ES (**E**arth **S**cience)
+:microscope:  ALL (**All** categories stated above)
 
 After you type in the command, a question and a big "Answer" button will be generated. You will be given 5 seconds plus an estimated read time to click the button. First person to click the button gets to answer the question. To answer, simply type `"""+prefix+"""a ANSWER`.(please only type the letter for multiple choice). You will be given 10 seconds to do so.
 
+**Other features**
 To view the server leaderboard, type `"""+prefix+"""leaderboard`.
 To view how many points you have, type `"""+prefix+"""points`.
+(Not supported anymore)To view the server statistics, type `"""+prefix+"""stats`.
+==split==
+**FAQ's**
+Q: How can I invite scibowlbot?
+A: Under <@!"""+str(client.user.id)+""">'s profile (You can get there by clicking that mention) there is a big "Add to Server" button under the bot's name. If that somehow doesn't show up, then use this link: <https://tinyurl.com/sbbv2invite>.
 
+Q: What can I do when the bot is down?
+A: You can DM or ping one of the devs, preferabaly `AndrewC10#6072`
 
+Q: I have a question, how can I ask it?
+A: You can DM one of the devs, but it is prefered that you send us an email at devnothackercorporations@gmail.com
+
+**This bot is open source!**
 This bot is open source! Help us improve it here: <https://github.com/DevNotHackerCorporations/scibowlbot> You are allowed to use this code under the conditions of the license: <https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt>
 		"""
-		await message.channel.send(helptxt)
+		await message.author.send(helptxt.split("==split==")[0])
+		await message.author.send(helptxt.split("==split==")[1])
 
 	if message.content.strip() == prefix+"points":
 		await message.channel.send(f"**{str(message.author.display_name)}**, you have **{str(getpoints(str(message.author.id)))}** point(s)")
@@ -328,6 +343,27 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				result += (emoji+" **"+str(member.display_name)+"** ("+str(points[k])+"pt)\n")
 		await message.channel.send(result)	
 
+	if message.content.startswith(prefix+"stats"):
+		await message.channel.send("Terribly sorry--we (the dev team) are temporarily closing the stats command as it is interfering with the deployment of scibowlbot's website, which is crucial for keeping the bot online 24/7. Thanks for your understanding.")
+		"""msgToEdit = await message.channel.send("Generating statistics--please wait.")
+		memberlist = set()
+		for member in message.guild.members:
+			memberlist.add(str(member.id))
+		points = json.loads(open("points.json", "r").read())
+		values = []
+		for k in points:
+			if str(k) in memberlist:
+				values.append(points.get(k))
+
+		plt.xlabel('Number of points')
+		plt.ylabel('Number of users')
+		plt.hist(values)
+		plt.savefig("tempstats.png")
+		await message.channel.send(f"The statistics for **{message.guild.name}**\n", file=discord.File(open("tempstats.png", "rb"), 'stats.png'))
+		await msgToEdit.delete()
+		os.remove("tempstats.png")		
+		plt.clf()"""
+
 	if message.content.strip() == prefix+"dev_servers":
 		await message.channel.send("I am currently in "+str(len(client.guilds))+" servers!")
 	elif "<@!"+str(client.user.id)+">" in message.content:
@@ -342,15 +378,15 @@ async def points(ctx, target: discord.Member = None):
 	await ctx.send(content=f"**{str(target.display_name)}**, you have **{str(getpoints(str(target.id)))}** point(s)")"""
 
 
-
-
-from threading import Thread
 from flask import Flask, send_file
 
 app = Flask("app")
 @app.route("/")
 def home():
     return open("index.html", "r").read()
+from threading import Thread
+Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
+
 @app.route("/style.css")
 def cssfile():
     return open("style.css", "r").read(), 200, {'Content-Type': 'text/css; charset=utf-8'}
@@ -363,8 +399,6 @@ def logopng():
 def license():
     return open("LICENSE.txt", "r").read(), 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
-def start_flask():
-	app.run(host='0.0.0.0', port=8080)
 
 def update_data_from_firebase():
 	#global user
@@ -374,6 +408,6 @@ def update_data_from_firebase():
 	time.sleep(5*60)
 	update_data_from_firebase()
 
-Thread(target=start_flask).start()
+
 Thread(target=update_data_from_firebase).start()
 client.run(os.getenv("TOKEN"))

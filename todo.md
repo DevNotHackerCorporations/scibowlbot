@@ -5,6 +5,6 @@
 * [x] react with emojis
 * [ ] when 3 seconds left to answer send message saying 3 sec left
 * [x] fix bug: .nick returns none if none
-* [ ] change prefix
-* [ ] \points USER
-* [ ] .leaderboard .points discord.ext.commands
+* [ ] change prefix [Not nessesary anymore]
+* [x] \points USER
+* [x] .leaderboard .points discord.ext.commands
