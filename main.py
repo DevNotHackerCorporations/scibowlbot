@@ -7,12 +7,12 @@ import requests
 import re
 import json
 import random
-import pyrebase
+#import pyrebase
 import time
 from datetime import datetime
 
 # setting up firebase
-config = {
+"""config = {
 	"apiKey": os.environ['API_key'],
 	"authDomain": "https://scibowlbot-6226d.firebaseapp.com",
 	"projectId": "scibowlbot-6226d",
@@ -26,7 +26,7 @@ firebase = pyrebase.initialize_app(config)
 #auth = firebase.auth()
 #user = auth.sign_in_with_email_and_password("devnothackercorporations@gmail.com", os.environ['email_psw'])
 #user = auth.refresh(user['refreshToken'])
-db = firebase.database()
+db = firebase.database()"""
 
 # This gets rid of the flask messages
 import logging
@@ -50,7 +50,7 @@ def changepoints(user, point):
 	points = json.loads(open("points.json", "r").read())
 	points[user] = points.get(user, 0) + point
 	open("points.json", "w").write(json.dumps(points))
-	db.set(points)
+	# db.set(points)
 
 
 def getpoints(user):
@@ -219,7 +219,7 @@ async def on_message(message):
 					await message.reply(f"Incorrect **{responder}**, you ran out of time. The answer was `{correct_answer}`. You now have **{getpoints(responderid)}** (-1) points ", mention_author=False)
 					hasQuestion.remove(message.channel.id)
 					await mcbuttons.add_reaction(random.choice(aw_reactions))
-					await mcbuttons.edit("You chose: **DID NOT CHOOSE**", components = ActionRow([
+					await mcbuttons.edit("**"+responder+"** chose: **DID NOT CHOOSE**", components = ActionRow([
 						Button(label = "W) "+answers[0], custom_id="niu1", style=color(correct_answer, -1, "W")),
 						Button(label = "X) "+answers[1], custom_id="niu2", style=color(correct_answer, -1, "X")),
 						Button(label = "Y) "+answers[2], custom_id="niu3", style=color(correct_answer, -1, "Y")),
@@ -228,7 +228,7 @@ async def on_message(message):
 					return
 				user_ans = prefix+"a "+mcButtonClick.custom_id[3]
 				await mcButtonClick.send("Success! Your answer was recorded")
-				await mcbuttons.edit("You chose: **"+mcButtonClick.custom_id[3].upper()+"**", components = ActionRow([
+				await mcbuttons.edit("**"+responder+"** chose: **"+mcButtonClick.custom_id[3].upper()+"**", components = ActionRow([
 					Button(label = "W) "+answers[0], custom_id="niu1", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "W")),
 					Button(label = "X) "+answers[1], custom_id="niu2", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "X")),
 					Button(label = "Y) "+answers[2], custom_id="niu3", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "Y")),
@@ -310,6 +310,9 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		await message.channel.send(f"**{str(member.display_name)}** has **{str(getpoints(str(member.id)))}** point(s)")
 
 	if message.content.startswith(prefix+"leaderboard"):
+		if not message.guild:
+			await message.channel.send("You can't view leaderboard in a DM")
+			return
 		maxx = 3
 		if re.match("\\"+prefix+"leaderboard ([0-9]+)", message.content.strip()):
 			maxx = int(re.match("\\"+prefix+"leaderboard ([0-9]+)", message.content.strip()).group(1))
@@ -366,6 +369,12 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 
 	if message.content.strip() == prefix+"dev_servers":
 		await message.channel.send("I am currently in "+str(len(client.guilds))+" servers!")
+
+	if message.content.strip() == prefix+"dev_clear":
+		if message.channel.id in hasQuestion:
+			hasQuestion.remove(message.channel.id)
+		await message.reply("Done!", mention_author=False)
+
 	elif "<@!"+str(client.user.id)+">" in message.content:
 		await message.channel.send("Hi there! I'm active and ready to serve up questions. For help, type "+prefix+"help")
 
@@ -385,7 +394,7 @@ app = Flask("app")
 def home():
     return open("index.html", "r").read()
 from threading import Thread
-Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
+
 
 @app.route("/style.css")
 def cssfile():
@@ -403,11 +412,12 @@ def license():
 def update_data_from_firebase():
 	#global user
 	#user = auth.refresh(user['refreshToken'])
-	open("points.json", "w").write(json.dumps(db.get().val()))
+	#open("points.json", "w").write(json.dumps(db.get().val()))
 	# five minutes
 	time.sleep(5*60)
+	Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
 	update_data_from_firebase()
 
-
-Thread(target=update_data_from_firebase).start()
+Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
+#Thread(target=update_data_from_firebase).start()
 client.run(os.getenv("TOKEN"))
