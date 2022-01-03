@@ -152,7 +152,9 @@ async def on_message(message):
 		try: 
 			waitfor = await client.wait_for(
         		"button_click",
-				timeout=5+(readtime.of_text(question).seconds),
+				timeout=2+(readtime.of_text(question).seconds),
+				await message.channel.send('Quick! 3 seconds left on the clock!')
+				timeout=3,
 				check=validatebtn
     		)
 		except (asyncio.TimeoutError):
@@ -170,7 +172,9 @@ async def on_message(message):
 				try: 
 					user_answer = await client.wait_for(
         				"message",
-						timeout=10,
+						timeout=7,
+						await message.channel.send('Quick! You only have 3 seconds')
+						timeout=3,
 						check=validate
     				)
 				except (asyncio.TimeoutError):
@@ -211,7 +215,9 @@ async def on_message(message):
 				try:
 					mcButtonClick = await client.wait_for(
         				"button_click",
-						timeout=6,
+						timeout=3,
+						await message.channel.send('Quick! Only 3 seconds left!')
+						timeout=3,
 						check=validate_mc
     				)
 				except (asyncio.TimeoutError):
