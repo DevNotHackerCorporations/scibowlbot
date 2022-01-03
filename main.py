@@ -137,6 +137,9 @@ async def on_message(message):
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
+			accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
+			accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
+			accepted_answer = accepted_answer.split(')')[0]
 			mc = False
 
 
@@ -236,7 +239,7 @@ async def on_message(message):
 				]))
 
 
-			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass]:
+			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass, accepted_answer]:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
