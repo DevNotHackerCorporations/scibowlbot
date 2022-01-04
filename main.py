@@ -133,7 +133,8 @@ async def on_message(message):
 							answers.append(i[:70]+"...")
 			else:
 				answers = ["", "", "", ""]
-			answer_accept_bypass = correct_answer			
+			answer_accept_bypass = correct_answer		
+			accepted_answer = correct_answer	
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
