@@ -139,7 +139,7 @@ async def on_message(message):
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
-			accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
+			accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (ACCEPT: ',1)[1]
 			accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
 			accepted_answer = accepted_answer.split(')')[0]
 			answer_solution_bypass = question_json["question"]["tossup_answer"].upper().split(' (*SOLUTION:',1)[0]
