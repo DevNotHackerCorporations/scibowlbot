@@ -1,4 +1,5 @@
-#scibowlbot
+Scibowlbot
+=============
 
 The best way to simulate a Science Bowl round on Discord.
 
