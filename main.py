@@ -70,6 +70,8 @@ async def on_message(message):
 		return
 
 	def validate(msg): 
+		if str(msg.author.display_name) == responder and prefix+"a" not in msg.content:
+			asyncio.create_task(msg.reply("Once again, to answer write `.a ANSWER` with `ANSWER` being your answer."))
 		if str(msg.author.display_name) == responder and prefix+"a" in msg.content:
 			return True
 		return False
@@ -139,10 +141,14 @@ async def on_message(message):
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
-			accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
-			accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
-			accepted_answer = accepted_answer.split(')')[0]
-			answer_solution_bypass = question_json["question"]["tossup_answer"].upper().split(' (*SOLUTION:',1)[0]
+			try:
+				correct_answer = question_json["question"]["tossup_answer"].upper()
+				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
+				accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
+				accepted_answer = accepted_answer.split(')')[0]
+				answer_solution_bypass = question_json["question"]["tossup_answer"].upper().split(' (*SOLUTION:',1)[0]
+			except BaseException: 
+				accepted_answer = correct_answer
 			mc = False
 
 
@@ -197,9 +203,11 @@ async def on_message(message):
 					return 1
 
 				def validate_mc(msg):
+					if msg.custom_id[:3] == "niu":
+						asyncio.create_task(msg.send("This question already ended ¯\_(ツ)_/¯"))
 					if str(msg.author.display_name) == responder and re.match("mc_(w|x|y|z)([0-9]+)",str(msg.custom_id)):
 						return True
-					#mcButtonClick.send("Not your turn")
+					asyncio.create_task(msg.send("This question is not yours!"))
 					return False
 
 				#time.sleep(2)
@@ -242,7 +250,7 @@ async def on_message(message):
 				]))
 
 
-			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass, accepted_answer, answer_solution_bypass]:
+			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass, accepted_answer]:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
@@ -305,6 +313,7 @@ A: You can DM one of the devs, but it is prefered that you send us an email at d
 **This bot is open source!**
 This bot is open source! Help us improve it here: <https://github.com/DevNotHackerCorporations/scibowlbot> You are allowed to use this code under the conditions of the license: <https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt>
 		"""
+		await message.add_reaction("\N{White Heavy Check Mark}")
 		await message.author.send(helptxt.split("==split==")[0])
 		await message.author.send(helptxt.split("==split==")[1])
 
@@ -414,15 +423,6 @@ def logopng():
 def license():
     return open("LICENSE.txt", "r").read(), 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
-
-def update_data_from_firebase():
-	#global user
-	#user = auth.refresh(user['refreshToken'])
-	#open("points.json", "w").write(json.dumps(db.get().val()))
-	# five minutes
-	time.sleep(5*60)
-	Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
-	update_data_from_firebase()
 
 Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
 #Thread(target=update_data_from_firebase).start()
