@@ -1,5 +1,5 @@
 import discord
-from discord_components import DiscordComponents, Button, ActionRow
+from discord_components import DiscordComponents, Button, ActionRow, Select, SelectOption
 import os
 import asyncio
 import readtime
@@ -48,14 +48,34 @@ yay_reactions = ["\N{Thumbs Up Sign}", "\N{White Heavy Check Mark}", "\N{Brain}"
 aw_reactions = ["\N{Crying Face}", "\N{White Question Mark Ornament}", "\N{Slightly Frowning Face}", "\N{Worried Face}", "\N{Thumbs Down Sign}", "\N{Loudly Crying Face}", "\N{Cross Mark}", "\N{Face with No Good Gesture}"]
 def changepoints(user, point):
 	points = json.loads(open("points.json", "r").read())
-	points[user] = points.get(user, 0) + point
+	points["points"][user] = points.get("points").get(user, 0) + point
 	open("points.json", "w").write(json.dumps(points))
 	# db.set(points)
 
 
 def getpoints(user):
 	points = json.loads(open("points.json", "r").read())
-	return points.get(user, 0)
+	return points.get("points").get(user, 0)
+
+def changeprofile(user, good=None, bad=None, bio=None):
+	user = str(user)
+	points = json.loads(open("points.json", "r").read())
+	if not points["profile"].get(user):
+		points["profile"][user] = [[], [], ""]
+	if good:
+		points["profile"][user][0] = good
+	if bad:
+		points["profile"][user][1] = bad
+	if bio:
+		points["profile"][user][2] = bio
+	open("points.json", "w").write(json.dumps(points))
+	# db.set(points)
+
+
+def getprofile(user):
+	user = str(user)
+	points = json.loads(open("points.json", "r").read())
+	return points.get("profile").get(user, [[], [], ""])
 
 
 @client.event
@@ -137,7 +157,6 @@ async def on_message(message):
 				answers = ["", "", "", ""]
 			answer_accept_bypass = correct_answer		
 			accepted_answer = correct_answer	
-			answer_solution_bypass = correct_answer
 		else:
 			correct_answer = question_json["question"]["tossup_answer"].upper()
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
@@ -146,7 +165,6 @@ async def on_message(message):
 				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
 				accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
 				accepted_answer = accepted_answer.split(')')[0]
-				answer_solution_bypass = question_json["question"]["tossup_answer"].upper().split(' (*SOLUTION:',1)[0]
 			except BaseException: 
 				accepted_answer = correct_answer
 			mc = False
@@ -248,15 +266,78 @@ async def on_message(message):
 					Button(label = "Y) "+answers[2], custom_id="niu3", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "Y")),
 					Button(label = "Z) "+answers[3], custom_id="niu4", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "Z"))
 				]))
-
-
-			if user_ans.strip()[3:].upper() in [correct_answer, answer_accept_bypass, accepted_answer]:
+			u_answer = user_ans.strip()[3:].upper()
+			test_cases = [correct_answer, answer_accept_bypass, accepted_answer]
+			algorithm_correct = False
+			accuracy = [compare(case, u_answer) for case in test_cases]
+			for percent in accuracy:
+				if 75 <= percent <= 100 and question_json["question"]["tossup_format"] != "Multiple Choice":
+					algorithm_correct = True
+					break
+			if u_answer in test_cases:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
 					await user_answer.add_reaction(random.choice(yay_reactions))
 				else:
 					await mcbuttons.add_reaction(random.choice(yay_reactions))
+			elif algorithm_correct:
+				hasQuestion.remove(message.channel.id)
+				changepoints(responderid, 1)
+				global msg_id
+				msg_id = "_ov_"+str(user_answer.channel.id)+str(user_answer.author.id)+str(random.randint(1, 100))
+				override_close_enough = await message.reply(
+					f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your answer got a score of **{percent}**) The answer is `{correct_answer}`. You now have **{getpoints(responderid)}** (+1) points", mention_author=False, 
+					components = [
+						Button(
+							label = "Override, I was incorrect", 
+							custom_id=msg_id, 
+							style=1
+						)
+					]
+				)
+				def check_override(msg):
+					if str(msg.author.display_name) == responder and str(msg.custom_id) == msg_id:
+						return True
+					asyncio.create_task(msg.send("You never answered this question."))
+					return False
+				my_emoji = random.choice(yay_reactions)
+				if (not mc):
+					await user_answer.add_reaction(my_emoji)
+				else:
+					await mcbuttons.add_reaction(my_emoji)
+				try:
+					waiting_honest = await client.wait_for("button_click", timeout=30, check=check_override)
+				except (asyncio.TimeoutError):
+					await override_close_enough.edit(
+						content=f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your answer got a score of **{percent}**) The answer is `{correct_answer}`. You now have **{getpoints(responderid)}** (+1) points", mention_author=False, 
+						components = [
+							Button(
+								label = "Override, I was incorrect", 
+								custom_id=msg_id, 
+								style=1,
+								disabled=True
+							)
+						]
+					)
+				else:
+					await waiting_honest.send("Thanks for being honest :slight_smile: You lost two points")
+					changepoints(responderid, -2)
+					await override_close_enough.edit(
+						content=f"Let's give **{responder}** a round of applause :clap: for being honest! Our algorithm thought their answer was \"close enough,\" but **{responder}** was honest and overrode it. The answer is `{correct_answer}`. **{responder}** now has **{getpoints(responderid)}** (-1) points", mention_author=False, 
+						components = [
+							Button(
+								label = "Override, I was incorrect", 
+								custom_id=msg_id, 
+								style=3,
+								disabled=True
+							)
+						]
+					)
+					await user_answer.remove_reaction(my_emoji, client.user)
+					await user_answer.add_reaction(random.choice(aw_reactions))
+
+				
 			else:
 				changepoints(responderid,  -1)
 				await message.reply(f"Incorrect **{responder}**, the answer was `{correct_answer}`. You now have **{getpoints(responderid)}** (-1) points", mention_author=False)
@@ -274,12 +355,13 @@ async def on_message(message):
 			hasQuestion.remove(message.channel.id)
 
 	if message.content.strip() == prefix+"help":
-		helptxt = """
+		helptxt = f"""
 **Scibowlbot**
 *a bot to help run science bowl rounds*
+I have been serving quesitons for **{t_string(time.time() - 1638489600)}** (Since <t:1638489600>)
 
 **How to obtain and answer a question**
-Scibowlbot is a bot built by AndrewC10#6072 et al. as an alternative to womogenes's scibowlbot (https://github.com/womogenes/ScibowlBot). To start a round, simply type `"""+prefix+"""SUBJECT`, with Subject being one of the below:
+Scibowlbot is a bot built by AndrewC10#6072 et al. as an alternative to womogenes's scibowlbot (https://github.com/womogenes/ScibowlBot). To start a round, simply type `"""+prefix+"""q SUBJECT`, with Subject being one of the below:
 
 :apple: PHY (**Phy**sics)
 :test_tube: GEN (**Gen**eral Science)
@@ -297,7 +379,9 @@ After you type in the command, a question and a big "Answer" button will be gene
 
 **Other features**
 To view the server leaderboard, type `"""+prefix+"""leaderboard`.
-To view how many points you have, type `"""+prefix+"""points`.
+To view your profile you have, type `"""+prefix+"""points`.
+To view someone else's profiles type `"""+prefix+"""points @MENTION` or `"""+prefix+"""points USER_ID`.
+To change your profile, type `"""+prefix+"""change_profile`
 (Not supported anymore)To view the server statistics, type `"""+prefix+"""stats`.
 ==split==
 **FAQ's**
@@ -310,6 +394,9 @@ A: You can DM or ping one of the devs, preferabaly `AndrewC10#6072`
 Q: I have a question, how can I ask it?
 A: You can DM one of the devs, but it is prefered that you send us an email at devnothackercorporations@gmail.com
 
+Q: What if the bot says "There already is another question in this channel." when there clearly is not?
+A: Run the `"""+prefix+"""dev_clear` command and everything should be fixed.
+
 **This bot is open source!**
 This bot is open source! Help us improve it here: <https://github.com/DevNotHackerCorporations/scibowlbot> You are allowed to use this code under the conditions of the license: <https://devnothackercorporations.github.io/scibowlbot/LICENSE.txt>
 		"""
@@ -317,12 +404,33 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		await message.author.send(helptxt.split("==split==")[0])
 		await message.author.send(helptxt.split("==split==")[1])
 
-	if message.content.strip() == prefix+"points":
-		await message.channel.send(f"**{str(message.author.display_name)}**, you have **{str(getpoints(str(message.author.id)))}** point(s)")
 
-	if re.match("\\"+prefix+"points <@!([0-9]+)>", message.content.strip()):
-		member = await message.guild.fetch_member(int(re.match("\\"+prefix+"points <@!([0-9]+)>", message.content.strip()).group(1)))
-		await message.channel.send(f"**{str(member.display_name)}** has **{str(getpoints(str(member.id)))}** point(s)")
+	if re.match("\\"+prefix+"profile <@!([0-9]+)>", message.content.strip()) or message.content.strip() == prefix+"profile" or re.match("\\"+prefix+"profile ([0-9]+)", message.content.strip()):
+		if re.match("\\"+prefix+"profile <@!([0-9]+)>", message.content.strip()):
+			id = int(re.match("\\"+prefix+"profile <@!([0-9]+)>", message.content.strip()).group(1))
+		elif message.content.strip() == prefix+"profile":
+			id = int(message.author.id)
+		else:
+			id = int(re.match("\\"+prefix+"profile ([0-9]+)", message.content.strip()).group(1))
+		try:
+			member = await message.guild.fetch_member(id)
+		except:
+			await message.reply("No user with that id has been found in this server.")
+			return
+
+		embed = discord.Embed(title=f"{member.display_name}'s profile", description="What they are good at, their points, etc.", color=0xFF5733)
+		embed.set_author(name=member.display_name, url="", icon_url=member.avatar_url)
+		embed.set_thumbnail(url=member.avatar_url)
+		embed.add_field(name=f"{member}'s point count", value=f"**{str(member.display_name)}** has **{str(getpoints(str(member.id)))}** point(s)", inline=False)
+		good_at = ", ".join(list(map(lambda x: apprev[x.upper()][0].lower(), getprofile(member.id)[0])))
+		if not good_at:
+			good_at = "*Nothing*"
+		bad_at = ", ".join(list(map(lambda x: apprev[x.upper()][0].lower(), getprofile(member.id)[1])))
+		if not bad_at:
+			bad_at = "*Nothing*"
+		embed.add_field(name=f"What {member} is is good at", value=f"{str(member.display_name)} is good at {good_at}", inline=False)
+		embed.add_field(name=f"What {member} is is not so good at", value=f"{str(member.display_name)} is not so good at {bad_at}", inline=False)
+		await message.channel.send(embed=embed)
 
 	if message.content.startswith(prefix+"leaderboard"):
 		if not message.guild:
@@ -335,7 +443,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				await message.reply("Please enter a number between 3 and 15.", mention_author=False)
 				return
 
-		points = json.loads(open("points.json", "r").read())
+		points = json.loads(open("points.json", "r").read()).get("points")
 		points = {k: v for k, v in sorted(points.items(), key=lambda item: item[1], reverse=True)}
 		numusers = 0
 		result = f"The points leaderboard for **{message.guild.name}** (top {maxx})\n"
@@ -347,9 +455,12 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			2: ":second_place: ",
 			3: ":third_place: ",
 		}
+		prev = float("-inf")
 		for k in points:
 			if str(k) in memberlist:
-				numusers += 1
+				if points[k] != prev:
+					numusers += 1
+				prev = points[k]
 				if numusers > maxx:
 					break
 
@@ -381,7 +492,9 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		await msgToEdit.delete()
 		os.remove("tempstats.png")		
 		plt.clf()"""
-
+		
+	if message.content.startswith(prefix+"serverstats"):
+		await message.channel.send("This feature is still in development--sit tight!")
 	if message.content.strip() == prefix+"dev_servers":
 		await message.channel.send("I am currently in "+str(len(client.guilds))+" servers!")
 
@@ -390,8 +503,107 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			hasQuestion.remove(message.channel.id)
 		await message.reply("Done!", mention_author=False)
 
+	if message.content.strip() == prefix+"change_profile":
+		good_at, bad_at, bio = getprofile(int(message.author.id))
+		select_id = str(message.channel.id)+str(message.author.id)+str(random.randint(1, 100))
+		orig_msg = await message.channel.send(f"**{str(message.author.display_name)}**, change your profile here!", components = [
+			Select(
+				placeholder="The subjects you are good at!",
+				max_values=10, 
+				id = select_id + "1",
+				options=[
+					SelectOption(label="Physics", value="phy", default=("phy" in good_at), emoji="\N{Red Apple}"),
+					SelectOption(label="General Science", value="gen", default=("" in good_at), emoji="\N{Test Tube}"),
+					SelectOption(label="Energy", value="energy", default=("energy" in good_at), emoji="\N{High Voltage Sign}"),
+					SelectOption(label="Earth and Space", value="eas", default=("eas" in good_at), emoji="\N{Night with Stars}"),
+					SelectOption(label="Chemistry", value="chem", default=("chem" in good_at), emoji="\N{Atom Symbol}"),
+					SelectOption(label="Biology", value="bio", default=("bio" in good_at), emoji="\N{DNA Double Helix}"),
+					SelectOption(label="Astronomy", value="astro", default=("astro" in good_at), emoji="\N{Ringed Planet}"),
+					SelectOption(label="Math", value="math", default=("math" in good_at), emoji="\N{Input Symbol for Numbers}"),
+					SelectOption(label="Earth Science", value="es", default=("es" in good_at), emoji="\N{Earth Globe Americas}"),
+					SelectOption(label="Computer Science", value="cs",default=("cs" in good_at), emoji="\N{Personal Computer}")
+				]
+			),
+			Select(
+				placeholder="The subjects you are bad at",
+				max_values=10, 
+				id = select_id + "2",
+				options=[
+					SelectOption(label="Physics", value="phy", default=("phy" in bad_at), emoji="\N{Red Apple}"),
+					SelectOption(label="General Science", value="gen", default=("" in bad_at), emoji="\N{Test Tube}"),
+					SelectOption(label="Energy", value="energy", default=("energy" in bad_at), emoji="\N{High Voltage Sign}"),
+					SelectOption(label="Earth and Space", value="eas", default=("eas" in bad_at), emoji="\N{Night with Stars}"),
+					SelectOption(label="Chemistry", value="chem", default=("chem" in bad_at), emoji="\N{Atom Symbol}"),
+					SelectOption(label="Biology", value="bio", default=("bio" in bad_at), emoji="\N{DNA Double Helix}"),
+					SelectOption(label="Astronomy", value="astro", default=("astro" in bad_at), emoji="\N{Ringed Planet}"),
+					SelectOption(label="Math", value="math", default=("math" in bad_at), emoji="\N{Input Symbol for Numbers}"),
+					SelectOption(label="Earth Science", value="es", default=("es" in bad_at), emoji="\N{Earth Globe Americas}"),
+					SelectOption(label="Computer Science", value="cs",default=("cs" in bad_at), emoji="\N{Personal Computer}")
+				]
+			),
+		])
+		select_author = int(message.author.id)
+		def profile_check(interaction):
+			if interaction.custom_id[:-1] == select_id and select_author == int(interaction.author.id):
+				return True
+			asyncio.create_task(interaction.send("This isn't your profile"))
+			return False
+
+		while True:
+			try:
+				select_op = await client.wait_for("select_option", timeout=15, check=profile_check)
+			except asyncio.TimeoutError:
+				await orig_msg.edit(content=f"**{str(message.author.display_name)}**, change your profile here!", components = [
+					Select(
+						placeholder="The subjects you are good at!",
+						max_values=10, 
+						disabled=True,
+						id = "niu1",
+						options=[
+							SelectOption(label="Physics", value="phy", default=("phy" in good_at), emoji="\N{Red Apple}"),
+							SelectOption(label="General Science", value="gen", default=("" in good_at), emoji="\N{Test Tube}"),
+							SelectOption(label="Energy", value="energy", default=("energy" in good_at), emoji="\N{High Voltage Sign}"),
+							SelectOption(label="Earth and Space", value="eas", default=("eas" in good_at), emoji="\N{Night with Stars}"),
+							SelectOption(label="Chemistry", value="chem", default=("chem" in good_at), emoji="\N{Atom Symbol}"),
+							SelectOption(label="Biology", value="bio", default=("bio" in good_at), emoji="\N{DNA Double Helix}"),
+							SelectOption(label="Astronomy", value="astro", default=("astro" in good_at), emoji="\N{Ringed Planet}"),
+							SelectOption(label="Math", value="math", default=("math" in good_at), emoji="\N{Input Symbol for Numbers}"),
+							SelectOption(label="Earth Science", value="es", default=("es" in good_at), emoji="\N{Earth Globe Americas}"),
+							SelectOption(label="Computer Science", value="cs",default=("cs" in good_at), emoji="\N{Personal Computer}")
+						]
+					),
+					Select(
+						placeholder="The subjects you are bad at",
+						max_values=10, 
+						id = "niu2",
+						disabled=True,
+						options=[
+							SelectOption(label="Physics", value="phy", default=("phy" in bad_at), emoji="\N{Red Apple}"),
+							SelectOption(label="General Science", value="gen", default=("" in bad_at), emoji="\N{Test Tube}"),
+							SelectOption(label="Energy", value="energy", default=("energy" in bad_at), emoji="\N{High Voltage Sign}"),
+							SelectOption(label="Earth and Space", value="eas", default=("eas" in bad_at), emoji="\N{Night with Stars}"),
+							SelectOption(label="Chemistry", value="chem", default=("chem" in bad_at), emoji="\N{Atom Symbol}"),
+							SelectOption(label="Biology", value="bio", default=("bio" in bad_at), emoji="\N{DNA Double Helix}"),
+							SelectOption(label="Astronomy", value="astro", default=("astro" in bad_at), emoji="\N{Ringed Planet}"),
+							SelectOption(label="Math", value="math", default=("math" in bad_at), emoji="\N{Input Symbol for Numbers}"),
+							SelectOption(label="Earth Science", value="es", default=("es" in bad_at), emoji="\N{Earth Globe Americas}"),
+							SelectOption(label="Computer Science", value="cs",default=("cs" in bad_at), emoji="\N{Personal Computer}")
+						]
+					),
+				])
+				break
+			inter_number = select_op.custom_id[-1]
+			if inter_number == "1":
+				changeprofile(select_author, good=select_op.values)
+			if inter_number == "2":
+				changeprofile(select_author, bad=select_op.values)
+			await select_op.send("Updated your profile")
+
+
 	elif "<@!"+str(client.user.id)+">" in message.content:
 		await message.channel.send("Hi there! I'm active and ready to serve up questions. For help, type "+prefix+"help")
+
+	
 
 """@bot.slash(name="points", description="See someone's point's!")
 async def points(ctx, target: discord.Member = None):
@@ -401,6 +613,25 @@ async def points(ctx, target: discord.Member = None):
 		target = ctx.author
 	await ctx.send(content=f"**{str(target.display_name)}**, you have **{str(getpoints(str(target.id)))}** point(s)")"""
 
+# Compares two strings and returns a percentage based on how similar they are. 
+# The algorithm is not perfect, but it should work
+def compare(str1: str, str2: str) -> float:
+    str_one_letters = {}
+    for letter in str1:
+        str_one_letters[letter] = str_one_letters.get(letter, 0) + 1
+    for letter in str2:
+        str_one_letters[letter] = abs(str_one_letters.get(letter, 0) - 1)
+    return round((1-((sum(str_one_letters.values()))/len(str1)))*100, 2)
+
+def t_string(seconds: int) -> str:
+	day = seconds // (24 * 3600)
+	seconds = seconds % (24 * 3600)
+	hour = seconds // 3600
+	seconds %= 3600
+	minutes = seconds // 60
+	seconds %= 60
+	seconds = seconds
+	return ("%d days, %d hours, %d minutes, and %d seconds!" % (day, hour, minutes, seconds))
 
 from flask import Flask, send_file
 
