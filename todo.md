@@ -8,3 +8,4 @@
 * [ ] change prefix [Not nessesary anymore]
 * [x] \points USER
 * [x] .leaderboard .points discord.ext.commands
+* [ ] Create a system that tracks correct answers and questions for each subject

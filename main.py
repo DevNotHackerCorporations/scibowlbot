@@ -10,7 +10,6 @@ import random
 #import pyrebase
 import time
 from datetime import datetime
-
 # setting up firebase
 """config = {
 	"apiKey": os.environ['API_key'],
@@ -203,6 +202,16 @@ async def on_message(message):
 						timeout=10,
 						check=validate
     				)
+			#t = 11
+			#e = 0
+			#global t
+			#while e == 0:
+			#if t > 3:
+				#t -= 1
+				#time.sleep(1)
+			#else:
+				#await message.channel.send("Three seconds")
+				#break
 				except (asyncio.TimeoutError):
 					changepoints(responderid,  -1)
 					await message.reply(f"Incorrect **{responder}**, you ran out of time. The answer was `{correct_answer}`. You now have **{getpoints(responderid)}** (-1) points ", mention_author=False)
@@ -446,7 +455,11 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		points = json.loads(open("points.json", "r").read()).get("points")
 		points = {k: v for k, v in sorted(points.items(), key=lambda item: item[1], reverse=True)}
 		numusers = 0
-		result = f"The points leaderboard for **{message.guild.name}** (top {maxx})\n"
+		# Setting up embed
+		embed = discord.Embed(title=f"The points leaderboard for **{message.guild.name}**", description=f"Top {maxx} people", color=0xFF5733)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_thumbnail(url=message.guild.icon_url)
+		# end set up
 		memberlist = set()
 		for member in message.guild.members:
 			memberlist.add(str(member.id))
@@ -456,6 +469,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			3: ":third_place: ",
 		}
 		prev = float("-inf")
+		result = ""
 		for k in points:
 			if str(k) in memberlist:
 				if points[k] != prev:
@@ -470,7 +484,8 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				else:
 					emoji = whatplace[numusers]
 				result += (emoji+" **"+str(member.display_name)+"** ("+str(points[k])+"pt)\n")
-		await message.channel.send(result)	
+		embed.add_field(name=f"The people and their scores", value=result, inline=False)
+		await message.channel.send(embed=embed)	
 
 	if message.content.startswith(prefix+"stats"):
 		await message.channel.send("Terribly sorry--we (the dev team) are temporarily closing the stats command as it is interfering with the deployment of scibowlbot's website, which is crucial for keeping the bot online 24/7. Thanks for your understanding.")
@@ -494,7 +509,28 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		plt.clf()"""
 		
 	if message.content.startswith(prefix+"serverstats"):
-		await message.channel.send("This feature is still in development--sit tight!")
+		memberlist = set()
+		for member in message.guild.members:
+			memberlist.add(str(member.id))
+		points = json.loads(open("points.json", "r").read()).get("points")
+		average = 0
+		num_pep = 0
+		for k in points:
+			if str(k) in memberlist:
+				average += points[k]
+				num_pep += 1 
+		if num_pep == 0:
+			num_pep = 1
+		average = round(average / num_pep, 2)
+		# Setting up embed
+		embed = discord.Embed(title=f"Server stats of **{message.guild.name}**", color=0xFF5733)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_thumbnail(url=message.guild.icon_url)
+		embed.add_field(name=f"Average amount of points", value=f"The average amount of points for {message.guild.name} is {average} points.", inline=False)
+		await message.channel.send(embed=embed)
+		# end set up
+
+		
 	if message.content.strip() == prefix+"dev_servers":
 		await message.channel.send("I am currently in "+str(len(client.guilds))+" servers!")
 
@@ -598,8 +634,6 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			if inter_number == "2":
 				changeprofile(select_author, bad=select_op.values)
 			await select_op.send("Updated your profile")
-
-
 	elif "<@!"+str(client.user.id)+">" in message.content:
 		await message.channel.send("Hi there! I'm active and ready to serve up questions. For help, type "+prefix+"help")
 
