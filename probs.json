@@ -1,0 +1,51 @@
+[{
+		"question": {
+			"category": "GENERAL SCIENCE",
+			"id": -1,
+			"source": "Scibowlbot Round 1",
+			"tossup_answer": "X) 42",
+			"tossup_format": "Multiple Choice",
+			"tossup_question": "What is the answer to life and everything?\nW) There is no answer\nX) 42\nY) Funny number\nZ) Turtles"
+		}
+	},
+	{
+		"question": {
+			"category": "BIOLOGY",
+			"id": -2,
+			"source": "Scibowlbot Round 1",
+			"tossup_answer": "X) Crab",
+			"tossup_format": "Multiple Choice",
+			"tossup_question": "What is the fate of all things?\nW) Death\nX) Crab\nY) endless reincarnation\nZ) Microsoft"
+		}
+	},
+	{
+		"question": {
+			"category": "GENERAL SCIENCE",
+			"id": -3,
+			"source": "Scibowlbot Round 1",
+			"tossup_answer": "Y) Who asked?",
+			"tossup_format": "Multiple Choice",
+			"tossup_question": "Scientists at Argonne National Laboratory are using high powered infrared orbital telescopes to try and find what hypothetical form of matter? ?\nW) Dark Matter\nX) Exotic Matter\nY) Who asked?\nZ) Mirror matter"
+		}
+	},
+	{
+		"question": {
+			"category": "MEME",
+			"id": -4,
+			"source": "Scibowlbot Round 1",
+			"tossup_answer": "69",
+			"tossup_format": "Short Answer",
+			"tossup_question": "What is the funny number?"
+		}
+	},
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -5,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Z) 122 years",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "How old did the oldest person ever live, using official records? \nW) 119 years\nX) 120 years\nY) 121 years\nZ) 122 years"
+        }
+    }
+]

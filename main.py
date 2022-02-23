@@ -10,6 +10,7 @@ import random
 #import pyrebase
 import time
 from datetime import datetime
+
 # setting up firebase
 """config = {
 	"apiKey": os.environ['API_key'],
@@ -97,7 +98,7 @@ async def on_message(message):
 
 	def validatebtn(msg):
 		return str(msg.custom_id) == str(message.channel.id)
-	subject = re.match("\\"+prefix+"Q (PHY|GEN|ENERGY|EAS|ES|CHEM|BIO|ASTRO|MATH|CS|ALL)", message.content.upper())
+	subject = re.match("\\"+prefix+"Q (PHY|GEN|ENERGY|EAS|ES|CHEM|BIO|ASTRO|MATH|CS|ALL|WEIRD)", message.content.upper())
 	apprev = {
 		"PHY":["PHYSICS"],
 		"GEN":["GENERAL SCIENCE"],
@@ -109,6 +110,7 @@ async def on_message(message):
 		"MATH":["MATH"],
 		"CS":["COMPUTER SCIENCE"],
 		"ES":["EARTH SCIENCE"],
+		"WEIRD":["WEIRD PROBLEMS"],
 		"ALL":[
 			"PHYSICS",
 			"GENERAL SCIENCE",
@@ -123,6 +125,7 @@ async def on_message(message):
 		]
 	}
 	if subject:
+		isweird = subject.group(1) == "WEIRD"
 
 		# 	message.channel.send("scibowlbot is currently rate-limited by Discord for some reason. In other words, scibowlbot is down. Thanks for being patient.")
 		# return
@@ -131,9 +134,12 @@ async def on_message(message):
 			await message.reply(f"**There already is another question in this channel.**", mention_author=False)
 			return
 		hasQuestion.add(message.channel.id)
-		question_json = requests.post("https://scibowldb.com/api/questions/random", json={
-			"categories":apprev[subject.group(1)]
-		}).json()
+		if subject.group(1) != "WEIRD":
+			question_json = requests.post("https://scibowldb.com/api/questions/random", json={
+				"categories":apprev[subject.group(1)]
+			}).json()
+		else:
+			question_json = random.choice(json.loads(open("probs.json", "r").read()))
 		question_header = "**"+question_json["question"]["category"]+" "+question_json["question"]["tossup_format"]+" (Source: "+question_json["question"]["source"]+")\n**"
 		question = question_header+question_json["question"]["tossup_question"]
 		mc = True
@@ -168,7 +174,6 @@ async def on_message(message):
 				accepted_answer = correct_answer
 			mc = False
 
-
 		sentmsg = await message.channel.send(
 			question,
 			components = [
@@ -194,14 +199,15 @@ async def on_message(message):
 				Button(label = f"Answered by {responder}!", disabled=True)
 			])
 			if not mc:
+				type_time = len(accepted_answer)/100
 				#time.sleep(2)
-				await waitfor.send("It's your turn to answer! You have 10 seconds.")
+				await waitfor.send("It's your turn to answer! You have 10 seconds plus an estimated and type time.")
 				try: 
 					user_answer = await client.wait_for(
-        				"message",
-						timeout=10,
+						"message",
+						timeout=10+type_time,
 						check=validate
-    				)
+					)
 			#t = 11
 			#e = 0
 			#global t
@@ -283,7 +289,10 @@ async def on_message(message):
 				if 75 <= percent <= 100 and question_json["question"]["tossup_format"] != "Multiple Choice":
 					algorithm_correct = True
 					break
-			if u_answer in test_cases:
+			if u_answer in test_cases and isweird:
+				changepoints(responderid, 1)
+				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+1) points (This is a *weird* question, so you get less points)", mention_author=False)
+			elif u_answer in test_cases:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
@@ -391,7 +400,7 @@ To view the server leaderboard, type `"""+prefix+"""leaderboard`.
 To view your profile you have, type `"""+prefix+"""points`.
 To view someone else's profiles type `"""+prefix+"""points @MENTION` or `"""+prefix+"""points USER_ID`.
 To change your profile, type `"""+prefix+"""change_profile`
-(Not supported anymore)To view the server statistics, type `"""+prefix+"""stats`.
+To view the server statistics, type `"""+prefix+"""serverstats`.
 ==split==
 **FAQ's**
 Q: How can I invite scibowlbot?
@@ -448,8 +457,8 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		maxx = 3
 		if re.match("\\"+prefix+"leaderboard ([0-9]+)", message.content.strip()):
 			maxx = int(re.match("\\"+prefix+"leaderboard ([0-9]+)", message.content.strip()).group(1))
-			if maxx > 15 or maxx < 3:
-				await message.reply("Please enter a number between 3 and 15.", mention_author=False)
+			if maxx > 30 or maxx < 3:
+				await message.reply("Please enter a number between 3 and 30.", mention_author=False)
 				return
 
 		points = json.loads(open("points.json", "r").read()).get("points")
@@ -634,10 +643,46 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			if inter_number == "2":
 				changeprofile(select_author, bad=select_op.values)
 			await select_op.send("Updated your profile")
+
+	elif re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content):
+		amount = int(re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(1))
+		# Setup
+		embed = discord.Embed(title=f"Some points were just gifted!", description=f"{message.author.display_name} just tried to gift {amount} points.", color=0xFF5733)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_thumbnail(url=message.author.avatar_url)
+		# calculations
+		if not message.guild:
+			embed.add_field(name="Error", value="You can't gift points outside of a server.")
+			await message.channel.send(embed=embed)
+			return
+		user = str(message.author.id)
+		user_money = int(getpoints(user))
+		to = re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(2) 
+		to_user = await message.guild.fetch_member(int(to))
+		#if amount < 0:
+		#	embed.add_field(name="Error", value="It's not like your going to gain money from this...")
+		#	return
+		if amount > user_money:
+			embed.add_field(name="Error", value=f"This goes over your current balance of {user_money}")
+		elif to_user.bot:
+			embed.add_field(name="Error", value="You can't give points to a bot...")
+		else:
+			changepoints(user, -1*amount)
+			changepoints(to, amount)
+			embed.add_field(name=f"{message.author.display_name} now has", value=f"{getpoints(user)} points. (-{amount})")
+			embed.add_field(name=f"{to_user.display_name} now has", value=f"{getpoints(to)} points. (+{amount})")
+			await to_user.send(f"**{message.author.display_name}** just sent you **{amount}** coins!") 
+		await message.reply(embed=embed)
+
+	
 	elif "<@!"+str(client.user.id)+">" in message.content:
 		await message.channel.send("Hi there! I'm active and ready to serve up questions. For help, type "+prefix+"help")
 
-	
+@client.event
+async def on_button_click(interaction):
+	if interaction.custom_id[:3] == "niu":
+		await interaction.respond(content="This button is not in use anymore.")
+		return
 
 """@bot.slash(name="points", description="See someone's point's!")
 async def points(ctx, target: discord.Member = None):
