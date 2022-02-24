@@ -168,7 +168,7 @@ async def on_message(message):
 			try:
 				correct_answer = question_json["question"]["tossup_answer"].upper()
 				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (ACCEPT: ',1)[1]
-				accepted_answer = accepted_answer.split(')')[0]
+				accepted_answer = accepted_answer.split(')', 1)[0]
 			except BaseException: 
 				accepted_answer = correct_answer
 			mc = False
