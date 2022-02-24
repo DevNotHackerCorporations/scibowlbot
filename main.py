@@ -80,7 +80,7 @@ def getprofile(user):
 def attempt_do_not_accept(accepted_answer):
 	a = accepted_answer
 	try:
-		a=a.split('DO NOT ACCEPT: ',1)
+		a=a.split('DO NOT ACCEPT: ',1)[0]
 	except:
 		a=a
 	return a
