@@ -167,8 +167,7 @@ async def on_message(message):
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
 			try:
 				correct_answer = question_json["question"]["tossup_answer"].upper()
-				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
-				accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
+				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (ACCEPT: ',1)[1]
 				accepted_answer = accepted_answer.split(')')[0]
 			except BaseException: 
 				accepted_answer = correct_answer
