@@ -8,6 +8,7 @@ import re
 import json
 import random
 #import pyrebase
+import difflib
 import time
 from datetime import datetime
 
@@ -290,8 +291,8 @@ async def on_message(message):
 					algorithm_correct = True
 					break
 			if u_answer in test_cases and isweird:
-				changepoints(responderid, 1)
-				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+1) points (This is a *weird* question, so you get less points)", mention_author=False)
+				changepoints(responderid, 0)
+				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+0) points (This is a *weird* question, so you get no points, you may get some kicks though?)", mention_author=False)
 			elif u_answer in test_cases:
 				changepoints(responderid,  2)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
@@ -302,7 +303,6 @@ async def on_message(message):
 			elif algorithm_correct:
 				hasQuestion.remove(message.channel.id)
 				changepoints(responderid, 1)
-				global msg_id
 				msg_id = "_ov_"+str(user_answer.channel.id)+str(user_answer.author.id)+str(random.randint(1, 100))
 				override_close_enough = await message.reply(
 					f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your answer got a score of **{percent}**) The answer is `{correct_answer}`. You now have **{getpoints(responderid)}** (+1) points", mention_author=False, 
@@ -317,7 +317,7 @@ async def on_message(message):
 				def check_override(msg):
 					if str(msg.author.display_name) == responder and str(msg.custom_id) == msg_id:
 						return True
-					asyncio.create_task(msg.send("You never answered this question."))
+					asyncio.create_task(msg.send(f"You never answered this question. \n\n DEBUG DATA:\n Expected responder: `{str(msg.author.display_name)}` Got: `{responder}`\nExpected ID: `{msg.custom_id}` Got: {msg_id}"))
 					return False
 				my_emoji = random.choice(yay_reactions)
 				if (not mc):
@@ -391,6 +391,7 @@ Scibowlbot is a bot built by AndrewC10#6072 et al. as an alternative to womogene
 :1234:  MATH (**Math**ematics)
 :desktop:  CS (**C**omputer **S**cience)
 :earth_americas:  ES (**E**arth **S**cience)
+:upside_down: WEIRD (**Weird** Questions)
 :microscope:  ALL (**All** categories stated above)
 
 After you type in the command, a question and a big "Answer" button will be generated. You will be given 5 seconds plus an estimated read time to click the button. First person to click the button gets to answer the question. To answer, simply type `"""+prefix+"""a ANSWER`.(please only type the letter for multiple choice). You will be given 10 seconds to do so.
@@ -479,6 +480,8 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		}
 		prev = float("-inf")
 		result = ""
+		my_id = int(message.author.id)
+		place = f"You're not among the top {maxx} people."
 		for k in points:
 			if str(k) in memberlist:
 				if points[k] != prev:
@@ -486,7 +489,8 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				prev = points[k]
 				if numusers > maxx:
 					break
-
+				if my_id == int(k):
+					place = f"You occupy place #{numusers}!"
 				member = message.guild.get_member(int(k))
 				if numusers > 3:
 					emoji = ":medal: "
@@ -494,6 +498,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 					emoji = whatplace[numusers]
 				result += (emoji+" **"+str(member.display_name)+"** ("+str(points[k])+"pt)\n")
 		embed.add_field(name=f"The people and their scores", value=result, inline=False)
+		embed.add_field(name=f"What place am I?", value=place, inline=False)
 		await message.channel.send(embed=embed)	
 
 	if message.content.startswith(prefix+"stats"):
@@ -644,8 +649,14 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				changeprofile(select_author, bad=select_op.values)
 			await select_op.send("Updated your profile")
 
-	elif re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content):
-		amount = int(re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(1))
+	elif re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content) or re.match(".gift ([0-9]+) ([0-9]+)", message.content):
+		if re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content):
+			amount = int(re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(1))
+			to = re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(2) 
+		else:
+			amount = int(re.match(".gift ([0-9]+) ([0-9]+)", message.content).group(1))
+			to = re.match(".gift ([0-9]+) ([0-9]+)", message.content).group(2) 
+
 		# Setup
 		embed = discord.Embed(title=f"Some points were just gifted!", description=f"{message.author.display_name} just tried to gift {amount} points.", color=0xFF5733)
 		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
@@ -657,7 +668,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 			return
 		user = str(message.author.id)
 		user_money = int(getpoints(user))
-		to = re.match(".gift ([0-9]+) <@!([0-9]+)>", message.content).group(2) 
+		
 		to_user = await message.guild.fetch_member(int(to))
 		#if amount < 0:
 		#	embed.add_field(name="Error", value="It's not like your going to gain money from this...")
@@ -695,12 +706,15 @@ async def points(ctx, target: discord.Member = None):
 # Compares two strings and returns a percentage based on how similar they are. 
 # The algorithm is not perfect, but it should work
 def compare(str1: str, str2: str) -> float:
+	"""
     str_one_letters = {}
     for letter in str1:
         str_one_letters[letter] = str_one_letters.get(letter, 0) + 1
     for letter in str2:
         str_one_letters[letter] = abs(str_one_letters.get(letter, 0) - 1)
     return round((1-((sum(str_one_letters.values()))/len(str1)))*100, 2)
+	"""
+	return difflib.SequenceMatcher(None, str1, str2).ratio()*100
 
 def t_string(seconds: int) -> str:
 	day = seconds // (24 * 3600)

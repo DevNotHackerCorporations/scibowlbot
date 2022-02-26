@@ -47,5 +47,45 @@
             "tossup_format": "Multiple Choice",
             "tossup_question": "How old did the oldest person ever live, using official records? \nW) 119 years\nX) 120 years\nY) 121 years\nZ) 122 years"
         }
+    },
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -6,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "10",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Suppose Billy is spinning a ball around in a circle with a string. That string is 5 meters long. The ball weighs 2 kilograms and is moving at 1 m/s. Assuming that Billy lives in a world without gravity and he is spinning the string parallel to the ground, then what is the angular momentum of the ball in m^2/s?"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -7,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "X) He is Fat",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "Suppose Bob has 5925 cookies,  and all of them are the same weight. He eats all of them, what is his weight? \nW) 3592 pounds\nX) He is Fat\nY) Ded due to cookie overdose\nZ) Not my issue"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -8,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Y) 4.17",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "(Bonus) Billy teleports onto a planet with a gravity of 12 m^2/s, and grabs a cannonball. He throws it straight up at a speed of 10 m/s. What is the max height of the cannonball as a decimal rounded to the nearest hundredth? \nW) 6\nX) 1.2\nY) 4.17\nZ) 5.74"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -9,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "e",
+            "tossup_format": "Short Answer",
+            "tossup_question": "e ee eee eeee eeeee eeeeee eeeeeee eeeeeeee eeeeeeeee eeeeeeeeee eeeeeeeeeee eeeeeeeeeeee eeeeeeeeeeeee eeeeeeeeeeeeeee eeeeeeeeeeeeeeee?"
+        }
     }
 ]
