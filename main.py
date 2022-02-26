@@ -78,6 +78,14 @@ def getprofile(user):
 	points = json.loads(open("points.json", "r").read())
 	return points.get("profile").get(user, [[], [], ""])
 
+def attempt_do_not_accept(accepted_answer):
+	a = accepted_answer
+	try:
+		a=a.split('DO NOT ACCEPT: ',1)[0]
+	except:
+		a=a
+	return a
+
 
 @client.event
 async def on_ready():
@@ -168,9 +176,9 @@ async def on_message(message):
 			answer_accept_bypass = re.sub("(\(.*\))", "", question_json["question"]["tossup_answer"].upper()).strip().replace("  ", " ")
 			try:
 				correct_answer = question_json["question"]["tossup_answer"].upper()
-				accepted_answer = question_json["question"]["tossup_answer"].upper().split(' (*ACCEPT: ',1)[1]
-				accepted_answer = accepted_answer.split('DO NOT ACCEPT: ')[0]
-				accepted_answer = accepted_answer.split(')')[0]
+				accepted_answer = question_json["question"]["tossup_answer"].upper().split('(ACCEPT: ',1)[1]
+				accepted_answer = accepted_answer.split(')', 1)[0]
+				accepted_answer = attempt_do_not_accept(accepted_answer)
 			except BaseException: 
 				accepted_answer = correct_answer
 			mc = False
