@@ -1,0 +1,11 @@
+,
+    {
+        "question": {
+            "category": "WEIRD (Energy)",
+            "id": -8,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Fusion (Accept: Nuclear Fusion)",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Scientists are trying to find a new process that produces energy by combining different atoms together. What is this process known as?"
+        }
+    }

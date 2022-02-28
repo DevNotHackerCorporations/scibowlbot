@@ -85,8 +85,31 @@ def attempt_do_not_accept(accepted_answer):
 	except:
 		a=a
 	return a
+def mc_mistaken_for_short(accepted_answer):
+	also_accepted_answer = ""
+	if "W)" in accepted_answer:
+		also_accepted_answer = "W"
+	if "X)" in accepted_answer:
+		also_accepted_answer = "X"
+	if "Y)" in accepted_answer:
+		also_accepted_answer = "Y"
+	if "Z)" in accepted_answer:
+		also_accepted_answer = "Z"
+	return also_accepted_answer
 
-
+	
+def mc_mistaken_for_short_2(accepted_answer):
+	also_accepted_answer_2 = ""
+	if "W)" in accepted_answer:
+		also_accepted_answer_2 = accepted_answer.split("W) ")
+	if "X)" in accepted_answer:
+		also_accepted_answer_2 = accepted_answer.split("X) ")
+	if "Y)" in accepted_answer:
+		also_accepted_answer_2 = accepted_answer.split("Y) ")
+	if "Z)" in accepted_answer:
+		also_accepted_answer_2 = accepted_answer.split("Z) ")
+	return also_accepted_answer_2
+	
 @client.event
 async def on_ready():
 	print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(client, len(client.guilds), datetime.now().strftime("%B %d, %Y %H:%M:%S")))
@@ -107,7 +130,7 @@ async def on_message(message):
 
 	def validatebtn(msg):
 		return str(msg.custom_id) == str(message.channel.id)
-	subject = re.match("\\"+prefix+"Q (PHY|GEN|ENERGY|EAS|ES|CHEM|BIO|ASTRO|MATH|CS|ALL|WEIRD)", message.content.upper())
+	subject = re.match("\\"+prefix+"Q (PHY|GEN|ENERGY|EAS|ES|CHEM|BIO|ASTRO|MATH|CS|ALL|WEIRD|CRAZY)", message.content.upper())
 	apprev = {
 		"PHY":["PHYSICS"],
 		"GEN":["GENERAL SCIENCE"],
@@ -120,6 +143,7 @@ async def on_message(message):
 		"CS":["COMPUTER SCIENCE"],
 		"ES":["EARTH SCIENCE"],
 		"WEIRD":["WEIRD PROBLEMS"],
+		"CRAZY":["CRAZY PROBLEMS"],
 		"ALL":[
 			"PHYSICS",
 			"GENERAL SCIENCE",
@@ -135,6 +159,8 @@ async def on_message(message):
 	}
 	if subject:
 		isweird = subject.group(1) == "WEIRD"
+		iscrazy = subject.group(1) == "CRAZY"
+		
 
 		# 	message.channel.send("scibowlbot is currently rate-limited by Discord for some reason. In other words, scibowlbot is down. Thanks for being patient.")
 		# return
@@ -143,12 +169,15 @@ async def on_message(message):
 			await message.reply(f"**There already is another question in this channel.**", mention_author=False)
 			return
 		hasQuestion.add(message.channel.id)
-		if subject.group(1) != "WEIRD":
+		if isweird:
+			question_json = random.choice(json.loads(open("probs.json", "r").read()))
+		elif iscrazy:
+			question_json = random.choice(json.loads(open("crazy.json", "r").read()))
+		else:
 			question_json = requests.post("https://scibowldb.com/api/questions/random", json={
 				"categories":apprev[subject.group(1)]
 			}).json()
-		else:
-			question_json = random.choice(json.loads(open("probs.json", "r").read()))
+
 		question_header = "**"+question_json["question"]["category"]+" "+question_json["question"]["tossup_format"]+" (Source: "+question_json["question"]["source"]+")\n**"
 		question = question_header+question_json["question"]["tossup_question"]
 		mc = True
@@ -179,6 +208,8 @@ async def on_message(message):
 				accepted_answer = question_json["question"]["tossup_answer"].upper().split('(ACCEPT: ',1)[1]
 				accepted_answer = accepted_answer.split(')', 1)[0]
 				accepted_answer = attempt_do_not_accept(accepted_answer)
+				accepted_answer_2 = mc_mistaken_for_short(accepted_answer)
+				accepted_answer_3 = mc_mistaken_for_short_2(accepted_answer)
 			except BaseException: 
 				accepted_answer = correct_answer
 			mc = False
@@ -194,10 +225,10 @@ async def on_message(message):
 
 		try: 
 			waitfor = await client.wait_for(
-        		"button_click",
+				"button_click",
 				timeout=5+(readtime.of_text(question).seconds),
 				check=validatebtn
-    		)
+			)
 		except (asyncio.TimeoutError):
 			clicked = False
 		
@@ -266,10 +297,10 @@ async def on_message(message):
 				)
 				try:
 					mcButtonClick = await client.wait_for(
-        				"button_click",
+						"button_click",
 						timeout=6,
 						check=validate_mc
-    				)
+					)
 				except (asyncio.TimeoutError):
 					changepoints(responderid,  -1)
 					await message.reply(f"Incorrect **{responder}**, you ran out of time. The answer was `{correct_answer}`. You now have **{getpoints(responderid)}** (-1) points ", mention_author=False)
@@ -291,7 +322,7 @@ async def on_message(message):
 					Button(label = "Z) "+answers[3], custom_id="niu4", style=color(correct_answer, mcButtonClick.custom_id[3].upper(), "Z"))
 				]))
 			u_answer = user_ans.strip()[3:].upper()
-			test_cases = [correct_answer, answer_accept_bypass, accepted_answer]
+			test_cases = [correct_answer, answer_accept_bypass, accepted_answer, """accepted_answer_2, accepted_answer_3"""]
 			algorithm_correct = False
 			accuracy = [compare(case, u_answer) for case in test_cases]
 			for percent in accuracy:
@@ -299,10 +330,14 @@ async def on_message(message):
 					algorithm_correct = True
 					break
 			if u_answer in test_cases and isweird:
+				changepoints(responderid, 1)
+				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+1) points (This is a *weird* question, so you get a point.)", mention_author=False)
+			elif u_answer in test_cases and iscrazy:
 				changepoints(responderid, 0)
-				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+0) points (This is a *weird* question, so you get no points, you may get some kicks though?)", mention_author=False)
+				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+0) points (This is a *crazy* question, so you get no points, you may get some kicks though?)", mention_author=False)
 			elif u_answer in test_cases:
 				changepoints(responderid,  2)
+				pointtest = getpoints(responderid)
 				await message.reply(f"Correct **{responder}** You now have **{getpoints(responderid)}** (+2) points", mention_author=False)
 				if (not mc):
 					await user_answer.add_reaction(random.choice(yay_reactions))
@@ -490,6 +525,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		result = ""
 		my_id = int(message.author.id)
 		place = f"You're not among the top {maxx} people."
+		
 		for k in points:
 			if str(k) in memberlist:
 				if points[k] != prev:
@@ -505,9 +541,17 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 				else:
 					emoji = whatplace[numusers]
 				result += (emoji+" **"+str(member.display_name)+"** ("+str(points[k])+"pt)\n")
+				if len(result) >= 800:
+					embed.add_field(name=f"The people and their scores", value=result, inline=False)
+					await message.channel.send(embed=embed)	
+					embed = discord.Embed(title=f"Overflow", description="We went over 1024 chars so we had to split it into two messages", color=0xFF5733)
+					result = ""
+
 		embed.add_field(name=f"The people and their scores", value=result, inline=False)
 		embed.add_field(name=f"What place am I?", value=place, inline=False)
 		await message.channel.send(embed=embed)	
+					
+
 
 	if message.content.startswith(prefix+"stats"):
 		await message.channel.send("Terribly sorry--we (the dev team) are temporarily closing the stats command as it is interfering with the deployment of scibowlbot's website, which is crucial for keeping the bot online 24/7. Thanks for your understanding.")
@@ -678,6 +722,7 @@ This bot is open source! Help us improve it here: <https://github.com/DevNotHack
 		user_money = int(getpoints(user))
 		
 		to_user = await message.guild.fetch_member(int(to))
+		embed.set_thumbnail(url=to_user.avatar_url)
 		#if amount < 0:
 		#	embed.add_field(name="Error", value="It's not like your going to gain money from this...")
 		#	return
@@ -715,12 +760,12 @@ async def points(ctx, target: discord.Member = None):
 # The algorithm is not perfect, but it should work
 def compare(str1: str, str2: str) -> float:
 	"""
-    str_one_letters = {}
-    for letter in str1:
-        str_one_letters[letter] = str_one_letters.get(letter, 0) + 1
-    for letter in str2:
-        str_one_letters[letter] = abs(str_one_letters.get(letter, 0) - 1)
-    return round((1-((sum(str_one_letters.values()))/len(str1)))*100, 2)
+	str_one_letters = {}
+	for letter in str1:
+		str_one_letters[letter] = str_one_letters.get(letter, 0) + 1
+	for letter in str2:
+		str_one_letters[letter] = abs(str_one_letters.get(letter, 0) - 1)
+	return round((1-((sum(str_one_letters.values()))/len(str1)))*100, 2)
 	"""
 	return difflib.SequenceMatcher(None, str1, str2).ratio()*100
 
@@ -739,21 +784,21 @@ from flask import Flask, send_file
 app = Flask("app")
 @app.route("/")
 def home():
-    return open("index.html", "r").read()
+	return open("index.html", "r").read()
 from threading import Thread
 
 
 @app.route("/style.css")
 def cssfile():
-    return open("style.css", "r").read(), 200, {'Content-Type': 'text/css; charset=utf-8'}
+	return open("style.css", "r").read(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/atom.png")
 def logopng():
-    return send_file("atom.png", mimetype='image/png')
+	return send_file("atom.png", mimetype='image/png')
 
 @app.route("/LICENSE.txt")
 def license():
-    return open("LICENSE.txt", "r").read(), 200, {'Content-Type': 'text/plain; charset=utf-8'}
+	return open("LICENSE.txt", "r").read(), 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 
 Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()

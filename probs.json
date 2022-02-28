@@ -1,47 +1,8 @@
-[{
-		"question": {
-			"category": "GENERAL SCIENCE",
-			"id": -1,
-			"source": "Scibowlbot Round 1",
-			"tossup_answer": "X) 42",
-			"tossup_format": "Multiple Choice",
-			"tossup_question": "What is the answer to life and everything?\nW) There is no answer\nX) 42\nY) Funny number\nZ) Turtles"
-		}
-	},
+[	
 	{
-		"question": {
-			"category": "BIOLOGY",
-			"id": -2,
-			"source": "Scibowlbot Round 1",
-			"tossup_answer": "X) Crab",
-			"tossup_format": "Multiple Choice",
-			"tossup_question": "What is the fate of all things?\nW) Death\nX) Crab\nY) endless reincarnation\nZ) Microsoft"
-		}
-	},
-	{
-		"question": {
-			"category": "GENERAL SCIENCE",
-			"id": -3,
-			"source": "Scibowlbot Round 1",
-			"tossup_answer": "Y) Who asked?",
-			"tossup_format": "Multiple Choice",
-			"tossup_question": "Scientists at Argonne National Laboratory are using high powered infrared orbital telescopes to try and find what hypothetical form of matter? ?\nW) Dark Matter\nX) Exotic Matter\nY) Who asked?\nZ) Mirror matter"
-		}
-	},
-	{
-		"question": {
-			"category": "MEME",
-			"id": -4,
-			"source": "Scibowlbot Round 1",
-			"tossup_answer": "69",
-			"tossup_format": "Short Answer",
-			"tossup_question": "What is the funny number?"
-		}
-	},
-    {
         "question": {
-            "category": "WEIRD",
-            "id": -5,
+            "category": "WEIRD (General Knowledge)",
+            "id": -1,
             "source": "Scibowlbot Round 1",
             "tossup_answer": "Z) 122 years",
             "tossup_format": "Multiple Choice",
@@ -50,8 +11,8 @@
     },
     {
         "question": {
-            "category": "WEIRD",
-            "id": -6,
+            "category": "WEIRD (Physics)",
+            "id": -2,
             "source": "Scibowlbot Round 1",
             "tossup_answer": "10",
             "tossup_format": "Short Answer",
@@ -60,18 +21,8 @@
     },
     {
         "question": {
-            "category": "WEIRD",
-            "id": -7,
-            "source": "Scibowlbot Round 1",
-            "tossup_answer": "X) He is Fat",
-            "tossup_format": "Multiple Choice",
-            "tossup_question": "Suppose Bob has 5925 cookies,  and all of them are the same weight. He eats all of them, what is his weight? \nW) 3592 pounds\nX) He is Fat\nY) Ded due to cookie overdose\nZ) Not my issue"
-        }
-    },
-    {
-        "question": {
-            "category": "WEIRD",
-            "id": -8,
+            "category": "WEIRD (Physics)",
+            "id": -3,
             "source": "Scibowlbot Round 1",
             "tossup_answer": "Y) 4.17",
             "tossup_format": "Multiple Choice",
@@ -80,12 +31,52 @@
     },
     {
         "question": {
-            "category": "WEIRD",
-            "id": -9,
+            "category": "WEIRD (Astronomy, Earth and Space)",
+            "id": -4,
             "source": "Scibowlbot Round 1",
-            "tossup_answer": "e",
+            "tossup_answer": "Andromeda Galaxy (Accept: Andromeda Nebula) (Accept: Messier 31, M31, or NGC 224 before it is said)",
             "tossup_format": "Short Answer",
-            "tossup_question": "e ee eee eeee eeeee eeeeee eeeeeee eeeeeeee eeeeeeeee eeeeeeeeee eeeeeeeeeee eeeeeeeeeeee eeeeeeeeeeeee eeeeeeeeeeeeeee eeeeeeeeeeeeeeee?"
+            "tossup_question": "Name an object in space, which has a dual core and has a diameter of around 220 light years, and was probably first described by Abd al-Rahman al-Sufi. It is a barred spiral galaxy, approximately 2.5 million light years away from Earth. It is expected to collide with the Milky Way. It is also known as Messier 31, M31, or NGC 224. It is around 10 billion years old, and is the nearest galaxy to Earth."
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Chemistry)",
+            "id": -5,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Z) Neutrinos",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "Name the subatomic particle that is a form of dark matter, move at almost the speed of light, and have mass.\nW) Photons\nX) Protons\nY) Quarks\nZ) Neutrinos"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Math)",
+            "id": -6,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "240",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Billy wants to play cocogolf, in which he hits a coconut with a golf club and sees how much damage he can do to the coconut. Unfortuanately, Billy is very poor and usually the golf club breaks before the coconut does. If Billy only breaks the coconut 20% of the time, while the rest being his golf club breaking, and it costs 10$ per golf club, then how much money is Billy predicted to spend if he currently has 1 golf club and will try 30 times? (Assume that the coconuts are free)"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Earth Science)",
+            "id": -7,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "X) Convergent Boundaries",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "What is the most common plate boundary?\nW) Divergent Boundaries\nX) Convergent Boundaries\nY) Transform Boundaries\nZ) Strike-Slip Boundaries"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Energy)",
+            "id": -8,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Fusion (Accept: Nuclear Fusion)",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Scientists are trying to find a new process that produces energy by combining different atoms together. What is this process known as?"
         }
     }
 ]

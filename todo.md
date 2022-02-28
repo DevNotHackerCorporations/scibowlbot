@@ -1,4 +1,4 @@
-* [ ] accept short answer without the (Accept: something) and accept the one with only the (Accept: something)
+* [x] accept short answer without the (Accept: something) and accept the one with only the (Accept: something)
 
 * [x] make it so in multiple choice make the answer choicds buttons
 * [x] estimated typing time
