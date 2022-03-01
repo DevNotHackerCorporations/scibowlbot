@@ -434,17 +434,19 @@ Scibowlbot is a bot built by AndrewC10#6072 et al. as an alternative to womogene
 :1234:  MATH (**Math**ematics)
 :desktop:  CS (**C**omputer **S**cience)
 :earth_americas:  ES (**E**arth **S**cience)
-:upside_down: WEIRD (**Weird** Questions)
 :microscope:  ALL (**All** categories stated above)
+:interrobang: WEIRD (Our own custom questions that are related)
+:exploding_head: CRAZY (Our own questions that are unrelated)
 
 After you type in the command, a question and a big "Answer" button will be generated. You will be given 5 seconds plus an estimated read time to click the button. First person to click the button gets to answer the question. To answer, simply type `"""+prefix+"""a ANSWER`.(please only type the letter for multiple choice). You will be given 10 seconds to do so.
 
 **Other features**
 To view the server leaderboard, type `"""+prefix+"""leaderboard`.
-To view your profile you have, type `"""+prefix+"""points`.
-To view someone else's profiles type `"""+prefix+"""points @MENTION` or `"""+prefix+"""points USER_ID`.
+To view your profile you have, type `"""+prefix+"""profile`.
+To view someone else's profiles type `"""+prefix+"""profile @MENTION` or `"""+prefix+"""profile USER_ID`.
 To change your profile, type `"""+prefix+"""change_profile`
 To view the server statistics, type `"""+prefix+"""serverstats`.
+To gift someone points, type `"""+prefix+"""gift AMOUNT USER` With user either being a ping, or the user's id.
 ==split==
 **FAQ's**
 Q: How can I invite scibowlbot?
