@@ -56,7 +56,7 @@
             "source": "Scibowlbot Round 1",
             "tossup_answer": "240",
             "tossup_format": "Short Answer",
-            "tossup_question": "Billy wants to play cocogolf, in which he hits a coconut with a golf club and sees how much damage he can do to the coconut. Unfortuanately, Billy is very poor and usually the golf club breaks before the coconut does. If Billy only breaks the coconut 20% of the time, while the rest being his golf club breaking, and it costs 10$ per golf club, then how much money is Billy predicted to spend if he currently has 1 golf club and will try 30 times? (Assume that the coconuts are free)"
+            "tossup_question": "Billy wants to play cocogolf, in which he hits a coconut with a golf club and sees how much damage he can do to the coconut. Unfortunately, Billy is very poor and usually the golf club breaks before the coconut does. If Billy only breaks the coconut 20% of the time, while the rest being his golf club breaking, and it costs 10$ per golf club, then how much money is Billy predicted to spend if he currently has 1 golf club and will try 30 times? (Assume that the coconuts are free)"
         }
     },
     {
@@ -77,6 +77,36 @@
             "tossup_answer": "Fusion (Accept: Nuclear Fusion)",
             "tossup_format": "Short Answer",
             "tossup_question": "Scientists are trying to find a new process that produces energy by combining different atoms together. What is this process known as?"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (MATH)",
+            "id": -9,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "1/72",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Mr. Jones is running a pharmacy called Animal Pharm. He imprisoned a bunch of animals on it, so the animals want to overthrow him. If the animals have a 1/2 chance of overthrowing Mr. Jones every weekday and a 2/3 chance of overthrowing him every weekend, what is the probability that the Animals overthrow Mr. Jones seven days this week? Give your answer as a reduced fraction"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Earth Science)",
+            "id": -10,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Y)",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "John Doe is in a hurricane. His friend, Jane Doe, observes that he is spinning around the eye of the hurricane clockwise. This is due to what effect?\nW) Hadley Cell\nX) Ferrel's Law\nY) Coriolis Effect\nZ) Spherical Rotational Effect"
+        }
+    },
+    {
+        "question": {
+            "category": "WEIRD (Astronomy)",
+            "id": -11,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Z) The Summer Triangle",
+            "tossup_format": "Multiple Choice",
+            "tossup_question": "The stars Altair and Vega are located in what constellation/asterim?\nW) The Big Dipper\nX) Gemini\nY) Orion\nZ) The Summer Triangle"
         }
     }
 ]

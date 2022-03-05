@@ -1,11 +1,11 @@
 ,
     {
         "question": {
-            "category": "WEIRD (Energy)",
-            "id": -8,
+            "category": "WEIRD (Physics)",
+            "id": -12,
             "source": "Scibowlbot Round 1",
-            "tossup_answer": "Fusion (Accept: Nuclear Fusion)",
+            "tossup_answer": "780",
             "tossup_format": "Short Answer",
-            "tossup_question": "Scientists are trying to find a new process that produces energy by combining different atoms together. What is this process known as?"
+            "tossup_question": "Christine is pulling a chair with Arush on it (who weighs 52 kg and is not touching the floor) on a smooth ground with coefficient of friction of 0.3. If the chair (along with Arush) is moving at 1.5 m/s, and assuming the chair's weight is neglegible, how many newtons is Christine pulling the chair? Assume Earth has a gravitational force of 10 m/s."
         }
     }
