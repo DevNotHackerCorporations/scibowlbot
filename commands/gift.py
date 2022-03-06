@@ -12,6 +12,13 @@ async def _gift(message, amount: int, to_user: discord.Member):
 
 	Note that to_user can be a mention or the id of a user
 	"""
+	if amount < 0:
+		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.add_field(name=f'Invalid value', value="YOU GREEDY LITTLE--")
+		await message.channel.send(embed=embed)
+		return
+		
 	to = str(to_user.id)
 	# Setup
 	embed = discord.Embed(title=f"Some points were just gifted!", description=f"{message.author.display_name} just tried to gift {amount} points.", color=0xFF5733)
