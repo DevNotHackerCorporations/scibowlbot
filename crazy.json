@@ -89,5 +89,15 @@
             "tossup_format": "Multiple Choice",
             "tossup_question": "Suppose Bob has 5925 cookies,  and all of them are the same weight. He eats all of them, what is his weight? \nW) 3592 pounds\nX) He is Fat\nY) Ded due to cookie overdose\nZ) Not my issue"
         }
+    },
+    {
+        "question": {
+            "category": "WEIRD",
+            "id": -10,
+            "source": "Scibowlbot Round 1",
+            "tossup_answer": "Among Us",
+            "tossup_format": "Short Answer",
+            "tossup_question": "Which video game is sus?"
+        }
     }
 ]
