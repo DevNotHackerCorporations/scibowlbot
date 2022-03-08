@@ -21,9 +21,12 @@ async def _server_stats(message):
 		if str(k) in memberlist:
 			average += points[k]
 			num_pep += 1 
+
 	if num_pep == 0:
 		num_pep = 1
 	average = round(average / num_pep, 2)
+
+		
 	# Setting up embed
 	embed = discord.Embed(title=f"Server stats of **{message.guild.name}**", color=0xFF5733)
 	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)

@@ -15,7 +15,7 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	if amount < 0:
 		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
 		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
-		embed.add_field(name=f'Invalid value', value="YOU GREEDY LITTLE--")
+		embed.add_field(name=f'Invalid value', value="There are two people in life, those whose power is to give and those whos weakness is to take, in other words, YOU GREEDY LITTLE--")
 		await message.channel.send(embed=embed)
 		return
 		
@@ -39,8 +39,12 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	#	return
 	if amount > user_money:
 		embed.add_field(name="Error", value=f"This goes over your current balance of {user_money}")
+		await message.channel.send(embed=embed)
+		return
 	elif to_user.bot:
 		embed.add_field(name="Error", value="You can't give points to a bot...")
+		await message.channel.send(embed=embed)
+		return
 	else:
 		message.bot.changepoints(user, -1*amount)
 		message.bot.changepoints(to, amount)
