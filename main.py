@@ -1,14 +1,10 @@
 import discord
 import os
-import asyncio
-import re
 import json
-import random
-import time
 from datetime import datetime
 from discord.ext import commands
 from discord_components import DiscordComponents
-
+from discord.ext.commands import *
 
 
 
@@ -20,6 +16,8 @@ prefix = "."
 client = commands.Bot(command_prefix=prefix, intents=intents)
 DiscordComponents(client)
 client.hasQuestion = set()
+alertdev_err = [MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound]
+dev = 0
 
 
 
@@ -63,7 +61,7 @@ client.apprev = {
 		"ASTRONOMY",
 		"MATH",
 		"COMPUTER SCIENCE"
-	]
+	],
 	"EVERYTHING":[
 		"PHYSICS",
 		"GENERAL SCIENCE",
@@ -133,7 +131,8 @@ client.getprofile = getprofile
 async def on_ready():
 	print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(client, len(client.guilds), datetime.now().strftime("%B %d, %Y %H:%M:%S")))
 	await client.change_presence(status=discord.Status.online, activity=discord.Game(name=(prefix+"help"), type=discord.ActivityType.listening))
-
+	global dev
+	dev = client.get_user(728297793646624819)
 
 @client.event
 async def on_message(message):
@@ -152,11 +151,28 @@ async def on_button_click(interaction):
 
 @client.event
 async def on_command_error(ctx, err):
-		embed = discord.Embed(title=f":warning: Warning! :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
-		embed.add_field(name=f'The error', value="```\n"+str(err)+"\n```")
-		await ctx.channel.send(embed=embed)
+	if isinstance(err, CommandNotFound):
 		return
+
+	alert_dev = not any([isinstance(err, b) for b in alertdev_err])
+	embed = discord.Embed(title=f":warning: Warning! :warning:", description="While processing this request, we ran into an unexpected error", color=0xFFFF00)
+	embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
+	embed.add_field(name=f'The error', value="```\n"+str(err)+"\n```")
+	if alert_dev:
+		embed.set_footer(text="The dev has been notified", icon_url=dev.avatar_url)
+	else:
+		embed.set_footer(text="The dev has blacklisted this error", icon_url=dev.avatar_url)
+	await ctx.channel.send(embed=embed)
+
+	if alert_dev:
+		embed = discord.Embed(title=f":warning: Dev Alert! :warning:", description="While processing a request, we ran into an error", color=0xFFFF00)
+		embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
+		embed.add_field(name="Message Sender", value=f"{ctx.author} ({ctx.author.id})", inline=False)
+		embed.add_field(name="Message ID", value=f"{ctx.message.id}", inline=False)
+		embed.add_field(name="Message Guild", value=f"{ctx.guild.name} ({ctx.guild.id})", inline=False)
+		embed.add_field(name="Contex", value="```\n"+ctx.message.content+"\n```", inline=False)
+		embed.add_field(name=f'Error!', value="```\n"+str(err)+"\n```", inline=False)
+		await dev.send(embed=embed)
 
 from flask import Flask, send_file
 
