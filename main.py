@@ -16,7 +16,7 @@ prefix = "."
 client = commands.Bot(command_prefix=prefix, intents=intents)
 DiscordComponents(client)
 client.hasQuestion = set()
-alertdev_err = [MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound]
+alertdev_err = [MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded]
 dev = 0
 
 
@@ -133,6 +133,7 @@ async def on_ready():
 	await client.change_presence(status=discord.Status.online, activity=discord.Game(name=(prefix+"help"), type=discord.ActivityType.listening))
 	global dev
 	dev = client.get_user(728297793646624819)
+	client.devs = [dev]
 
 @client.event
 async def on_message(message):
@@ -169,7 +170,8 @@ async def on_command_error(ctx, err):
 		embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
 		embed.add_field(name="Message Sender", value=f"{ctx.author} ({ctx.author.id})", inline=False)
 		embed.add_field(name="Message ID", value=f"{ctx.message.id}", inline=False)
-		embed.add_field(name="Message Guild", value=f"{ctx.guild.name} ({ctx.guild.id})", inline=False)
+		if ctx.guild:
+			embed.add_field(name="Message Guild", value=f"{ctx.guild.name} ({ctx.guild.id})", inline=False)
 		embed.add_field(name="Contex", value="```\n"+ctx.message.content+"\n```", inline=False)
 		embed.add_field(name=f'Error!', value="```\n"+str(err)+"\n```", inline=False)
 		await dev.send(embed=embed)
