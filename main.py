@@ -3,8 +3,8 @@ import os
 import json
 from datetime import datetime
 from discord.ext import commands
-from discord_components import DiscordComponents
 from discord.ext.commands import *
+from discord_components import DiscordComponents, Button, ActionRow, ButtonStyle
 
 
 
@@ -174,7 +174,16 @@ async def on_command_error(ctx, err):
 			embed.add_field(name="Message Guild", value=f"{ctx.guild.name} ({ctx.guild.id})", inline=False)
 		embed.add_field(name="Contex", value="```\n"+ctx.message.content+"\n```", inline=False)
 		embed.add_field(name=f'Error!', value="```\n"+str(err)+"\n```", inline=False)
-		await dev.send(embed=embed)
+		await dev.send(
+			embed=embed, 
+			components = [
+				Button(
+					style=ButtonStyle.URL,
+					url=ctx.message.jump_url,
+					label = "Take me there!",
+				)
+			]
+		)
 
 from flask import Flask, send_file
 
