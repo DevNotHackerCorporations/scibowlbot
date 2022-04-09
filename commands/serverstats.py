@@ -1,10 +1,20 @@
 from discord.ext import commands
+import math
 import discord
 import json
 client = commands.Bot(command_prefix=".")
 
 def setup(bot):
 	bot.add_command(_server_stats)
+
+def standard_deviation_approx(arr):
+	top = 0
+	average = sum(arr) / len(arr)
+	for val in arr:
+		top += (val - average) ** 2
+	top = int(top//len(arr))
+	return math.isqrt(top)
+		
 
 @client.command(name="serverstats")
 async def _server_stats(message):
@@ -15,16 +25,12 @@ async def _server_stats(message):
 	for member in message.guild.members:
 		memberlist.add(str(member.id))
 	points = json.loads(open("points.json", "r").read()).get("points")
-	average = 0
-	num_pep = 0
+	people = []
 	for k in points:
 		if str(k) in memberlist:
-			average += points[k]
-			num_pep += 1 
+			people.append(points[k])
 
-	if num_pep == 0:
-		num_pep = 1
-	average = round(average / num_pep, 2)
+	average = round(sum(people) / len(people), 2)
 
 		
 	# Setting up embed
@@ -32,5 +38,6 @@ async def _server_stats(message):
 	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
 	embed.set_thumbnail(url=message.guild.icon_url)
 	embed.add_field(name=f"Average amount of points", value=f"The average amount of points for {message.guild.name} is {average} points.", inline=False)
+	embed.add_field(name=f"Standard Deviation", value=f"The standard deviation of points for {message.guild.name} is {standard_deviation_approx(people)} points.", inline=False)
 	await message.channel.send(embed=embed)
 	# end set up

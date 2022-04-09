@@ -125,6 +125,8 @@ client.getpoints = getpoints
 client.changeprofile = changeprofile
 client.getprofile = getprofile
 
+client.status_webhook = discord.Webhook.from_url(os.getenv("WEBHOOKURL"), adapter=RequestsWebhookAdapter())
+client.status_webhook.send("Sbb starting up")
 
 	
 @client.event
@@ -134,6 +136,7 @@ async def on_ready():
 	global dev
 	dev = client.get_user(728297793646624819)
 	client.devs = [dev]
+	client.status_webhook.send("Sbb ready to serve up questions")
 
 @client.event
 async def on_message(message):
