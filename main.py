@@ -1,6 +1,5 @@
 import discord
 import os
-import json
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import *
@@ -28,6 +27,7 @@ log.setLevel(logging.ERROR)
 # End
 
 # Commands
+client.load_extension('commands.constants')
 client.load_extension('commands.question')
 client.load_extension('commands.profile')
 client.load_extension('commands.serverstats')
@@ -37,106 +37,21 @@ client.load_extension('commands.leaderboard')
 client.load_extension('commands.change_profile')
 # End
 
-client.apprev = {
-	"PHY":["PHYSICS"],
-	"GEN":["GENERAL SCIENCE"],
-	"ENERGY":["ENERGY"],
-	"EAS":["EARTH AND SPACE"],
-	"CHEM":["CHEMISTRY"],
-	"BIO":["BIOLOGY"],
-	"ASTRO":["ASTRONOMY"],
-	"MATH":["MATH"],
-	"CS":["COMPUTER SCIENCE"],
-	"ES":["EARTH SCIENCE"],
-	"WEIRD":["WEIRD PROBLEMS"],
-	"CRAZY":["CRAZY PROBLEMS"],
-	"ALL":[
-		"PHYSICS",
-		"GENERAL SCIENCE",
-		"ENERGY",
-		"EARTH AND SPACE",
-		"EARTH SCIENCE",
-		"CHEMISTRY",
-		"BIOLOGY",
-		"ASTRONOMY",
-		"MATH",
-		"COMPUTER SCIENCE"
-	],
-	"EVERYTHING":[
-		"PHYSICS",
-		"GENERAL SCIENCE",
-		"ENERGY",
-		"EARTH AND SPACE",
-		"EARTH SCIENCE",
-		"CHEMISTRY",
-		"BIOLOGY",
-		"ASTRONOMY",
-		"MATH",
-		"COMPUTER SCIENCE",
-		"WEIRD PROBLEMS",
-		"CRAZY PROBLEMS"
-	]
-}
-
-
-def changepoints(user, point):
-	points = json.loads(open("points.json", "r").read())
-	points["points"][user] = points.get("points").get(user, 0) + point
-	open("points.json", "w").write(json.dumps(points))
-	# db.set(points)
-
-
-def getpoints(user):
-	points = json.loads(open("points.json", "r").read())
-	return points.get("points").get(user, 0)
-
-def changeprofile(user, good=None, bad=None, bio=None):
-	user = str(user)
-	points = json.loads(open("points.json", "r").read())
-	if not points["profile"].get(user):
-		points["profile"][user] = [[], [], ""]
-	if good:
-		points["profile"][user][0] = good
-	if bad:
-		points["profile"][user][1] = bad
-	if bio:
-		points["profile"][user][2] = bio
-	open("points.json", "w").write(json.dumps(points))
-	# db.set(points)
-
-
-def getprofile(user):
-	user = str(user)
-	points = json.loads(open("points.json", "r").read())
-	return points.get("profile").get(user, [[], [], ""])
-
-def t_string(seconds: int) -> str:
-	day = seconds // (24 * 3600)
-	seconds = seconds % (24 * 3600)
-	hour = seconds // 3600
-	seconds %= 3600
-	minutes = seconds // 60
-	seconds %= 60
-	seconds = seconds
-	return ("%d days, %d hours, %d minutes, and %d seconds!" % (day, hour, minutes, seconds))
-
-client.changepoints = changepoints
-client.getpoints = getpoints
-client.changeprofile = changeprofile
-client.getprofile = getprofile
-
-client.status_webhook = discord.Webhook.from_url(os.getenv("WEBHOOKURL"), adapter=RequestsWebhookAdapter())
-client.status_webhook.send("Sbb starting up")
-
 	
 @client.event
 async def on_ready():
 	print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(client, len(client.guilds), datetime.now().strftime("%B %d, %Y %H:%M:%S")))
-	await client.change_presence(status=discord.Status.online, activity=discord.Game(name=(prefix+"help"), type=discord.ActivityType.listening))
+	await client.change_presence(status=discord.Status.online, activity=discord.Game(name=(prefix+"help"), type=discord.ActivityType.listening, start=datetime(2021, 12, 2, 16)))
 	global dev
 	dev = client.get_user(728297793646624819)
 	client.devs = [dev]
-	client.status_webhook.send("Sbb ready to serve up questions")
+	for webhook in client.status_webhook:
+		webhook.send("Sbb ready to serve up questions")
+
+@client.event
+async def on_disconnect():
+	for webhook in client.status_webhook:
+		webhook.send("Sbb has disconnected")
 
 @client.event
 async def on_message(message):
@@ -211,5 +126,4 @@ def license():
 
 
 Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
-#Thread(target=update_data_from_firebase).start()
 client.run(os.getenv("TOKEN"))
