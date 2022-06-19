@@ -49,7 +49,7 @@ def setup(client):
 		points = json.loads(open("points.json", "r").read())
 		points["points"][user] = points.get("points").get(user, 0) + point
 		open("points.json", "w").write(json.dumps(points))
-		# db.set(points)
+		client.db.set(points)
 	
 	
 	def getpoints(user):
@@ -68,7 +68,7 @@ def setup(client):
 		if bio:
 			points["profile"][user][2] = bio
 		open("points.json", "w").write(json.dumps(points))
-		# db.set(points)
+		client.db.set(points)
 	
 	
 	def getprofile(user):

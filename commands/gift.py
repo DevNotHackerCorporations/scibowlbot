@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands import BadArgument
 import discord
 client = commands.Bot(command_prefix=".")
 
@@ -38,11 +39,9 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	#	embed.add_field(name="Error", value="It's not like your going to gain money from this...")
 	#	return
 	if amount > user_money:
-		embed.add_field(name="Error", value=f"This goes over your current balance of {user_money}")
-		await message.channel.send(embed=embed)
-		return
+		raise BadArgument(f"This goes over your current balance of {user_money}")
 	elif to_user.bot:
-		embed.add_field(name="Error", value="You can't give points to a bot...")
+		raise BadArgument("You can't give points to a bot...")
 		await message.channel.send(embed=embed)
 		return
 	else:
@@ -54,7 +53,4 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	try:
 		await to_user.send(f"**{message.author.display_name}** just sent you **{amount}** coins!") 
 	except:
-		embed = discord.Embed(title=f"Notice", description="While processing this request, something interesting happened", color=0x3498DB)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
-		embed.add_field(name=f"Message to user \"{to_user.display_name}\" failed", value="This user may have DMs disabled. There is nothing we can do about this. It doesn't matter really.")
-		await message.channel.send(embed=embed)
+		raise BadArgument("This user may have DMs disabled. There is nothing we can do about this. It doesn't matter really.") from None

@@ -1,22 +1,38 @@
 import discord
 import os
 from datetime import datetime
+import pyrebase
 from discord.ext import commands
 from discord.ext.commands import *
 from discord_components import DiscordComponents, Button, ActionRow, ButtonStyle
-
-
+from flask import Flask, send_file
+import json
+import time
 
 # === SETUP ===
+prefix = "."
+dev = 0
+alertdev_err = [MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument]
+
 intents = discord.Intents.default()
 intents.members = True
-#client = discord.Client(intents=intents)
-prefix = "."
 client = commands.Bot(command_prefix=prefix, intents=intents)
 DiscordComponents(client)
 client.hasQuestion = set()
-alertdev_err = [MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded]
-dev = 0
+
+
+config = {
+	"apiKey": os.environ['API_key'],
+	"authDomain": "https://scibowlbot-6226d.firebaseapp.com",
+	"projectId": "scibowlbot-6226d",
+	"storageBucket": "https://scibowlbot-6226d.appspot.com",
+	"messagingSenderId": "845301907304",
+	"databaseURL": "https://scibowlbot-6226d-default-rtdb.firebaseio.com/",
+	"appId": "1:845301907304:web:542d9a100ffac52576a0dd",
+	"measurementId": "G-17XY9EN63J"
+}
+firebase = pyrebase.initialize_app(config)
+client.db = firebase.database()
 
 
 
@@ -34,7 +50,6 @@ client.load_extension('commands.serverstats')
 client.load_extension('commands.dev')
 client.load_extension('commands.gift')
 client.load_extension('commands.leaderboard')
-client.load_extension('commands.change_profile')
 # End
 
 	
@@ -103,7 +118,12 @@ async def on_command_error(ctx, err):
 			]
 		)
 
-from flask import Flask, send_file
+
+def update_data_from_firebase():
+	while True:
+		open("points.json", "w").write(json.dumps(client.db.get().val()))
+		time.sleep(5*60)
+
 
 app = Flask("app")
 @app.route("/")
@@ -126,4 +146,5 @@ def license():
 
 
 Thread(target=lambda:app.run(host='0.0.0.0', port=8080)).start()
+Thread(target=update_data_from_firebase).start()
 client.run(os.getenv("TOKEN"))

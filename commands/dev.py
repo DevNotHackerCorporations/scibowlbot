@@ -1,5 +1,6 @@
 # The dev commands
 from discord.ext import commands
+from discord.ext.commands import BadArgument
 import discord
 client = commands.Bot(command_prefix=".")
 
@@ -41,10 +42,6 @@ class Dev(commands.Cog):
 		DEV ONLY
 		"""
 		if ctx.author not in ctx.bot.devs:
-			embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-			embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
-			embed.add_field(name=f'Unauthorized', value="This command is dev only.")
-			await ctx.channel.send(embed=embed)
-			return
+			raise BadArgument("Unauthorized. This command is dev only.")
 		ctx.bot.reload_extension(command_name)
 		await ctx.channel.send("Reloaded extention")
