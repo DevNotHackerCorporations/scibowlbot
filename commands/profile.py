@@ -31,14 +31,17 @@ class Profile(commands.Cog):
 		embed.set_author(name=member.display_name, url="", icon_url=member.avatar_url)
 		embed.set_thumbnail(url=member.avatar_url)
 		embed.add_field(name=f"{member}'s point count", value=f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)", inline=False)
-		good_at = ", ".join(list(map(lambda x: message.bot.apprev[x.upper()][0].lower(), profile[0])))
-		if not good_at:
-			good_at = "*Nothing*"
-		bad_at = ", ".join(list(map(lambda x: message.bot.apprev[x.upper()][0].lower(), profile[1])))
-		if not bad_at:
-			bad_at = "*Nothing*"
-		embed.add_field(name=f"What {member} is is good at", value=f"{str(member.display_name)} is good at {good_at}", inline=False)
-		embed.add_field(name=f"What {member} is is not so good at", value=f"{str(member.display_name)} is not so good at {bad_at}", inline=False)
+		if not profile[0]:
+			good_at = "Ø"
+		else:
+			good_at = "\n".join(list(map(lambda x: message.bot.emoj[x.lower()] + " " + message.bot.apprev[x.upper()][0].lower(), profile[0])))
+		if not profile[1]:
+			bad_at = "Ø"
+		else:
+			bad_at = "\n".join(list(map(lambda x: message.bot.emoj[x.lower()] + " " + message.bot.apprev[x.upper()][0].lower(), profile[1])))
+
+		embed.add_field(name=f"What {member} is is good at", value=good_at, inline=False)
+		embed.add_field(name=f"What {member} is is not so good at", value=bad_at, inline=False)
 		await message.channel.send(embed=embed)
 		
 	@commands.command(name="change_profile")
@@ -55,7 +58,7 @@ class Profile(commands.Cog):
 				id = select_id + "1",
 				options=[
 					SelectOption(label="Physics", value="phy", default=("phy" in good_at), emoji="\N{Red Apple}"),
-					SelectOption(label="General Science", value="gen", default=("" in good_at), emoji="\N{Test Tube}"),
+					SelectOption(label="General Science", value="gen", default=("gen" in good_at), emoji="\N{Test Tube}"),
 					SelectOption(label="Energy", value="energy", default=("energy" in good_at), emoji="\N{High Voltage Sign}"),
 					SelectOption(label="Earth and Space", value="eas", default=("eas" in good_at), emoji="\N{Night with Stars}"),
 					SelectOption(label="Chemistry", value="chem", default=("chem" in good_at), emoji="\N{Atom Symbol}"),
@@ -72,7 +75,7 @@ class Profile(commands.Cog):
 				id = select_id + "2",
 				options=[
 					SelectOption(label="Physics", value="phy", default=("phy" in bad_at), emoji="\N{Red Apple}"),
-					SelectOption(label="General Science", value="gen", default=("" in bad_at), emoji="\N{Test Tube}"),
+					SelectOption(label="General Science", value="gen", default=("gen" in bad_at), emoji="\N{Test Tube}"),
 					SelectOption(label="Energy", value="energy", default=("energy" in bad_at), emoji="\N{High Voltage Sign}"),
 					SelectOption(label="Earth and Space", value="eas", default=("eas" in bad_at), emoji="\N{Night with Stars}"),
 					SelectOption(label="Chemistry", value="chem", default=("chem" in bad_at), emoji="\N{Atom Symbol}"),

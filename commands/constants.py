@@ -43,6 +43,19 @@ def setup(client):
 			"CRAZY PROBLEMS"
 		]
 	}
+
+	client.emoj = {
+		"phy": "🍎",
+		"gen": "🧪",
+		"energy": "⚡",
+		"eas": "🌃",
+		"chem": "⚛",
+		"bio": "🧬",
+		"astro": "🪐",
+		"math": "🔢",
+		"es": "🌎",
+		"cs": "💻",
+	}
 	
 	
 	def changepoints(user, point):
