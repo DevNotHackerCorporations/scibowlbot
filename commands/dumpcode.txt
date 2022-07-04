@@ -1,0 +1,46 @@
+        """
+		embed = discord.Embed(title=f"Search Results",
+			description="0 Results were Found",
+			color=discord.Colour.blurple())
+		embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar)
+		
+		select_id = "S" + str(ctx.channel.id)+str(ctx.author.id)+str(random.randint(1, 100))
+		select_author = int(ctx.author.id)
+		
+		msg = await ctx.channel.send(embed = embed, components = [
+			Select(
+				placeholder="Good at",
+				max_values=10, 
+				id = select_id + "1",
+				options=[
+					SelectOption(label=ctx.bot.apprev[subject.upper()][0].capitalize(), value=subject, default=False, emoji=ctx.bot.emoj[subject]) for subject in ["phy", "gen", "energy", "eas", "chem", "bio", "astro", "math", "es", "cs"]
+				]
+			),
+			Select(
+				placeholder="Bad at",
+				max_values=10, 
+				id = select_id + "2",
+				options=[
+					SelectOption(label=ctx.bot.apprev[subject.upper()][0].capitalize(), value=subject, default=False, emoji=ctx.bot.emoj[subject]) for subject in ["phy", "gen", "energy", "eas", "chem", "bio", "astro", "math", "es", "cs"]
+				]
+			),
+			Button(label = "Search", custom_id = select_id + "B", style = 3)
+		])
+
+		def profile_check(interaction):
+			if interaction.custom_id[:-1] == select_id and select_author == int(interaction.author.id):
+				return True
+			asyncio.create_task(interaction.send("This isn't your profile"))
+			return False
+		try:
+			try:
+				wait_user_input = await asyncio.gather(
+					ctx.bot.wait_for("select_option", timeout=30, check=profile_check),
+					ctx.bot.wait_for("button_click", timeout=30, check=profile_check)
+				)
+			except asyncio.TimeoutError:
+				ctx.channel.send("Ran out of time")
+				return
+			await wait_user_input[0].send("Search query recorded")
+		except asyncio.TimeoutError:
+			return"""

@@ -10,7 +10,7 @@ This feature is not to be used. Thanks.
 from discord.ext import commands
 client = commands.Bot(command_prefix=".")
 
-def setup(bot):
+async def setup(bot):
 	bot.add_command(_stats)
 
 @client.command(name="serverstats")

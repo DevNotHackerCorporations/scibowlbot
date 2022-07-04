@@ -1,162 +1,292 @@
 import asyncio
-from discord_components import Select, SelectOption
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import random
 import discord
 import typing
 import re
-client = commands.Bot(command_prefix=".")
 
-def setup(bot):
-	bot.add_cog(Profile())
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix=".", intents=intents)
+
+
+async def setup(bot):
+    await bot.add_cog(Profile())
+
 
 class Profile(commands.Cog):
-	"""
+    """
 	Commands that relate to your profile
 	"""
-	@commands.command(name="profile")
-	async def _profile(self, message, member: typing.Optional[discord.Member]):
-		"""
+    @commands.command(name="profile", aliases=["p"])
+    async def _profile(self, message, member: typing.Optional[discord.Member]):
+        """
 		View your server profile!
 	
 		You can change this with .change_profile
 		"""
-		if not member:
-			member = message.author
-	
-		profile = message.bot.getprofile(member.id)
-	
-		embed = discord.Embed(title=f"{member.display_name}'s profile", description=(profile[2] if profile[2] else f"{member.display_name} does not have a bio yet."), color=0xFF5733)
-		embed.set_author(name=member.display_name, url="", icon_url=member.avatar_url)
-		embed.set_thumbnail(url=member.avatar_url)
-		embed.add_field(name=f"{member}'s point count", value=f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)", inline=False)
-		if not profile[0]:
-			good_at = "Ø"
-		else:
-			good_at = "\n".join(list(map(lambda x: message.bot.emoj[x.lower()] + " " + message.bot.apprev[x.upper()][0].lower(), profile[0])))
-		if not profile[1]:
-			bad_at = "Ø"
-		else:
-			bad_at = "\n".join(list(map(lambda x: message.bot.emoj[x.lower()] + " " + message.bot.apprev[x.upper()][0].lower(), profile[1])))
+        if not member:
+            member = message.author
 
-		embed.add_field(name=f"What {member} is is good at", value=good_at, inline=False)
-		embed.add_field(name=f"What {member} is is not so good at", value=bad_at, inline=False)
-		await message.channel.send(embed=embed)
-		
-	@commands.command(name="change_profile")
-	async def _c_profile(self, message):
-		"""
+        profile = message.bot.getprofile(member.id)
+
+        embed = discord.Embed(
+            title=f"{member.display_name}'s profile",
+            description=(profile[2] if profile[2] else
+                         f"{member.display_name} does not have a bio yet."),
+            color=0xFF5733)
+        embed.set_author(name=member.display_name,
+                         url="",
+                         icon_url=member.avatar)
+        embed.set_thumbnail(url=member.avatar)
+        embed.add_field(
+            name=f"{member}'s point count",
+            value=
+            f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)",
+            inline=False)
+
+        if not profile[0]:
+            good_at = "∅"
+        else:
+            good_at = "\n".join(
+                list(
+                    map(
+                        lambda x: message.bot.emoj[x.lower()] + " " + message.
+                        bot.apprev[x.upper()][0].lower(), profile[0])))
+        if not profile[1]:
+            bad_at = "∅"
+        else:
+            bad_at = "\n".join(
+                list(
+                    map(
+                        lambda x: message.bot.emoj[x.lower()] + " " + message.
+                        bot.apprev[x.upper()][0].lower(), profile[1])))
+
+        embed.add_field(name=f"What {member} is is good at",
+                        value=good_at,
+                        inline=False)
+        embed.add_field(name=f"What {member} is is not so good at",
+                        value=bad_at,
+                        inline=False)
+        await message.channel.send(embed=embed)
+
+    @commands.command(name="change_profile", aliases=["cp"])
+    async def _c_profile(self, message):
+        """
 		Changes your server profile
 		"""
-		good_at, bad_at, bio = message.bot.getprofile(int(message.author.id))
-		select_id = str(message.channel.id)+str(message.author.id)+str(random.randint(1, 100))
-		orig_msg = await message.channel.send(f"**{str(message.author.display_name)}**, change your profile here!", components = [
-			Select(
-				placeholder="The subjects you are good at!",
-				max_values=10, 
-				id = select_id + "1",
-				options=[
-					SelectOption(label="Physics", value="phy", default=("phy" in good_at), emoji="\N{Red Apple}"),
-					SelectOption(label="General Science", value="gen", default=("gen" in good_at), emoji="\N{Test Tube}"),
-					SelectOption(label="Energy", value="energy", default=("energy" in good_at), emoji="\N{High Voltage Sign}"),
-					SelectOption(label="Earth and Space", value="eas", default=("eas" in good_at), emoji="\N{Night with Stars}"),
-					SelectOption(label="Chemistry", value="chem", default=("chem" in good_at), emoji="\N{Atom Symbol}"),
-					SelectOption(label="Biology", value="bio", default=("bio" in good_at), emoji="\N{DNA Double Helix}"),
-					SelectOption(label="Astronomy", value="astro", default=("astro" in good_at), emoji="\N{Ringed Planet}"),
-					SelectOption(label="Math", value="math", default=("math" in good_at), emoji="\N{Input Symbol for Numbers}"),
-					SelectOption(label="Earth Science", value="es", default=("es" in good_at), emoji="\N{Earth Globe Americas}"),
-					SelectOption(label="Computer Science", value="cs",default=("cs" in good_at), emoji="\N{Personal Computer}")
-				]
-			),
-			Select(
-				placeholder="The subjects you are bad at",
-				max_values=10, 
-				id = select_id + "2",
-				options=[
-					SelectOption(label="Physics", value="phy", default=("phy" in bad_at), emoji="\N{Red Apple}"),
-					SelectOption(label="General Science", value="gen", default=("gen" in bad_at), emoji="\N{Test Tube}"),
-					SelectOption(label="Energy", value="energy", default=("energy" in bad_at), emoji="\N{High Voltage Sign}"),
-					SelectOption(label="Earth and Space", value="eas", default=("eas" in bad_at), emoji="\N{Night with Stars}"),
-					SelectOption(label="Chemistry", value="chem", default=("chem" in bad_at), emoji="\N{Atom Symbol}"),
-					SelectOption(label="Biology", value="bio", default=("bio" in bad_at), emoji="\N{DNA Double Helix}"),
-					SelectOption(label="Astronomy", value="astro", default=("astro" in bad_at), emoji="\N{Ringed Planet}"),
-					SelectOption(label="Math", value="math", default=("math" in bad_at), emoji="\N{Input Symbol for Numbers}"),
-					SelectOption(label="Earth Science", value="es", default=("es" in bad_at), emoji="\N{Earth Globe Americas}"),
-					SelectOption(label="Computer Science", value="cs",default=("cs" in bad_at), emoji="\N{Personal Computer}")
-				]
-			),
-		])
-		select_author = int(message.author.id)
-		def profile_check(interaction):
-			if interaction.custom_id[:-1] == select_id and select_author == int(interaction.author.id):
-				return True
-			asyncio.create_task(interaction.send("This isn't your profile"))
-			return False
-	
-		while True:
-			try:
-				select_op = await message.bot.wait_for("select_option", timeout=15, check=profile_check)
-			except asyncio.TimeoutError:
-				await orig_msg.edit(content=f"**{str(message.author.display_name)}**, change your profile here!", components = [
-					Select(
-						placeholder="The subjects you are good at!",
-						max_values=10, 
-						disabled=True,
-						id = "niu1",
-						options=[
-							SelectOption(label="Physics", value="phy", default=("phy" in good_at), emoji="\N{Red Apple}"),
-							SelectOption(label="General Science", value="gen", default=("" in good_at), emoji="\N{Test Tube}"),
-							SelectOption(label="Energy", value="energy", default=("energy" in good_at), emoji="\N{High Voltage Sign}"),
-							SelectOption(label="Earth and Space", value="eas", default=("eas" in good_at), emoji="\N{Night with Stars}"),
-							SelectOption(label="Chemistry", value="chem", default=("chem" in good_at), emoji="\N{Atom Symbol}"),
-							SelectOption(label="Biology", value="bio", default=("bio" in good_at), emoji="\N{DNA Double Helix}"),
-							SelectOption(label="Astronomy", value="astro", default=("astro" in good_at), emoji="\N{Ringed Planet}"),
-							SelectOption(label="Math", value="math", default=("math" in good_at), emoji="\N{Input Symbol for Numbers}"),
-							SelectOption(label="Earth Science", value="es", default=("es" in good_at), emoji="\N{Earth Globe Americas}"),
-							SelectOption(label="Computer Science", value="cs",default=("cs" in good_at), emoji="\N{Personal Computer}")
-						]
-					),
-					Select(
-						placeholder="The subjects you are bad at",
-						max_values=10, 
-						id = "niu2",
-						disabled=True,
-						options=[
-							SelectOption(label="Physics", value="phy", default=("phy" in bad_at), emoji="\N{Red Apple}"),
-							SelectOption(label="General Science", value="gen", default=("" in bad_at), emoji="\N{Test Tube}"),
-							SelectOption(label="Energy", value="energy", default=("energy" in bad_at), emoji="\N{High Voltage Sign}"),
-							SelectOption(label="Earth and Space", value="eas", default=("eas" in bad_at), emoji="\N{Night with Stars}"),
-							SelectOption(label="Chemistry", value="chem", default=("chem" in bad_at), emoji="\N{Atom Symbol}"),
-							SelectOption(label="Biology", value="bio", default=("bio" in bad_at), emoji="\N{DNA Double Helix}"),
-							SelectOption(label="Astronomy", value="astro", default=("astro" in bad_at), emoji="\N{Ringed Planet}"),
-							SelectOption(label="Math", value="math", default=("math" in bad_at), emoji="\N{Input Symbol for Numbers}"),
-							SelectOption(label="Earth Science", value="es", default=("es" in bad_at), emoji="\N{Earth Globe Americas}"),
-							SelectOption(label="Computer Science", value="cs",default=("cs" in bad_at), emoji="\N{Personal Computer}")
-						]
-					),
-				])
-				break
-			inter_number = select_op.custom_id[-1]
-			if inter_number == "1":
-				message.bot.changeprofile(select_author, good=select_op.values)
-			if inter_number == "2":
-				message.bot.changeprofile(select_author, bad=select_op.values)
-			await select_op.send("Updated your profile")
-	
-	
-	@commands.command(name="set_bio")
-	async def _c_bio(self, ctx, * bio):
-		"""
+        obj = ChangeProfile(message)
+        await obj.run()
+
+    @commands.command(name="set_bio", aliases=["bio"])
+    async def _c_bio(self, ctx, *bio):
+        """
 		Sets your bio for your profile
 		"""
-		bio = " ".join(bio)
-	
-		if len(bio) > 200:
-			raise BadArgument("Bio must be at most 200 characters.")
-		ctx.bot.changeprofile(ctx.author.id, bio=bio)
-		embed = discord.Embed(title=f":white_check_mark: Success!",
-						description="We successfully set your bio",
-						color=discord.Colour.green())
-		embed.set_author(name=ctx.author.display_name, url="", icon_url=ctx.author.avatar_url)
-		await ctx.channel.send(embed=embed)
+        bio = " ".join(bio)
+
+        if not bio.strip():
+            raise BadArgument("You must set your bio to something!")
+
+        if len(bio) > 200:
+            raise BadArgument("Bio must be at most 200 characters.")
+        ctx.bot.changeprofile(ctx.author.id, bio=bio)
+        embed = discord.Embed(title=f":white_check_mark: Success!",
+                              description="We successfully set your bio",
+                              color=discord.Colour.green())
+        embed.set_author(name=ctx.author.display_name,
+                         url="",
+                         icon_url=ctx.author.avatar)
+        await ctx.channel.send(embed=embed)
+
+    @commands.command(name="search")
+    async def _c_search(self, ctx):
+        """
+		Searches for a user
+		"""
+        obj = SearchView(ctx)
+        await obj.run()
+
+
+class ChangeProfile(discord.ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=60.0)
+        self.ctx = ctx
+        self.add_item(CPGood(self.ctx, self))
+        self.add_item(CPBad(self.ctx, self))
+
+    async def run(self):
+        profile = self.ctx.bot.getprofile(self.ctx.author.id)
+        if not profile[0]:
+            good_at = "∅"
+        else:
+            good_at = "\n".join(
+                list(
+                    map(
+                        lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
+                        .bot.apprev[x.upper()][0].lower(), profile[0])))
+        if not profile[1]:
+            bad_at = "∅"
+        else:
+            bad_at = "\n".join(
+                list(
+                    map(
+                        lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
+                        .bot.apprev[x.upper()][0].lower(), profile[1])))
+
+        em = discord.Embed(title="Change your profile", color=0x2ecc71)
+        em.set_author(name=str(self.ctx.author),
+                      icon_url=self.ctx.author.display_avatar.url)
+        em.add_field(name=f"Your current data for 'good at'",
+                     value=good_at,
+                     inline=False)
+        em.add_field(name=f"Your current data for 'not so good at'",
+                     value=bad_at,
+                     inline=False)
+        em.set_footer(text=f"Confused? Learn more with .help change_profile")
+
+        self.message = await self.ctx.send(embed=em, view=self)
+
+    async def on_timeout(self):
+        for item in self.children:
+            item.disabled = True
+
+        await self.message.edit(view=self)
+
+
+class CPGood(discord.ui.Select):
+    def __init__(self, ctx, view):
+        self.ctx = ctx
+        self.author = ctx.author.id
+        good_at, bad_at, bio = ctx.bot.getprofile(int(self.author))
+        if not good_at:
+            good_at = []
+
+        options = [
+            discord.SelectOption(
+                label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                value=subject,
+                default=(subject in good_at),
+                emoji=ctx.bot.emoj[subject]) for subject in [
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
+        ]
+
+        super().__init__(placeholder='Things you are good at',
+                         min_values=1,
+                         max_values=10,
+                         options=options)
+
+    async def callback(self, interaction):
+        if interaction.user.id != self.author:
+            return await interaction.response.send_message(
+                "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
+                ephemeral=True)
+        self.ctx.bot.changeprofile(self.author, good=self.values)
+        await interaction.response.defer()
+
+
+class CPBad(discord.ui.Select):
+    def __init__(self, ctx, view):
+        self.ctx = ctx
+        self.author = ctx.author.id
+        good_at, bad_at, bio = ctx.bot.getprofile(int(self.author))
+        if not bad_at:
+            bad_at = []
+
+        options = [
+            discord.SelectOption(
+                label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                value=subject,
+                default=(subject in bad_at),
+                emoji=ctx.bot.emoj[subject]) for subject in [
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
+        ]
+        super().__init__(placeholder='Things you are good at',
+                         min_values=1,
+                         max_values=10,
+                         options=options)
+
+    async def callback(self, interaction):
+        if interaction.user.id != self.author:
+            return await interaction.response.send_message(
+                "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
+                ephemeral=True)
+        self.ctx.bot.changeprofile(self.author, bad=self.values)
+        await interaction.response.defer()
+
+
+class SearchView(discord.ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=60.0)
+        self.ctx = ctx
+        self.add_item(SearchGood(self.ctx))
+        self.add_item(SearchBad(self.ctx))
+
+
+class SearchGood(discord.ui.Select):
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.author = ctx.author.id
+
+        options = [
+            discord.SelectOption(
+                
+				label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                
+				value=subject,
+                
+				default=False,
+                emoji=ctx.bot.emoj[subject]) for subject in [
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
+        ]
+        super().__init__(placeholder='Query for good at',
+                         min_values=0,
+                         max_values=10,
+                         options=options)
+
+    async def callback(self, interaction):
+        if interaction.user.id != self.author:
+            return await interaction.response.send_message(
+                "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
+                ephemeral=True)
+
+        await interaction.response.defer()
+
+
+class SearchBad(discord.ui.Select):
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.author = ctx.author.id
+
+        options = [
+            discord.SelectOption(
+                
+				label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                
+				value=subject,
+                
+				default=False,
+                emoji=ctx.bot.emoj[subject]) for subject in [
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
+        ]
+        super().__init__(placeholder='Query for good at',
+                         min_values=0,
+                         max_values=10,
+                         options=options)
+
+    async def callback(self, interaction):
+        if interaction.user.id != self.author:
+            return await interaction.response.send_message(
+                "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
+                ephemeral=True)
+
+        await interaction.response.defer()

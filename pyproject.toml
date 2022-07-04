@@ -1,12 +1,17 @@
 [tool.poetry]
-name = "repl_python3_scibowlbot"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+name = "Scibowlbot"
+version = "1"
+description = "The best way to simulate a Science Bowl round on Discord."
+authors = [
+	"Andrew Chen <https://github.com/actiniumn404>", 
+	"Matthew Hou <https://github.com/DevNotHacker>",
+	"Nuaym Syed <https://github.com/Coderz75>",
+	"Ryan Tang <https://github.com/rtang09>"
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-discord = "^1.7.3"
+'discord.py' = { git = "https://github.com/Rapptz/discord.py.git", branch = "master" }
 discord-components = "^2.1.2"
 readtime = "^1.1.1"
 Flask = "^2.0.2"

@@ -2,9 +2,11 @@ from discord.ext import commands
 import discord
 import json
 
-client = commands.Bot(command_prefix=".")
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix=".", intents=intents)
 
-def setup(bot):
+async def setup(bot):
 	bot.add_command(_leaderboard)
 
 @client.command(name="leaderboard")
@@ -16,13 +18,13 @@ async def _leaderboard(message, maxx: int = 3):
 	"""
 	if not message.guild:
 		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
 		embed.add_field(name=f'Invalid enviorment', value="Leaderboards don't work in a DM")
 		await message.channel.send(embed=embed)
 		return
 	if maxx > 30 or maxx < 3:
 		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
 		embed.add_field(name=f'Invalid range "{maxx}"', value="Please enter a number between 3 and 30 (inclusive)")
 		await message.channel.send(embed=embed)
 		return
@@ -32,8 +34,8 @@ async def _leaderboard(message, maxx: int = 3):
 	numusers = 0
 	# Setting up embed
 	embed = discord.Embed(title=f"The points leaderboard for **{message.guild.name}**", description=f"Top {maxx} people", color=0xFF5733)
-	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
-	embed.set_thumbnail(url=message.guild.icon_url)
+	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
+	embed.set_thumbnail(url=message.guild.icon)
 	# end set up
 	memberlist = set()
 	for member in message.guild.members:

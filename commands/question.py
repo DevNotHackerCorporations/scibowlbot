@@ -16,7 +16,7 @@ DiscordComponents(client)
 
 valid = ["PHY", "GEN", "ENERGY", "EAS", "CHEM", "BIO", "ASTRO", "MATH", "CS", "ES", "WEIRD", "CRAZY", "ALL"]
 
-def setup(bot):
+async def setup(bot):
 	bot.add_command(_q)
 	bot.add_command(_a)
 
@@ -123,7 +123,7 @@ async def _q(message, subject):
 
 	if subject not in valid:
 		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
 		embed.add_field(name=f'"{subject}" is not a valid subject', value="We only support the following subjects```"+"\n".join(valid)+"```")
 		await message.channel.send(embed=embed)
 		return

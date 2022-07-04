@@ -1,9 +1,12 @@
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
-client = commands.Bot(command_prefix=".")
 
-def setup(bot):
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix=".", intents=intents)
+
+async def setup(bot):
 	bot.add_command(_gift)
 
 @client.command(name="gift")
@@ -15,17 +18,17 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	"""
 	if amount < 0:
 		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
+		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
 		embed.add_field(name=f'Invalid value', value="There are two people in life, those whose power is to give and those whos weakness is to take, in other words, YOU GREEDY LITTLE--")
 		await message.channel.send(embed=embed)
 		return
 		
 	to = str(to_user.id)
-	# Setup
+	
 	embed = discord.Embed(title=f"Some points were just gifted!", description=f"{message.author.display_name} just tried to gift {amount} points.", color=0xFF5733)
-	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar_url)
-	embed.set_thumbnail(url=message.author.avatar_url)
-	# calculations
+	embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
+	embed.set_thumbnail(url=message.author.avatar)
+
 	if not message.guild:
 		embed.add_field(name="Error", value="You can't gift points outside of a server.")
 		await message.channel.send(embed=embed)
@@ -34,10 +37,8 @@ async def _gift(message, amount: int, to_user: discord.Member):
 	user_money = int(message.bot.getpoints(user))
 	
 	to_user = await message.guild.fetch_member(int(to))
-	embed.set_thumbnail(url=to_user.avatar_url)
-	#if amount < 0:
-	#	embed.add_field(name="Error", value="It's not like your going to gain money from this...")
-	#	return
+	embed.set_thumbnail(url=to_user.avatar)
+
 	if amount > user_money:
 		raise BadArgument(f"This goes over your current balance of {user_money}")
 	elif to_user.bot:

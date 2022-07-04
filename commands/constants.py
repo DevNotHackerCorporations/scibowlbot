@@ -2,7 +2,7 @@ import discord
 import json
 import os
 
-def setup(client):
+async def setup(client):
 	client.apprev = {
 		"PHY":["PHYSICS"],
 		"GEN":["GENERAL SCIENCE"],
@@ -103,7 +103,8 @@ def setup(client):
 	client.getpoints = getpoints
 	client.changeprofile = changeprofile
 	client.getprofile = getprofile
+	client.hasQuestion = set()
 	
-	client.status_webhook = [discord.Webhook.from_url(os.getenv("WEBHOOKURL"), adapter=discord.RequestsWebhookAdapter()), discord.Webhook.from_url(os.getenv("SECONDARYWEBHOOK"), adapter=discord.RequestsWebhookAdapter())]
-	for webhook in client.status_webhook:
-		webhook.send("Sbb starting up")
+	#client.status_webhook = [discord.Webhook.from_url(os.getenv("WEBHOOKURL"), adapter=discord.RequestsWebhookAdapter()), discord.Webhook.from_url(os.getenv("SECONDARYWEBHOOK"), adapter=discord.RequestsWebhookAdapter())]
+	#for webhook in client.status_webhook:
+	#	webhook.send("Sbb starting up")

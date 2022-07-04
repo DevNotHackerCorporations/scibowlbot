@@ -1,6 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+
+:root{
+	--theme:  #fca21c;
+}
+
 body {
-	padding: 20px;
+	padding: 20px 0px;
 	margin: 0px;
 	background: rgb(22, 22, 22);
 	color: white;
@@ -26,7 +31,7 @@ code pre {
 }
 blockquote {
 	margin-left: 20px;
-	border-left: 5px solid #fca21c;
+	border-left: 5px solid var(--theme);
 	padding: 10px;
 	background: rgb(37, 37, 37);
 }
@@ -36,7 +41,7 @@ code.multiline pre {
 	margin: 5px;
 }
 code.singleline pre {
-	color: #fca21c;
+	color: var(--theme);
 	display: inline;
 }
 header {
@@ -48,10 +53,10 @@ hr {
 }
 button {
 	margin: 10px;
-	border: 3px solid #fca21c;
+	border: 3px solid var(--theme);
 	padding: 10px;
 	background: none;
-	color: #ffb546;
+	color: var(--theme);
 	font-weight: bold;
 	font-size: 20px;
 	border-radius: 4px;
@@ -89,6 +94,8 @@ h3:hover a {
 	color: gray;
 	width: 100%;
 	display: inline-block;
+	position: fixed;
+	bottom: 10px;
 }
 th{
 	border: 1px solid white;
@@ -109,4 +116,9 @@ th{
 	50% {filter: hue-rotate(180deg);}
 	75% {filter: hue-rotate(270deg);}
 	100% {filter: hue-rotate(360deg);}
+}
+
+main{
+	width: min(800px, 100vw);
+	margin: auto;
 }

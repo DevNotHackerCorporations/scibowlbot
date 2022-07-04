@@ -2,21 +2,18 @@
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
-client = commands.Bot(command_prefix=".")
 
-def setup(bot):
-	bot.add_cog(Dev(bot))
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix=".", intents=intents)
+
+async def setup(bot):
+	await bot.add_cog(Dev(bot))
 	
 class Dev(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	"""
-	@commands.group(invoke_without_command=True)
-	async def dev_base(self, ctx):
-		await ctx.channel.send("This is a placeholder for something I will add later!")
-	"""
-		
 	@commands.command(name="servers")
 	async def _dev_servers(self, message):
 		"""
@@ -43,5 +40,5 @@ class Dev(commands.Cog):
 		"""
 		if ctx.author not in ctx.bot.devs:
 			raise BadArgument("Unauthorized. This command is dev only.")
-		ctx.bot.reload_extension(command_name)
+		await ctx.bot.reload_extension(command_name)
 		await ctx.channel.send("Reloaded extention")
