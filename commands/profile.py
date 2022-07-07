@@ -1,3 +1,25 @@
+"""
+The GNU General Public License v3.0 (GNU GPLv3)
+
+scibowlbot, a Discord Bot that helps simulate a Science Bowl round.
+Copyright (C) 2021-Present DevNotHackerCorporations
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
+"""
+
 import asyncio
 from discord.ext import commands
 from discord.ext.commands import BadArgument
@@ -5,6 +27,7 @@ import random
 import discord
 import typing
 import re
+import json
 
 intents = discord.Intents.default()
 intents.members = True
@@ -221,11 +244,33 @@ class CPBad(discord.ui.Select):
 
 
 class SearchView(discord.ui.View):
-    def __init__(self, ctx):
-        super().__init__(timeout=60.0)
-        self.ctx = ctx
-        self.add_item(SearchGood(self.ctx))
-        self.add_item(SearchBad(self.ctx))
+	def __init__(self, ctx):
+		super().__init__(timeout=60.0)
+		self.ctx = ctx
+		self.data = [[], []]  # Good, Bad
+		self.matches = []
+		self.pag = 8
+		self.add_item(SearchGood(self.ctx))
+		self.add_item(SearchBad(self.ctx))
+		self.add_item(SearchPagLeft(self.ctx))
+		self.add_item(SearchButton(self.ctx))
+		self.add_item(SearchReset(self.ctx))
+		self.add_item(SearchPagRight(self.ctx))
+
+	async def run(self):
+		em = discord.Embed(title=f"Search Results",
+			description="0 Results were Found",
+			color=discord.Colour.blurple())
+		em.set_author(name=self.ctx.author.display_name,
+			url="",
+			icon_url=self.ctx.author.avatar)
+		self.message = await self.ctx.send(embed=em, view=self)
+
+	async def on_timeout(self):
+		for item in self.children:
+			item.disabled = True
+		
+		await self.message.edit(view=self)
 
 
 class SearchGood(discord.ui.Select):
@@ -235,12 +280,9 @@ class SearchGood(discord.ui.Select):
 
         options = [
             discord.SelectOption(
-                
-				label=ctx.bot.apprev[subject.upper()][0].capitalize(),
-                
-				value=subject,
-                
-				default=False,
+                label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                value=subject,
+                default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
                     "phy", "gen", "energy", "eas", "chem", "bio", "astro",
                     "math", "es", "cs"
@@ -257,6 +299,7 @@ class SearchGood(discord.ui.Select):
                 "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
                 ephemeral=True)
 
+        self.view.data[0] = self.values
         await interaction.response.defer()
 
 
@@ -267,18 +310,15 @@ class SearchBad(discord.ui.Select):
 
         options = [
             discord.SelectOption(
-                
-				label=ctx.bot.apprev[subject.upper()][0].capitalize(),
-                
-				value=subject,
-                
-				default=False,
+                label=ctx.bot.apprev[subject.upper()][0].capitalize(),
+                value=subject,
+                default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
                     "phy", "gen", "energy", "eas", "chem", "bio", "astro",
                     "math", "es", "cs"
                 ]
         ]
-        super().__init__(placeholder='Query for good at',
+        super().__init__(placeholder='Query for bad at',
                          min_values=0,
                          max_values=10,
                          options=options)
@@ -289,4 +329,134 @@ class SearchBad(discord.ui.Select):
                 "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
                 ephemeral=True)
 
+        self.view.data[1] = self.values
         await interaction.response.defer()
+
+
+class SearchButton(discord.ui.Button):
+	def __init__(self, ctx):
+		self.ctx = ctx
+		self.author = ctx.author.id
+		super().__init__(style=discord.ButtonStyle.green, label="Search")
+
+	async def callback(self, interaction):
+		if interaction.user.id != self.author:
+			return await interaction.response.send_message(
+				"Sorry, this button menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
+				ephemeral=True)
+		
+		good_at, bad_at = map(set, self.view.data)
+		memberlist = {str(member.id) for member in self.ctx.guild.members}
+		
+		with open("points.json") as raw_data:
+			raw_data = json.loads(raw_data.read())
+			profiles = raw_data["profile"]
+			matches = []
+			
+			for id, profile in profiles.items():
+				good, bad, bio = map(lambda x: x if x else [], profile)
+				bio = bio if bio else "None"
+				
+				if id in memberlist and len(set(good).intersection(good_at)) == len(good_at) and len(set(bad).intersection(bad_at)) == len(bad_at):  # Match
+					matches.append([self.ctx.bot.get_user(int(id)), bio, self.ctx.bot.getpoints(id), id])
+		
+		matches.sort(key=lambda x: x[2], reverse=True)
+		self.view.matches = matches
+		s_or_not = "s" if len(matches) - 1 else ""
+		
+		em = discord.Embed(
+			title=f"Search Results",
+			description=f"{len(matches)} result{s_or_not} found. (Results 1-8)",
+			color=discord.Colour.blurple())
+		em.set_author(name=self.ctx.author.display_name,
+			url="",
+			icon_url=self.ctx.author.avatar)
+		
+		for match in matches[self.view.pag - 8:self.view.pag]:
+			em.add_field(name=f"{match[0].name}#{match[0].discriminator}",
+			value=f"Points: {match[2]}\nBio: {match[1]}",
+			inline=False)
+		
+		await interaction.response.edit_message(embed=em, view=self.view)
+
+
+class SearchReset(discord.ui.Button):
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.author = ctx.author.id
+        super().__init__(style=discord.ButtonStyle.red, label="Reset", row=2)
+
+    async def callback(self, interaction):
+        if interaction.user.id != self.author:
+            return await interaction.response.send_message(
+                "Sorry, this button menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.search`..?",
+                ephemeral=True)
+
+        await interaction.response.edit_message()
+
+class SearchPagLeft(discord.ui.Button):
+	def __init__(self, ctx):
+		self.ctx = ctx
+		self.author = ctx.author.id
+		super().__init__(style=discord.ButtonStyle.gray, emoji="⬅️", row=2)
+	
+	async def callback(self, interaction):
+		if interaction.user.id != self.author:
+			return await interaction.response.send_message(
+				"Sorry, this button menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.search`..?",
+				ephemeral=True)
+	
+		if self.view.pag > 8:
+			self.view.pag -= 8
+
+			s_or_not = "s" if len(self.view.matches) - 1 else ""
+	
+			em = discord.Embed(
+				title=f"Search Results",
+				description=f"{len(self.view.matches)} result{s_or_not} found. {self.view.pag - 7}-{self.view.pag}",
+				color=discord.Colour.blurple())
+			em.set_author(name=self.ctx.author.display_name,
+				url="",
+				icon_url=self.ctx.author.avatar)
+			
+			for match in self.view.matches[self.view.pag - 8:self.view.pag]:
+				em.add_field(name=f"{match[0].name}#{match[0].discriminator}",
+				value=f"Points: {match[2]}\nBio: {match[1]}",
+				inline=False)
+			
+			await interaction.response.edit_message(embed=em, view=self.view)
+		else:
+			await interaction.response.defer()
+
+class SearchPagRight(discord.ui.Button):
+	def __init__(self, ctx):
+		self.ctx = ctx
+		self.author = ctx.author.id
+		super().__init__(style=discord.ButtonStyle.gray, emoji="➡️", row=2)
+	
+	async def callback(self, interaction):
+		if interaction.user.id != self.author:
+			return await interaction.response.send_message(
+				"Sorry, this button menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.search`..?",
+				ephemeral=True)
+		if self.view.pag < len(self.view.matches):
+			self.view.pag += 8
+
+			s_or_not = "s" if len(self.view.matches) - 1 else ""
+	
+			em = discord.Embed(
+				title=f"Search Results",
+				description=f"{len(self.view.matches)} result{s_or_not} found. (Results {self.view.pag - 7}-{self.view.pag})",
+				color=discord.Colour.blurple())
+			em.set_author(name=self.ctx.author.display_name,
+				url="",
+				icon_url=self.ctx.author.avatar)
+			
+			for match in self.view.matches[self.view.pag - 8:self.view.pag]:
+				em.add_field(name=f"{match[0].name}#{match[0].discriminator}",
+				value=f"Points: {match[2]}\nBio: {match[1]}",
+				inline=False)
+			
+			await interaction.response.edit_message(embed=em, view=self.view)
+		else:
+			await interaction.response.defer()

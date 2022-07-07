@@ -1,4 +1,25 @@
-# The dev commands
+"""
+The GNU General Public License v3.0 (GNU GPLv3)
+
+scibowlbot, a Discord Bot that helps simulate a Science Bowl round.
+Copyright (C) 2021-Present DevNotHackerCorporations
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
+"""
+
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
@@ -17,7 +38,7 @@ class Dev(commands.Cog):
 	@commands.command(name="servers")
 	async def _dev_servers(self, message):
 		"""
-		See how many servers scibowlbot is in!
+		How many servers is scibowlbot in?
 		"""
 		await message.channel.send("I am currently in "+str(len(message.bot.guilds))+" servers!")
 	
@@ -26,7 +47,7 @@ class Dev(commands.Cog):
 		"""
 		Remove this channel from the list of channels that already have a question.
 	
-		Use this command to override scibowlbot when he incorrectly says that there already is a question in this channel
+		Use this command to override scibowlbot when it incorrectly says that there already is a question in the channel
 		"""
 		if message.channel.id in message.bot.hasQuestion:
 			message.bot.hasQuestion.remove(message.channel.id)
@@ -36,7 +57,7 @@ class Dev(commands.Cog):
 	@commands.command(name="reload")
 	async def _reload(self, ctx, command_name):
 		"""
-		DEV ONLY
+		Refresh a file without restarting the bot. (Dev only)
 		"""
 		if ctx.author not in ctx.bot.devs:
 			raise BadArgument("Unauthorized. This command is dev only.")

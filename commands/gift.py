@@ -1,3 +1,25 @@
+"""
+The GNU General Public License v3.0 (GNU GPLv3)
+
+scibowlbot, a Discord Bot that helps simulate a Science Bowl round.
+Copyright (C) 2021-Present DevNotHackerCorporations
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
+"""
+
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
@@ -12,16 +34,14 @@ async def setup(bot):
 @client.command(name="gift")
 async def _gift(message, amount: int, to_user: discord.Member):
 	"""
-	Be a generous person and gift some points to someone!
+Gift some of your points to someone!
 
-	Note that to_user can be a mention or the id of a user
+The recipient of your gift can be formatted as either the user id, username (with or without discriminator), or server nickname. 
+    
+You can put quotes around this if the username contains whitespace to prevent discord.py from breaking the username into seperate arguments
 	"""
 	if amount < 0:
-		embed = discord.Embed(title=f":warning: Error :warning:", description="While processing this request, we ran into an error", color=0xFFFF00)
-		embed.set_author(name=message.author.display_name, url="", icon_url=message.author.avatar)
-		embed.add_field(name=f'Invalid value', value="There are two people in life, those whose power is to give and those whos weakness is to take, in other words, YOU GREEDY LITTLE--")
-		await message.channel.send(embed=embed)
-		return
+		raise BadArgument("There are two people in life, those whose power is to give and those whos weakness is to take, in other words, YOU GREEDY LITTLE--")
 		
 	to = str(to_user.id)
 	
@@ -43,8 +63,6 @@ async def _gift(message, amount: int, to_user: discord.Member):
 		raise BadArgument(f"This goes over your current balance of {user_money}")
 	elif to_user.bot:
 		raise BadArgument("You can't give points to a bot...")
-		await message.channel.send(embed=embed)
-		return
 	else:
 		message.bot.changepoints(user, -1*amount)
 		message.bot.changepoints(to, amount)

@@ -12,11 +12,10 @@ authors = [
 [tool.poetry.dependencies]
 python = "^3.8"
 'discord.py' = { git = "https://github.com/Rapptz/discord.py.git", branch = "master" }
-discord-components = "^2.1.2"
 readtime = "^1.1.1"
 Flask = "^2.0.2"
-discord-py-slash-command = "^3.0.1"
 Pyrebase = "^3.0.27"
+discord = "^1.7.3"
 
 [tool.poetry.dev-dependencies]
 

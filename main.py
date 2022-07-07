@@ -1,3 +1,26 @@
+#!/usr/bin/python -tt
+"""
+The GNU General Public License v3.0 (GNU GPLv3)
+
+scibowlbot, a Discord Bot that helps simulate a Science Bowl round.
+Copyright (C) 2021-Present DevNotHackerCorporations
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
+"""
+
 import discord
 from discord.ext import commands
 from discord.ext.commands import MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound
@@ -53,7 +76,7 @@ class Sbb(commands.Bot):
 
     async def setup_hook(self):
         await self.load_extension('commands.constants')
-        #client.load_extension('commands.question')
+        await client.load_extension('commands.question2')
         await self.load_extension('commands.profile')
         await self.load_extension('commands.serverstats')
         await self.load_extension('commands.dev')
@@ -86,30 +109,31 @@ class Sbb(commands.Bot):
     async def on_command_error(self, ctx, err):
         if isinstance(err, CommandNotFound):
             return
-
+        
         alert_dev = not any([isinstance(err, b) for b in alertdev_err])
         embed = discord.Embed(
             title=f":warning: Warning! :warning:",
             description=
             "While processing this request, we ran into an unexpected error",
             color=0xFFFF00)
+        
         embed.set_author(name=ctx.author.display_name,
-                         url="",
-                         icon_url=ctx.author.avatar)
+            url="",
+            icon_url=ctx.author.avatar)
+        
         embed.add_field(name=f'The error',
-                        value=f"```\n" + "".join(
-                            traceback.format_exception(
-                                type(err), err, err.__traceback__))[:900] +
-                        "\n```")
+            value="```\n" + str(err) +"\n```")
+        
         if alert_dev:
             embed.set_footer(text="The dev has been notified",
-                             icon_url=dev.avatar)
+            icon_url=dev.avatar)
         else:
-            embed.set_footer(text="The dev has blacklisted this error",
-                             icon_url=dev.avatar)
+            embed.set_footer(text="The dev has blacklisted this error", icon_url=dev.avatar)
+        
         await ctx.channel.send(embed=embed)
-
-        raise err
+        
+        if alert_dev:
+            raise err
 
         if alert_dev:
             embed = discord.Embed(
@@ -142,10 +166,10 @@ class Sbb(commands.Bot):
 
 
 def update_data_from_firebase():
-	global client
-	while True:
-		open("points.json", "w").write(json.dumps(client.db.get().val()))
-		time.sleep(5 * 60)
+    global client
+    while True:
+        open("points.json", "w").write(json.dumps(client.db.get().val()))
+        time.sleep(5 * 60)
 
 
 app = Flask("app")
