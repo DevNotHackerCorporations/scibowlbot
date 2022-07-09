@@ -47,7 +47,7 @@ class Profile(commands.Cog):
         """
 		View your server profile!
 	
-		You can change this with .change_profile
+		You can change this with .change_profile and .set_bio
 		"""
         if not member:
             member = message.author
@@ -98,6 +98,8 @@ class Profile(commands.Cog):
     async def _c_profile(self, message):
         """
 		Changes your server profile
+
+        You get to change what you are good at and what you are bad at. You can change your bio with .set_bio
 		"""
         obj = ChangeProfile(message)
         await obj.run()
@@ -106,6 +108,8 @@ class Profile(commands.Cog):
     async def _c_bio(self, ctx, *bio):
         """
 		Sets your bio for your profile
+
+        Note: You have a maximum of 200 characters
 		"""
         bio = " ".join(bio)
 
@@ -126,7 +130,9 @@ class Profile(commands.Cog):
     @commands.command(name="search")
     async def _c_search(self, ctx):
         """
-		Searches for a user
+		Searches for users
+
+        Basically, users that are good at something and/or bad at something.
 		"""
         obj = SearchView(ctx)
         await obj.run()
