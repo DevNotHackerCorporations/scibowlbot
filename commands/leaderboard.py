@@ -34,9 +34,9 @@ async def setup(bot):
 @client.command(name="leaderboard")
 async def _leaderboard(message, how_many_people: int = 3):
     """
-    View the server leaderboard
+    View the server leaderboard (and your place in it)
 
-    Note that "maxx" can be any integer between 3 and 30 (inclusive)
+    The "how_many_people" attribute can be anything between 3 and 30 (inclusive).
     """
     maxx = how_many_people
     if not message.guild:
