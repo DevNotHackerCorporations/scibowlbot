@@ -106,6 +106,8 @@ class Question(discord.ui.View):
                 color=discord.Colour.blue())
         self.embed.set_author(name="Unattempted", url="")
 
+        self.mc_timeout = 10.0
+
     def extra_whitespace(self, string):
         string = string.strip()
         for before, after in self.wspace.items():
@@ -202,10 +204,11 @@ class Question(discord.ui.View):
             self.add_item(MCOption(self.ctx, "Y)", self.answers[2], self.author))
             self.add_item(MCOption(self.ctx, "Z)", self.answers[3], self.author))
             await interaction.response.edit_message(view=self)
+            self.timeout = self.mc_timeout
         else:
             self.children[0].disabled = True
-            await interaction.response.send_modal(GetResponse(self, self.calc_timeout(self.alt_answers[0]), self.author))
             await self.message.edit(view=self)
+            await interaction.response.send_modal(GetResponse(self, self.calc_timeout(self.alt_answers[0]), self.author))
 
         
     async def on_timeout(self, element=False):
@@ -227,6 +230,8 @@ class Question(discord.ui.View):
             self.embed.add_field(
                 name="Question Timed Out", 
                 value=f"Incorrect **{self.responder.display_name}**, you ran out of time. The answer was `{self.alt_answers[0]}`. You now have **{self.ctx.bot.getpoints(self.author)}** (-1) points")
+            
+            await self.message.add_reaction(random.choice(self.aw_reactions))
 
             if self.ctx.channel.id in self.ctx.bot.hasQuestion:
                 self.ctx.bot.hasQuestion.remove(self.ctx.channel.id)
@@ -265,22 +270,28 @@ class Question(discord.ui.View):
         if answer in self.alt_answers and self.isweird:
             self.ctx.bot.changepoints(self.author, 1)
             verdict = f"Correct **{responder}** You now have **{self.ctx.bot.getpoints(self.author)}** (+1) points (This is a *weird* question, so you get a point.)"
+            await self.message.add_reaction(random.choice(self.yay_reactions))
         
         elif answer in self.alt_answers and self.iscrazy:
             self.ctx.bot.changepoints(self.author, 0)
             verdict = f"Correct **{responder}** You now have **{self.ctx.bot.getpoints(self.author)}** (+0) points (This is a *crazy* question, so you get no points, you may get some kicks though?)"
+            await self.message.add_reaction(random.choice(self.yay_reactions))
         
         elif answer in self.alt_answers:
             self.ctx.bot.changepoints(self.author,  2)
             verdict = f"Correct **{responder}** You now have **{self.ctx.bot.getpoints(self.author)}** (+2) points"
+            await self.message.add_reaction(random.choice(self.yay_reactions))
             
         elif algorithm_correct:
             self.ctx.bot.changepoints(self.author, 1)
             verdict = f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your answer got a score of **{percent}**) The answer is `{self.correct_answer}`. You now have **{self.ctx.bot.getpoints(self.author)}** (+1) points"
+            await self.message.add_reaction(random.choice(self.yay_reactions))
+
         else:
             self.correct = False
             self.ctx.bot.changepoints(self.author,  -1)
             verdict = f"Incorrect **{responder}**, the answer was `{self.correct_answer}`. You now have **{self.ctx.bot.getpoints(self.author)}** (-1) points"
+            await self.message.add_reaction(random.choice(self.aw_reactions))
 
         if self.ctx.channel.id in self.ctx.bot.hasQuestion:
             self.ctx.bot.hasQuestion.remove(self.ctx.channel.id)	
@@ -301,7 +312,7 @@ class Question(discord.ui.View):
                 item.disabled = True
             await self.message.edit(view=self)
 
-class GetResponse(discord.ui.Modal, title="Your Answer"):
+class GetResponse(discord.ui.Modal, title="Short Response"):
     answer = discord.ui.TextInput(label='Answer', style=discord.TextStyle.short, placeholder="Quick! Your answer")
 
     def __init__(self, view, timeout, author):
