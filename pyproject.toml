@@ -16,6 +16,7 @@ readtime = "^1.1.1"
 Flask = "^2.0.2"
 Pyrebase = "^3.0.27"
 discord = "^1.7.3"
+jishaku = "^2.5.1"
 
 [tool.poetry.dev-dependencies]
 

@@ -39,7 +39,7 @@ async def setup(bot):
     bot.add_command(_q)
 
 
-@client.command(name="q")
+@commands.hybrid_command(name="q")
 async def _q(ctx, subject):
     """
     Generate a new scibowl question!
@@ -196,7 +196,7 @@ class Question(discord.ui.View):
         self.answer_list = self.generate_answers(self.correct_answer)
 
         self.embed.add_field(name=self.question_header, value=self.question, inline=False)
-        self.message = await self.ctx.channel.send(embed=self.embed, view=self)
+        self.message = await self.ctx.send(embed=self.embed, view=self)
 
     @discord.ui.button(label="Buzz!", style=discord.ButtonStyle.green)
     async def buzz(self, interaction, button):

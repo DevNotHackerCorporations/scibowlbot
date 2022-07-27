@@ -42,8 +42,7 @@ class Profile(commands.Cog):
     """
     Commands that relate to your profile
     """
-
-    @commands.command(name="profile", aliases=["p"])
+    @commands.hybrid_command(name="profile", aliases=["p"])
     async def _profile(self, message, member: typing.Optional[discord.Member]):
         """
         View your server profile!
@@ -77,7 +76,7 @@ class Profile(commands.Cog):
                 list(
                     map(
                         lambda x: message.bot.emoj[x.lower()] + " " + message.
-                            bot.apprev[x.upper()][0].lower(), profile[0])))
+                        bot.apprev[x.upper()][0].lower(), profile[0])))
         if not profile[1]:
             bad_at = "∅"
         else:
@@ -85,7 +84,7 @@ class Profile(commands.Cog):
                 list(
                     map(
                         lambda x: message.bot.emoj[x.lower()] + " " + message.
-                            bot.apprev[x.upper()][0].lower(), profile[1])))
+                        bot.apprev[x.upper()][0].lower(), profile[1])))
 
         embed.add_field(name=f"What {member} is is good at",
                         value=good_at,
@@ -93,9 +92,9 @@ class Profile(commands.Cog):
         embed.add_field(name=f"What {member} is is not so good at",
                         value=bad_at,
                         inline=False)
-        await message.channel.send(embed=embed)
+        await message.send(embed=embed)
 
-    @commands.command(name="change_profile", aliases=["cp"])
+    @commands.hybrid_command(name="change_profile", aliases=["cp"])
     async def _c_profile(self, message):
         """
         Changes your server profile
@@ -105,8 +104,8 @@ class Profile(commands.Cog):
         obj = ChangeProfile(message)
         await obj.run()
 
-    @commands.command(name="set_bio", aliases=["bio"])
-    async def _c_bio(self, ctx, *bio):
+    @commands.hybrid_command(name="set_bio", aliases=["bio"])
+    async def _c_bio(self, ctx, bio):
         """
         Sets your bio for your profile
 
@@ -126,9 +125,9 @@ class Profile(commands.Cog):
         embed.set_author(name=ctx.author.display_name,
                          url="",
                          icon_url=ctx.author.avatar)
-        await ctx.channel.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.command(name="search")
+    @commands.hybrid_command(name="search")
     async def _c_search(self, ctx):
         """
         Searches for users
@@ -155,7 +154,7 @@ class ChangeProfile(discord.ui.View):
                 list(
                     map(
                         lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
-                            .bot.apprev[x.upper()][0].lower(), profile[0])))
+                        .bot.apprev[x.upper()][0].lower(), profile[0])))
         if not profile[1]:
             bad_at = "∅"
         else:
@@ -163,7 +162,7 @@ class ChangeProfile(discord.ui.View):
                 list(
                     map(
                         lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
-                            .bot.apprev[x.upper()][0].lower(), profile[1])))
+                        .bot.apprev[x.upper()][0].lower(), profile[1])))
 
         em = discord.Embed(title="Change your profile", color=0x2ecc71)
         em.set_author(name=str(self.ctx.author),
@@ -199,9 +198,9 @@ class CPGood(discord.ui.Select):
                 value=subject,
                 default=(subject in good_at),
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                "math", "es", "cs"
-            ]
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
         ]
 
         super().__init__(placeholder='Things you are good at',
@@ -232,9 +231,9 @@ class CPBad(discord.ui.Select):
                 value=subject,
                 default=(subject in bad_at),
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                "math", "es", "cs"
-            ]
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
         ]
         super().__init__(placeholder='Things you are good at',
                          min_values=1,
@@ -291,9 +290,9 @@ class SearchGood(discord.ui.Select):
                 value=subject,
                 default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                "math", "es", "cs"
-            ]
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
         ]
         super().__init__(placeholder='Query for good at',
                          min_values=0,
@@ -321,9 +320,9 @@ class SearchBad(discord.ui.Select):
                 value=subject,
                 default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                "math", "es", "cs"
-            ]
+                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                    "math", "es", "cs"
+                ]
         ]
         super().__init__(placeholder='Query for bad at',
                          min_values=0,
@@ -364,9 +363,14 @@ class SearchButton(discord.ui.Button):
                 good, bad, bio = map(lambda x: x if x else [], profile)
                 bio = bio if bio else "None"
 
-                if id in memberlist and len(set(good).intersection(good_at)) == len(good_at) and len(
+                if id in memberlist and len(
+                        set(good).intersection(good_at)
+                ) == len(good_at) and len(
                         set(bad).intersection(bad_at)) == len(bad_at):  # Match
-                    matches.append([self.ctx.bot.get_user(int(id)), bio, self.ctx.bot.getpoints(id), id])
+                    matches.append([
+                        self.ctx.bot.get_user(int(id)), bio,
+                        self.ctx.bot.getpoints(id), id
+                    ])
 
         matches.sort(key=lambda x: x[2], reverse=True)
         self.view.matches = matches
@@ -422,7 +426,8 @@ class SearchPagLeft(discord.ui.Button):
 
             em = discord.Embed(
                 title=f"Search Results",
-                description=f"{len(self.view.matches)} result{s_or_not} found. {self.view.pag - 7}-{self.view.pag}",
+                description=
+                f"{len(self.view.matches)} result{s_or_not} found. {self.view.pag - 7}-{self.view.pag}",
                 color=discord.Colour.blurple())
             em.set_author(name=self.ctx.author.display_name,
                           url="",
@@ -456,7 +461,8 @@ class SearchPagRight(discord.ui.Button):
 
             em = discord.Embed(
                 title=f"Search Results",
-                description=f"{len(self.view.matches)} result{s_or_not} found. (Results {self.view.pag - 7}-{self.view.pag})",
+                description=
+                f"{len(self.view.matches)} result{s_or_not} found. (Results {self.view.pag - 7}-{self.view.pag})",
                 color=discord.Colour.blurple())
             em.set_author(name=self.ctx.author.display_name,
                           url="",

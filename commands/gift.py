@@ -33,14 +33,14 @@ async def setup(bot):
     bot.add_command(_gift)
 
 
-@client.command(name="gift")
+@commands.hybrid_command(name="gift")
 async def _gift(message, amount: int, to_user: discord.Member):
     """
-Gift some of your points to someone!
-
-The recipient of your gift can be formatted as either the user id, username (with or without discriminator), or server nickname. 
+    Gift some of your points to someone!
     
-You can put quotes around this if the username contains whitespace to prevent discord.py from breaking the username into seperate arguments
+    The recipient of your gift can be formatted as either the user id, username (with or without discriminator), or server nickname. 
+        
+    You can put quotes around this if the username contains whitespace to prevent discord.py from breaking the username into seperate arguments
     """
     if amount < 0:
         raise BadArgument(

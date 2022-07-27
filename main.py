@@ -56,7 +56,7 @@ class Sbb(commands.Bot):
         super().__init__(
             command_prefix=".",
             description="The best way to do science on discord!",
-            owner_id=728297793646624819,  # Andrew
+            owner_id=728297793646624819,    # Andrew
             case_insensitive=True,
             intents=intents,
         )
@@ -75,8 +75,10 @@ class Sbb(commands.Bot):
         self.db = pyrebase.initialize_app(config).database()
 
     async def setup_hook(self):
+        await self.load_extension('jishaku')
+
         await self.load_extension('commands.constants')
-        await client.load_extension('commands.question2')
+        await self.load_extension('commands.question2')
         await self.load_extension('commands.profile')
         await self.load_extension('commands.serverstats')
         await self.load_extension('commands.dev')
@@ -109,31 +111,28 @@ class Sbb(commands.Bot):
     async def on_command_error(self, ctx, err):
         if isinstance(err, CommandNotFound):
             return
-        
+
         alert_dev = not any([isinstance(err, b) for b in alertdev_err])
         embed = discord.Embed(
             title=f":warning: Warning! :warning:",
             description=
             "While processing this request, we ran into an unexpected error",
             color=0xFFFF00)
-        
+
         embed.set_author(name=ctx.author.display_name,
-            url="",
-            icon_url=ctx.author.avatar)
-        
-        embed.add_field(name=f'The error',
-            value="```\n" + str(err) +"\n```")
-        
+                         url="",
+                         icon_url=ctx.author.avatar)
+
+        embed.add_field(name=f'The error', value="```\n" + str(err) + "\n```")
+
         if alert_dev:
             embed.set_footer(text="The dev has been notified",
-            icon_url=dev.avatar)
+                             icon_url=dev.avatar)
         else:
-            embed.set_footer(text="The dev has blacklisted this error", icon_url=dev.avatar)
-        
+            embed.set_footer(text="The dev has blacklisted this error",
+                             icon_url=dev.avatar)
+
         await ctx.channel.send(embed=embed)
-        
-        if alert_dev:
-            raise err
 
         if alert_dev:
             embed = discord.Embed(
@@ -153,7 +152,7 @@ class Sbb(commands.Bot):
                 embed.add_field(name="Message Guild",
                                 value=f"{ctx.guild.name} ({ctx.guild.id})",
                                 inline=False)
-            embed.add_field(name="Contex",
+            embed.add_field(name="Context",
                             value="```\n" + ctx.message.content + "\n```",
                             inline=False)
             embed.add_field(name=f'Error!',
@@ -209,7 +208,7 @@ def api():
     }
 
 
+client = Sbb()
 Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
 Thread(target=update_data_from_firebase).start()
-client = Sbb()
 client.run(os.getenv('TOKEN'))

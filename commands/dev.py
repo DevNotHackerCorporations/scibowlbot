@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
+For any questions, please contact DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
 """
 
 from discord.ext import commands
@@ -37,14 +37,15 @@ class Dev(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="servers")
-    async def _dev_servers(self, message):
+    @commands.hybrid_command(name="servers")
+    async def _dev_servers(self, ctx):
         """
         How many servers is scibowlbot in?
         """
-        await message.channel.send("I am currently in " + str(len(message.bot.guilds)) + " servers!")
+        await ctx.send("I am currently in " + str(len(ctx.bot.guilds)) +
+                       " servers!")
 
-    @commands.command(name="clear")
+    @commands.hybrid_command(name="clear")
     async def _dev_clear(self, message):
         """
         Remove this channel from the list of channels that already have a question.
@@ -55,7 +56,7 @@ class Dev(commands.Cog):
             message.bot.hasQuestion.remove(message.channel.id)
         await message.reply("Done!", mention_author=False)
 
-    @commands.command(name="reload")
+    @commands.hybrid_command(name="reload")
     async def _reload(self, ctx, command_name):
         """
         Refresh a file without restarting the bot. (Dev only)
@@ -63,4 +64,16 @@ class Dev(commands.Cog):
         if ctx.author not in ctx.bot.devs:
             raise BadArgument("Unauthorized. This command is dev only.")
         await ctx.bot.reload_extension(command_name)
-        await ctx.channel.send("Reloaded extention")
+        await ctx.send("Reloaded extention")
+
+    @commands.hybrid_command(name="ping")
+    async def _ping(self, ctx):
+        """
+        Check my latency!
+        """
+        embed = discord.Embed(
+            title="Pong",
+            color=discord.Colour.green(),
+            description=
+            f"It took {round(ctx.bot.latency * 1000)}ms to get back here")
+        await ctx.send(embed=embed)
