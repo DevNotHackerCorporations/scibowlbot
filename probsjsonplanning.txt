@@ -8,4 +8,4 @@
             "tossup_format": "Short Answer",
             "tossup_question": "Christine is pulling a chair with Arush on it (who weighs 52 kg and is not touching the floor) on a smooth ground with coefficient of friction of 0.3. If the chair (along with Arush) is moving at 1.5 m/s, and assuming the chair's weight is neglegible, how many newtons is Christine pulling the chair? Assume Earth has a gravitational force of 10 m/s."
         }
-    }
+    } 

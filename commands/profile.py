@@ -86,12 +86,23 @@ class Profile(commands.Cog):
                         lambda x: message.bot.emoj[x.lower()] + " " + message.
                         bot.apprev[x.upper()][0].lower(), profile[1])))
 
-        embed.add_field(name=f"What {member} is is good at",
+        embed.add_field(name=f"What {member} is good at",
                         value=good_at,
                         inline=False)
-        embed.add_field(name=f"What {member} is is not so good at",
+        embed.add_field(name=f"What {member} is not so good at",
                         value=bad_at,
                         inline=False)
+
+        MyAchiev = message.bot.Achievements(str(member.id)).desc
+        achiev = ""
+        for node in MyAchiev:
+            if node['earned']:
+                achiev += f"{node['emoji']} {node['name']} - {node['description']}\n"
+        if not achiev:
+            achiev = "None"
+
+        embed.add_field(name="Earned Achievements", value=achiev, inline=False)
+
         await message.send(embed=embed)
 
     @commands.hybrid_command(name="change_profile", aliases=["cp"])
@@ -99,7 +110,7 @@ class Profile(commands.Cog):
         """
         Changes your server profile
 
-        You get to change what you are good at and what you are bad at. You can change your bio with .set_bio
+        You get to change what you are good at and what you are bad at. You can change your bio with .set_bio (or .bio)
         """
         obj = ChangeProfile(message)
         await obj.run()
@@ -109,22 +120,27 @@ class Profile(commands.Cog):
         """
         Sets your bio for your profile
 
-        Note: You have a maximum of 200 characters
-        """
-        bio = " ".join(bio)
+        How to use:
+        - type .set_bio "your bio" WITH THE QUOTES to set your biography for your profile.
+        - Make sure your bio is under 200 characters
 
+        You can view your bio with `.profile`
+        """
         if not bio.strip():
             raise BadArgument("You must set your bio to something!")
 
         if len(bio) > 200:
             raise BadArgument("Bio must be at most 200 characters.")
         ctx.bot.changeprofile(ctx.author.id, bio=bio)
-        embed = discord.Embed(title=f":white_check_mark: Success!",
-                              description="We successfully set your bio",
-                              color=discord.Colour.green())
+        embed = discord.Embed(
+            title=f":white_check_mark: Success!",
+            description=f"We successfully set your bio as `{bio}`",
+            color=discord.Colour.green())
         embed.set_author(name=ctx.author.display_name,
                          url="",
                          icon_url=ctx.author.avatar)
+        embed.set_footer(
+            text="Confused? Not what you wanted? Try running `.help set_bio`")
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="search")

@@ -56,6 +56,7 @@ class Dev(commands.Cog):
             message.bot.hasQuestion.remove(message.channel.id)
         await message.reply("Done!", mention_author=False)
 
+    @commands.is_owner()
     @commands.hybrid_command(name="reload")
     async def _reload(self, ctx, command_name):
         """
@@ -65,7 +66,7 @@ class Dev(commands.Cog):
             raise BadArgument("Unauthorized. This command is dev only.")
         await ctx.bot.reload_extension(command_name)
         await ctx.send("Reloaded extention")
-
+                              
     @commands.hybrid_command(name="ping")
     async def _ping(self, ctx):
         """

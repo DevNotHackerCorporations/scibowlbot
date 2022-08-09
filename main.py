@@ -22,7 +22,7 @@ For any questions, please contant DevNotHackerCorporations by their email at <de
 """
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound
 
 import asyncio
@@ -33,14 +33,13 @@ import logging
 import os
 import time
 import pyrebase
-import traceback
 
 dev = 0
 
 alertdev_err = [
     MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound,
     UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded,
-    ExtensionNotLoaded, BadArgument
+    BadArgument
 ]
 
 log = logging.getLogger('werkzeug')
@@ -56,7 +55,7 @@ class Sbb(commands.Bot):
         super().__init__(
             command_prefix=".",
             description="The best way to do science on discord!",
-            owner_id=728297793646624819,    # Andrew
+            owner_ids=[728297793646624819, 712426753238237274],
             case_insensitive=True,
             intents=intents,
         )
@@ -72,11 +71,14 @@ class Sbb(commands.Bot):
             "appId": "1:845301907304:web:542d9a100ffac52576a0dd",
             "measurementId": "G-17XY9EN63J"
         }
-        self.db = pyrebase.initialize_app(config).database()
+        self.firebase = pyrebase.initialize_app(config)
+        self.db = self.firebase.database()
+
+        asyncio.run(self.regenerate_token())
+        asyncio.run(self.update_data_from_firebase())
 
     async def setup_hook(self):
         await self.load_extension('jishaku')
-
         await self.load_extension('commands.constants')
         await self.load_extension('commands.question2')
         await self.load_extension('commands.profile')
@@ -87,7 +89,7 @@ class Sbb(commands.Bot):
 
     async def on_ready(self):
         print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(
-            client, len(client.guilds),
+            self, len(self.guilds),
             datetime.now().strftime("%B %d, %Y %H:%M:%S")))
         await client.change_presence(status=discord.Status.online,
                                      activity=discord.Game(
@@ -95,15 +97,15 @@ class Sbb(commands.Bot):
                                          type=discord.ActivityType.listening,
                                          start=datetime(2021, 12, 2, 16)))
         global dev
-        dev = client.get_user(728297793646624819)
-        client.devs = [dev]
+        dev = self.get_user(728297793646624819)
+        self.devs = [dev]
 
     async def on_message(self, message):
         if message.author == client.user:
             return
         await self.invoke(await super().get_context(message))
 
-        if client.user.mention in message.content:
+        if self.user.mention in message.content:
             await message.channel.send(
                 "Hi there! I'm active and ready to serve up questions. For help, type "
                 + ".help")
@@ -132,7 +134,7 @@ class Sbb(commands.Bot):
             embed.set_footer(text="The dev has blacklisted this error",
                              icon_url=dev.avatar)
 
-        await ctx.channel.send(embed=embed)
+        await ctx.send(embed=embed)
 
         if alert_dev:
             embed = discord.Embed(
@@ -163,12 +165,16 @@ class Sbb(commands.Bot):
                             inline=False)
             await dev.send(embed=embed)
 
+    @tasks.loop(minutes=5.0)
+    async def update_data_from_firebase(self):
+        open("points.json", "w").write(json.dumps(self.db.get().val()))
 
-def update_data_from_firebase():
-    global client
-    while True:
-        open("points.json", "w").write(json.dumps(client.db.get().val()))
-        time.sleep(5 * 60)
+    @tasks.loop(minutes=60.0)
+    async def regenerate_token(self):
+        auth = self.firebase.auth()
+        user = auth.sign_in_with_email_and_password(
+            "devnothackercorporations@gmail.com", os.getenv("email_psw"))
+        self.auth_id = user['idToken']
 
 
 app = Flask("app")
@@ -210,5 +216,4 @@ def api():
 
 client = Sbb()
 Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
-Thread(target=update_data_from_firebase).start()
 client.run(os.getenv('TOKEN'))
