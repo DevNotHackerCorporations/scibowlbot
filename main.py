@@ -74,7 +74,7 @@ class Sbb(commands.Bot):
         self.firebase = pyrebase.initialize_app(config)
         self.db = self.firebase.database()
 
-        asyncio.run(self.regenerate_token())
+        #asyncio.run(self.regenerate_token())
         asyncio.run(self.update_data_from_firebase())
 
     async def setup_hook(self):
