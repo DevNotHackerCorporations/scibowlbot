@@ -45,6 +45,7 @@ alertdev_err = [
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+os.chdir("/home/achen/scibowlbot")
 
 class Sbb(commands.Bot):
     def __init__(self):
@@ -137,6 +138,7 @@ class Sbb(commands.Bot):
         await ctx.send(embed=embed)
 
         if alert_dev:
+            raise err
             embed = discord.Embed(
                 title=f":warning: Dev Alert! :warning:",
                 description="While processing a request, we ran into an error",
