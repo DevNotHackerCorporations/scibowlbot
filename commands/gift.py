@@ -37,10 +37,13 @@ async def setup(bot):
 async def _gift(message, amount: int, to_user: discord.Member):
     """
     Gift some of your points to someone!
-    
-    The recipient of your gift can be formatted as either the user id, username (with or without discriminator), or server nickname. 
-        
-    You can put quotes around this if the username contains whitespace to prevent discord.py from breaking the username into seperate arguments
+
+    Parameters
+    -----------
+    amount: int
+        How many coins are you gifting?
+    to_user: discord.Member
+        Who are you gifting to?
     """
     if amount < 0:
         raise BadArgument(

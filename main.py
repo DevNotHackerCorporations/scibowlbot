@@ -45,7 +45,8 @@ alertdev_err = [
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-os.chdir("/home/achen/scibowlbot")
+if __name__ == "__main__":
+    os.chdir("/home/achen/scibowlbot")
 
 class Sbb(commands.Bot):
     def __init__(self):

@@ -187,7 +187,7 @@ async def _q(message, subject):
 		return
 	message.bot.hasQuestion.add(message.channel.id)
 	if isweird:
-		question_json = random.choice(json.loads(open("probs.json", "r").read()))
+		question_json = random.choice(json.loads(open("weird.json", "r").read()))
 	elif iscrazy:
 		question_json = random.choice(json.loads(open("crazy.json", "r").read()))
 	else:

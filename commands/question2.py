@@ -94,6 +94,11 @@ async def q_autocomplete(interaction, current):
 class Question(discord.ui.View):
     def __init__(self, ctx, subject: str):
         super().__init__(timeout=15.0)
+        self.mc = None
+        self.question = None
+        self.question_header = None
+        self.question_json = None
+        self.algorithm_correct = None
         self.ctx = ctx
         self.yay_reactions = [
             "\N{Thumbs Up Sign}", "\N{White Heavy Check Mark}", "\N{Brain}",
@@ -114,6 +119,8 @@ class Question(discord.ui.View):
         ]
         self.achiev = self.ctx.bot.Achievements
         self.subject = subject
+        if subject.upper() == "ALL":
+            self.subject = random.choice(self.valid[:-1])
         self.isweird = subject == "WEIRD"
         self.iscrazy = subject == "CRAZY"
         self.author = ctx.author.id
@@ -166,33 +173,22 @@ class Question(discord.ui.View):
 
         if self.ctx.channel.id in self.ctx.bot.hasQuestion:
             raise BadArgument(
-                f"There is already a question being served in this channel\n\nThink this is a mistake? Try running `.clear`"
+                f"There is already a question being served in this channel\n\nThink this is a mistake? Try running "
+                f"`.clear` "
             )
 
         self.ctx.bot.hasQuestion.add(self.ctx.channel.id)
 
         # Get Question
-        if self.isweird:
-            question_json = random.choice(
-                json.loads(open("probs.json", "r").read()))
-        elif self.iscrazy:
-            question_json = random.choice(
-                json.loads(open("crazy.json", "r").read()))
-        else:
-            question_json = requests.post(
-                "https://scibowldb.com/api/questions/random",
-                json={
-                    "categories": self.ctx.bot.apprev[self.subject]
-                }).json()
-
-        self.question_json = question_json
-        self.question_header = "**" + question_json["question"][
-            "category"] + " " + question_json["question"][
-                "tossup_format"] + " (Source: " + question_json["question"][
-                    "source"] + ")\n**"
-        self.question = question_json["question"]["tossup_question"]
-        self.mc = question_json["question"][
-            "tossup_format"] == "Multiple Choice"
+        self.question_json = random.choice(
+            json.loads(open(f"questions/{self.subject.lower()}.json", "r").read()))
+        self.question_header = "**" + self.question_json[
+            "category"] + " " + self.question_json[
+                                   "tossup_format"] + " (Source: " + self.question_json[
+                                   "source"] + ")\n**"
+        self.question = self.question_json["tossup_question"]
+        self.mc = self.question_json[
+                      "tossup_format"] == "Multiple Choice"
         self.algorithm_correct = False
 
         self.timeout = self.calc_timeout(self.question)
@@ -201,7 +197,7 @@ class Question(discord.ui.View):
 
         if self.mc:
             self.correct_answer = (
-                question_json["question"]["tossup_answer"])[0].upper()
+                self.question_json["tossup_answer"])[0].upper()
             self.answers = []
             if "(W)" in self.question:
                 regstring = "\(W\)(.*)\(X\)(.*)\(Y\)(.*)\(Z\)(.*)"
@@ -223,7 +219,7 @@ class Question(discord.ui.View):
             else:
                 self.answers = ["", "", "", ""]
         else:
-            self.correct_answer = question_json["question"][
+            self.correct_answer = self.question_json[
                 "tossup_answer"].upper()
 
         self.answer_list = self.generate_answers(self.correct_answer)
@@ -282,7 +278,7 @@ class Question(discord.ui.View):
         if self.postedBtns:
             for item in self.children:
                 item.disabled = True
-            self.postedBtns = False 
+            self.postedBtns = False
 
         if self.buzzed and not self.graded:
 
@@ -301,8 +297,7 @@ class Question(discord.ui.View):
 
             self.embed.add_field(
                 name="Question Timed Out",
-                value=
-                f"Incorrect **{self.responder.display_name}**, you ran out of time. The answer was `{self.answer_list[0]}`. You now have **{self.ctx.bot.getpoints(self.author)}** (-1) points"
+                value=f"Incorrect **{self.responder.display_name}**, you ran out of time. The answer was `{self.answer_list[0]}`. You now have **{self.ctx.bot.getpoints(self.author)}** (-1) points"
             )
 
             await self.message.add_reaction(random.choice(self.aw_reactions))
@@ -386,7 +381,10 @@ class Question(discord.ui.View):
             await self.message.add_reaction(random.choice(self.yay_reactions))
 
         elif algorithm_correct:
-            verdict = f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your answer got a score of **{round(percent, 3)}**) The answer is `{self.correct_answer}`. You now have **{self.changepoints(self.author, 2 if not self.iscrazy else 0)}** (+{2 if not self.iscrazy else 0}) points"
+            verdict = f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your " \
+                      f"answer got a score of **{round(percent, 3)}**) The answer is `{self.correct_answer}`. You n" \
+                      f"ow have **{self.changepoints(self.author, 2 if not self.iscrazy else 0)}** (+" \
+                      f"{2 if not self.iscrazy else 0}) points "
             self.add_item(
                 Override(self.ctx,
                          self.author,
@@ -430,7 +428,8 @@ class GetResponse(discord.ui.Modal, title="Short Response"):
     async def on_submit(self, interaction: discord.Interaction):
         if interaction.user.id != self.a:
             return await interaction.response.send_message(
-                "I have no idea how in the world you managed to circumvent our buzzer disable and answer another person's question, but you did it. (We have a check here, so your submit didn't do anything)",
+                "I have no idea how in the world you managed to circumvent our buzzer disable and answer another "
+                "person's question, but you did it. (We have a check here, so your submit didn't do anything)",
                 ephemeral=True)
         if not self.timeouted:
             await self.view.validate(self.answer.value)
@@ -480,8 +479,7 @@ class Override(discord.ui.Button):
         self.disabled = True
         self.view.embed.add_field(
             name="Override",
-            value=
-            f"The verdict has been overriden by **{interaction.user.display_name}**. They now have **{self.view.changepoints(interaction.user.id, -3 if self.change else 0)}** {'(-1 from original) points.' if self.change else '(No Change)'}"
+            value=f"The verdict has been overriden by **{interaction.user.display_name}**. They now have **{self.view.changepoints(interaction.user.id, -3 if self.change else 0)}** {'(-1 from original) points.' if self.change else '(No Change)'} "
         )
         await interaction.response.edit_message(embed=self.view.embed,
                                                 view=self.view)

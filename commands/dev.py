@@ -60,7 +60,7 @@ class Dev(commands.Cog):
     @commands.hybrid_command(name="reload")
     async def _reload(self, ctx, command_name):
         """
-        Refresh a file without restarting the bot. (Dev only)
+        Refresh a file without restarting the bot.
         """
         if ctx.author not in ctx.bot.devs:
             raise BadArgument("Unauthorized. This command is dev only.")
