@@ -1,0 +1,5 @@
+discord
+flask
+pyrebase
+jishaku
+readtime

@@ -46,7 +46,7 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 if __name__ == "__main__":
-    os.chdir("/home/achen/scibowlbot")
+    os.chdir("/opt/app/scibowlbot")
 
 class Sbb(commands.Bot):
     def __init__(self):
@@ -63,7 +63,7 @@ class Sbb(commands.Bot):
         )
 
         config = {
-            "apiKey": os.environ['API_key'],
+            "apiKey": os.environ['API_KEY'],
             "authDomain": "https://scibowlbot-6226d.firebaseapp.com",
             "projectId": "scibowlbot-6226d",
             "storageBucket": "https://scibowlbot-6226d.appspot.com",

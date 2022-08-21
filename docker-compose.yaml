@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  scibowlbot:
+    build: .
+    image: scibowlbot:1.0.0
+    environment:
+      - API_KEY=${API_KEY}
+      - TOKEN=${TOKEN}
+    ports:
+      - "8080:8080"
+    restart: always
