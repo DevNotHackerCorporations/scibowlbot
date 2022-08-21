@@ -30,10 +30,10 @@ client = commands.Bot(command_prefix=".", intents=intents)
 
 
 async def setup(bot):
-    await bot.add_cog(Dev(bot))
+    await bot.add_cog(Utility(bot))
 
 
-class Dev(commands.Cog):
+class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

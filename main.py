@@ -139,7 +139,6 @@ class Sbb(commands.Bot):
         await ctx.send(embed=embed)
 
         if alert_dev:
-            raise err
             embed = discord.Embed(
                 title=f":warning: Dev Alert! :warning:",
                 description="While processing a request, we ran into an error",
