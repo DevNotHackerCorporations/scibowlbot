@@ -31,10 +31,9 @@ from flask import Flask, send_file
 import json
 import logging
 import os
-import time
+import traceback
 import pyrebase
 
-dev = 0
 
 alertdev_err = [
     MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound,
@@ -50,6 +49,8 @@ if __name__ == "__main__":
 
 class Sbb(commands.Bot):
     def __init__(self):
+        self.devs = None
+        self.auth_id = None
         intents = discord.Intents.default()
         intents.members = True
         intents.message_content = True
@@ -75,8 +76,6 @@ class Sbb(commands.Bot):
         }
         self.firebase = pyrebase.initialize_app(config)
         self.db = self.firebase.database()
-
-        #asyncio.run(self.regenerate_token())
         asyncio.run(self.update_data_from_firebase())
 
     async def setup_hook(self):
@@ -88,6 +87,7 @@ class Sbb(commands.Bot):
         await self.load_extension('commands.dev')
         await self.load_extension('commands.gift')
         await self.load_extension('commands.leaderboard')
+        await self.load_extension('commands.misc')
 
     async def on_ready(self):
         print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(
@@ -95,7 +95,7 @@ class Sbb(commands.Bot):
             datetime.now().strftime("%B %d, %Y %H:%M:%S")))
         await client.change_presence(status=discord.Status.online,
                                      activity=discord.Game(
-                                         name=(".help"),
+                                         name=".help",
                                          type=discord.ActivityType.listening,
                                          start=datetime(2021, 12, 2, 16)))
         global dev
@@ -159,13 +159,14 @@ class Sbb(commands.Bot):
             embed.add_field(name="Context",
                             value="```\n" + ctx.message.content + "\n```",
                             inline=False)
-            embed.add_field(name=f'Error!',
-                            value="```\n" + str(err) + "\n```",
-                            inline=False)
             embed.add_field(name=f'Jump Link',
                             value=ctx.message.jump_url,
                             inline=False)
-            await dev.send(embed=embed)
+
+            with open("error.txt", "w") as file:
+                file.write("".join(traceback.format_exception(type(err), err, err.__traceback__)))
+                await dev.send(embed=embed, file=discord.File("error.txt"))
+                file.truncate(0)
 
     @tasks.loop(minutes=5.0)
     async def update_data_from_firebase(self):

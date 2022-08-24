@@ -61,6 +61,10 @@ class Utility(commands.Cog):
     async def _reload(self, ctx, command_name):
         """
         Refresh a file without restarting the bot.
+        This is only to be used by developers.
+
+        :param command_name: The file path
+        :type command_name: str
         """
         if ctx.author not in ctx.bot.devs:
             raise BadArgument("Unauthorized. This command is dev only.")

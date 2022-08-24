@@ -34,13 +34,13 @@ async def setup(bot):
 
 
 @commands.hybrid_command(name="leaderboard")
-async def _leaderboard(message, how_many_people: int = 3):
+async def _leaderboard(message, max_people: int = 3):
     """
     View the server leaderboard (and your place in it)
 
-    The "how_many_people" attribute can be anything between 3 and 30 (inclusive).
+    :param max_people: How many people should we show on the leaderboard? Must be between 3 and 30, inclusive.
+    :type max_people: int
     """
-    maxx = how_many_people
     if not message.guild:
         embed = discord.Embed(
             title=f":warning: Error :warning:",
@@ -53,7 +53,7 @@ async def _leaderboard(message, how_many_people: int = 3):
                         value="Leaderboards don't work in a DM")
         await message.channel.send(embed=embed)
         return
-    if maxx > 30 or maxx < 3:
+    if max_people > 30 or max_people < 3:
         embed = discord.Embed(
             title=f":warning: Error :warning:",
             description="While processing this request, we ran into an error",
@@ -62,7 +62,7 @@ async def _leaderboard(message, how_many_people: int = 3):
                          url="",
                          icon_url=message.author.avatar)
         embed.add_field(
-            name=f'Invalid range "{maxx}"',
+            name=f'Invalid range "{max_people}"',
             value="Please enter a number between 3 and 30 (inclusive)")
         await message.channel.send(embed=embed)
         return
@@ -77,7 +77,7 @@ async def _leaderboard(message, how_many_people: int = 3):
     # Setting up embed
     embed = discord.Embed(
         title=f"The points leaderboard for **{message.guild.name}**",
-        description=f"Top {maxx} people",
+        description=f"Top {max_people} people",
         color=0xFF5733)
     embed.set_author(name=message.author.display_name,
                      url="",
@@ -95,14 +95,14 @@ async def _leaderboard(message, how_many_people: int = 3):
     prev = float("-inf")
     result = ""
     my_id = int(message.author.id)
-    place = f"You're not among the top {maxx} people."
+    place = f"You're not among the top {max_people} people."
 
     for k in points:
         if str(k) in memberlist:
             if points[k] != prev:
                 numusers += 1
             prev = points[k]
-            if numusers > maxx:
+            if numusers > max_people:
                 break
             if my_id == int(k):
                 place = f"You occupy place #{numusers}!"

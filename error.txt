@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 200, in wrapped
+    ret = await coro(*args, **kwargs)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/help.py", line 978, in command_callback
+    return await self.send_command_help(cmd)
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/misc.py", line 62, in send_command_help
+    await destination.send(embed=embed)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/abc.py", line 1537, in send
+    data = await state.http.send_message(channel.id, params=params)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/http.py", line 507, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body
+In embeds.0.fields.1.value: This field is required
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1330, in invoke
+    await ctx.command.invoke(ctx)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 995, in invoke
+    await injected(*ctx.args, **ctx.kwargs)  # type: ignore
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
+    raise CommandInvokeError(exc) from exc
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body
+In embeds.0.fields.1.value: This field is required

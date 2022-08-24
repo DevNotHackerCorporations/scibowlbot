@@ -42,9 +42,10 @@ async def setup(bot):
 @commands.hybrid_command(name="q")
 async def q(ctx, subject):
     """
-    Generate a new scibowl question!
+    Generate a new Science Bowl question!
 
     Valid subjects include:
+    ```
     PHY    (Physics)
     GEN    (General Science)
     ENERGY (Energy)
@@ -58,6 +59,11 @@ async def q(ctx, subject):
     ALL    (All Subjects Above)
     WEIRD  (Our own questions)
     CRAZY  (Our own non-science questions)
+    ```
+    Note: Each channel can only host one question at the time.
+
+    :param subject: The subject of the question
+    :type subject: str
     """
     try:
         obj = Question(ctx, subject.upper())

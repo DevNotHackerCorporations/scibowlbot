@@ -3,3 +3,4 @@ flask
 pyrebase
 jishaku
 readtime
+docstring_parser

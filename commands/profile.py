@@ -48,6 +48,9 @@ class Profile(commands.Cog):
         View your server profile!
 
         You can change this with .change_profile and .set_bio
+
+        :param member: Whose profile do you want to view? defaults to [your own profile]
+        :type member: int
         """
         if not member:
             member = message.author
@@ -125,6 +128,9 @@ class Profile(commands.Cog):
         - Make sure your bio is under 200 characters
 
         You can view your bio with `.profile`
+
+        :param bio: Your new biography
+        :type bio: str
         """
         if not bio.strip():
             raise BadArgument("You must set your bio to something!")

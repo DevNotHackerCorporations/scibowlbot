@@ -38,16 +38,15 @@ async def _gift(message, amount: int, to_user: discord.Member):
     """
     Gift some of your points to someone!
 
-    Parameters
-    -----------
-    amount: int
-        How many coins are you gifting?
-    to_user: discord.Member
-        Who are you gifting to?
+    :param amount: How many coins are you gifting?
+    :type amount: int
+    :param to_user: Who are you gifting to?
+    :type to_user: discord.Member
     """
     if amount < 0:
         raise BadArgument(
-            "There are two people in life, those whose power is to give and those whos weakness is to take, in other words, YOU GREEDY LITTLE--")
+            "There are two people in life, those whose power is to give and those whos weakness is to take, "
+            "in other words, YOU GREEDY LITTLE--")
 
     to = str(to_user.id)
 

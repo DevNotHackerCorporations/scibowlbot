@@ -47,6 +47,10 @@ def standard_deviation_approx(arr):
 async def _server_stats(message):
     """
     View the statistics for this server!
+
+    Statistics include:
+        - Average points in server
+        - Standard Deviation of points in server
     """
     memberlist = set()
     for member in message.guild.members:
