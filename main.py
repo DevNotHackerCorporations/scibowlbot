@@ -38,7 +38,7 @@ import pyrebase
 alertdev_err = [
     MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound,
     UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded,
-    BadArgument
+    BadArgument, str
 ]
 
 log = logging.getLogger('werkzeug')
@@ -85,8 +85,6 @@ class Sbb(commands.Bot):
         await self.load_extension('commands.profile')
         await self.load_extension('commands.serverstats')
         await self.load_extension('commands.dev')
-        await self.load_extension('commands.gift')
-        await self.load_extension('commands.leaderboard')
         await self.load_extension('commands.misc')
 
     async def on_ready(self):
@@ -166,7 +164,6 @@ class Sbb(commands.Bot):
             with open("error.txt", "w") as file:
                 file.write("".join(traceback.format_exception(type(err), err, err.__traceback__)))
                 await dev.send(embed=embed, file=discord.File("error.txt"))
-                file.truncate(0)
 
     @tasks.loop(minutes=5.0)
     async def update_data_from_firebase(self):
