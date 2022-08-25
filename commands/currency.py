@@ -31,7 +31,7 @@ client = commands.Bot(command_prefix=".", intents=intents)
 
 
 async def setup(bot):
-    bot.add_cog(Currency())
+    await bot.add_cog(Currency())
 
 
 class Currency(commands.Cog):
