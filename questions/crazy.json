@@ -1,141 +1,83 @@
-[{
-    "question": {
-        "category":
-        "WEIRD (Books)",
-        "auth":
-        "Kevin",
-        "id":
-        -1,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "Z)Beasts of England, beasts of Ireland, beasts of every land and clime...",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "arr me potato beast\nW) Patata\nX) Pititi\nY) Petete\nZ) Beasts of England, beasts of Ireland, beasts of every land and clime\nHearken to my joyful tidings of a golden future time"
-    }
-}, {
-    "question": {
-        "category":
-        "WEIRD (General Knowledge)",
-        "id":
-        -2,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "X) bananas don't grow on coconut trees",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "if there are 70 bananas growing on a coconut tree, the how many times can a yellow submarine crash into a pineapple under the sea?\nW) The yellow submarine is a pineapple\nX) bananas don't grow on coconut trees\nY) a pineapple is also growing on the coconut tree\nZ) a ko ko nut is a very big nut"
-    }
-}, {
-    "question": {
-        "category": "MEME",
-        "id": -3,
-        "source": "Scibowlbot Round 1",
-        "tossup_answer": "69 (ACCEPT: 6-9)",
-        "tossup_format": "Short Answer",
-        "tossup_question": "What is the funny number?"
-    }
-}, {
-    "question": {
-        "category":
-        "INTERESTING",
-        "id":
-        -4,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "6",
-        "tossup_format":
-        "Short Answer",
-        "tossup_question":
-        "What is the next number after the following? 3.14159265358979323846264338327950288419716939937510582097494459230781"
-    }
-}, {
-    "question": {
-        "category":
-        "INTERESTING",
-        "id":
-        -5,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "k",
-        "tossup_format":
-        "Short Answer",
-        "tossup_question":
-        "What is the most common letter in the following? eighksgjgdgjgeeeeeesgkdkgdkgkdfgkpeeeedkdkgskgkergkegbshjgbjsgrhgrjgdnkgdgdkgdghskrgsjghsghjsrjgskgsgkgsjgrugskgksgysbgksughrsbgkjsrkworgikejgkwrgihgjkrslgrighwkrguwrhjwqywjhqhuirghjwrkgrkhsdgkjesguwekkkwktwejfgydhfwsdgwyghjrbeghjwesddfsrkgdfgweyghwhjgsebkmmkndfkhwriwrkwristhdkxxkurjehdlskkfdh"
-    }
-}, {
-    "question": {
-        "category":
-        "GENERAL SCIENCE",
-        "id":
-        -6,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "X) 42",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "What is the answer to life and everything?\nW) There is no answer\nX) 42\nY) Funny number\nZ) Turtles"
-    }
-}, {
-    "question": {
-        "category":
-        "BIOLOGY",
-        "id":
-        -7,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "X) Crab",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "What is the fate of all things?\nW) Death\nX) Crab\nY) endless reincarnation\nZ) Microsoft"
-    }
-}, {
-    "question": {
-        "category":
-        "GENERAL SCIENCE",
-        "id":
-        -8,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "Y) Who asked?",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "Scientists at Argonne National Laboratory are using high powered infrared orbital telescopes to try and find what hypothetical form of matter? ?\nW) Dark Matter\nX) Exotic Matter\nY) Who asked?\nZ) Mirror matter"
-    }
-}, {
-    "question": {
-        "category":
-        "WEIRD",
-        "id":
-        -9,
-        "source":
-        "Scibowlbot Round 1",
-        "tossup_answer":
-        "X) He is Fat",
-        "tossup_format":
-        "Multiple Choice",
-        "tossup_question":
-        "Suppose Bob has 5925 cookies,  and all of them are the same weight. He eats all of them, what is his weight? \nW) 3592 pounds\nX) He is Fat\nY) Ded due to cookie overdose\nZ) Not my issue"
-    }
-}, {
-    "question": {
-        "category": "WEIRD",
-        "id": -10,
-        "source": "Scibowlbot Round 1",
-        "tossup_answer": "Among Us",
-        "tossup_format": "Short Answer",
-        "tossup_question": "Which video game is sus?"
-    }
-}]
+[
+  {
+    "category": "WEIRD (Books)",
+    "auth": "Kevin",
+    "id": -1,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "Z)Beasts of England, beasts of Ireland, beasts of every land and clime...",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "arr me potato beast\nW) Patata\nX) Pititi\nY) Petete\nZ) Beasts of England, beasts of Ireland, beasts of every land and clime\nHearken to my joyful tidings of a golden future time"
+  },
+  {
+    "category": "WEIRD (General Knowledge)",
+    "id": -2,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "X) bananas don't grow on coconut trees",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "if there are 70 bananas growing on a coconut tree, the how many times can a yellow submarine crash into a pineapple under the sea?\nW) The yellow submarine is a pineapple\nX) bananas don't grow on coconut trees\nY) a pineapple is also growing on the coconut tree\nZ) a ko ko nut is a very big nut"
+  },
+  {
+    "category": "MEME",
+    "id": -3,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "69 (ACCEPT: 6-9)",
+    "tossup_format": "Short Answer",
+    "tossup_question": "What is the funny number?"
+  },
+  {
+    "category": "INTERESTING",
+    "id": -4,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "6",
+    "tossup_format": "Short Answer",
+    "tossup_question": "What is the next number after the following? 3.14159265358979323846264338327950288419716939937510582097494459230781"
+  },
+  {
+    "category": "INTERESTING",
+    "id": -5,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "k",
+    "tossup_format": "Short Answer",
+    "tossup_question": "What is the most common letter in the following? eighksgjgdgjgeeeeeesgkdkgdkgkdfgkpeeeedkdkgskgkergkegbshjgbjsgrhgrjgdnkgdgdkgdghskrgsjghsghjsrjgskgsgkgsjgrugskgksgysbgksughrsbgkjsrkworgikejgkwrgihgjkrslgrighwkrguwrhjwqywjhqhuirghjwrkgrkhsdgkjesguwekkkwktwejfgydhfwsdgwyghjrbeghjwesddfsrkgdfgweyghwhjgsebkmmkndfkhwriwrkwristhdkxxkurjehdlskkfdh"
+  },
+  {
+    "category": "GENERAL SCIENCE",
+    "id": -6,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "X) 42",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "What is the answer to life and everything?\nW) There is no answer\nX) 42\nY) Funny number\nZ) Turtles"
+  },
+  {
+    "category": "BIOLOGY",
+    "id": -7,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "X) Crab",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "What is the fate of all things?\nW) Death\nX) Crab\nY) endless reincarnation\nZ) Microsoft"
+  },
+  {
+    "category": "GENERAL SCIENCE",
+    "id": -8,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "Y) Who asked?",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "Scientists at Argonne National Laboratory are using high powered infrared orbital telescopes to try and find what hypothetical form of matter? ?\nW) Dark Matter\nX) Exotic Matter\nY) Who asked?\nZ) Mirror matter"
+  },
+  {
+    "category": "WEIRD",
+    "id": -9,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "X) He is Fat",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "Suppose Bob has 5925 cookies,  and all of them are the same weight. He eats all of them, what is his weight? \nW) 3592 pounds\nX) He is Fat\nY) Ded due to cookie overdose\nZ) Not my issue"
+  },
+  {
+    "category": "WEIRD",
+    "id": -10,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "Among Us",
+    "tossup_format": "Short Answer",
+    "tossup_question": "Which video game is sus?"
+  }
+]
