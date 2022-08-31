@@ -23,7 +23,8 @@ For any questions, please contant DevNotHackerCorporations by their email at <de
 
 import discord
 from discord.ext import commands, tasks
-from discord.ext.commands import MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound
+from discord.ext.commands import MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, \
+    UserNotFound, BadUnionArgument, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound, NotOwner
 
 import asyncio
 from datetime import datetime
@@ -38,7 +39,7 @@ import pyrebase
 alertdev_err = [
     MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound,
     UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded,
-    BadArgument, str
+    BadArgument, NotOwner, str
 ]
 
 log = logging.getLogger('werkzeug')
