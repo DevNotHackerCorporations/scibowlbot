@@ -88,7 +88,7 @@ class Sbb(commands.Bot):
         await self.load_extension('commands.dev')
         await self.load_extension('commands.misc')
         await self.load_extension('commands.currency')
-
+        await self.load_extension('commands.suggest')
     async def on_ready(self):
         print('Logged in as {0.user} in {1} servers at {2} (UTC)'.format(
             self, len(self.guilds),
