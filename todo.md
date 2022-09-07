@@ -9,4 +9,4 @@
 * [x] \points USER
 * [x] .leaderboard .points discord.ext.commands
 * [ ] Create a system that tracks correct answers and questions for each subject
-* [ ] Create a system where you can suggest different things, as well as implementing a troll filter system along with a cooldown system
+* [ ] ~~Create a system where you can suggest different things~~, as well as implementing a troll filter system along with a cooldown system
