@@ -20,4 +20,4 @@ if message.content.startswith(".suggest"):
         y = message.content
         z = y.replace(".suggest", "", 1)
         channel = client.get_channel(channel_entry) 
-        await channel.send(f"from:`{message.author}`, suggestion: {z}")
+        await channel.send(f"from:`{message.author}`, suggestion:{z}")
