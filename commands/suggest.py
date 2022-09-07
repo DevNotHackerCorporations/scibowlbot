@@ -14,6 +14,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
 """
+import discord
 
 if message.content.startswith(".suggest"):
         channel_entry = 1016869552707084378
