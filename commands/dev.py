@@ -82,3 +82,12 @@ class Utility(commands.Cog):
             description=
             f"It took {round(ctx.bot.latency * 1000)}ms to get back here")
         await ctx.send(embed=embed)
+
+    @commands.hybrid_command(name="suggest")
+    async def _suggest(self, ctx, suggestion):
+        if ctx.prefix == ".":
+            suggestion = ctx.message.content[len("suggest "):].strip('"')
+        embed = discord.Embed(title="Incoming Suggestion!", color=discord.Color.green(), description=suggestion)
+        embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} (ID: {ctx.author.id})", icon_url=ctx.author.avatar)
+        embed.add_field(name="Original", value=f"[Jump!]({ctx.message.jump_url})")
+        await ctx.bot.suggestionLog.send(embed=embed)
