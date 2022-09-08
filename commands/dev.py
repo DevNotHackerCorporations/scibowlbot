@@ -91,3 +91,4 @@ class Utility(commands.Cog):
         embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} (ID: {ctx.author.id})", icon_url=ctx.author.avatar)
         embed.add_field(name="Original", value=f"[Jump!]({ctx.message.jump_url})")
         await ctx.bot.suggestionLog.send(embed=embed)
+        await ctx.message.add_reaction("✅")
