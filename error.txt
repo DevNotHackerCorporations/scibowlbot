@@ -1,13 +1,38 @@
 Traceback (most recent call last):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 917, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+  File "<frozen importlib._bootstrap_external>", line 855, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/serverstats.py", line 95, in <module>
+    async def _pd(ctx):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 767, in decorator
+    result = hybrid_command(name=name, *args, with_app_command=with_app_command, **kwargs)(func)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 844, in decorator
+    return HybridCommand(func, name=name, with_app_command=with_app_command, **attrs)  # type: ignore  # ???
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 483, in __init__
+    HybridAppCommand(self) if self.with_app_command else None
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 295, in __init__
+    super().__init__(
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 511, in __init__
+    self.name: str = validate_name(name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 218, in validate_name
+    raise ValueError(f'{name!r} must be all lower-case')
+ValueError: 'pointsDistribution' must be all lower-case
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 200, in wrapped
     ret = await coro(*args, **kwargs)
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 93, in _suggest
-    await ctx.bot.suggestionLog.send(embed=embed)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/abc.py", line 1537, in send
-    data = await state.http.send_message(channel.id, params=params)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/http.py", line 501, in request
-    raise Forbidden(response, data)
-discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 71, in _reload
+    await ctx.bot.reload_extension(command_name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1097, in reload_extension
+    await self.load_extension(name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 995, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 920, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'commands.serverstats' raised an error: ValueError: 'pointsDistribution' must be all lower-case
 
 The above exception was the direct cause of the following exception:
 
@@ -18,4 +43,4 @@ Traceback (most recent call last):
     await injected(*ctx.args, **ctx.kwargs)  # type: ignore
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
     raise CommandInvokeError(exc) from exc
-discord.ext.commands.errors.CommandInvokeError: Command raised an exception: Forbidden: 403 Forbidden (error code: 50001): Missing Access
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionFailed: Extension 'commands.serverstats' raised an error: ValueError: 'pointsDistribution' must be all lower-case

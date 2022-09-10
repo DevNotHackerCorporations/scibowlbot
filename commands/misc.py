@@ -72,7 +72,7 @@ class MyHelp(commands.HelpCommand):
         destination = self.get_destination()
         await destination.send(embed=self.help_embed(), view=view)
 
-    async def send_command_help(self, command):
+    async def get_command_embed(self, command):
         dstr = docstring_parser.parse(command.help)
 
         embed = discord.Embed(title="Scibowlbot help", color=discord.Color.blurple())
@@ -85,13 +85,26 @@ class MyHelp(commands.HelpCommand):
                     f"({type_emojis.get(arg.type_name, arg.type_name)}" \
                     f"{', optional' if arg.is_optional else ''})\n> {arg.description}\n\n"
         embed.add_field(name="Arguments", value=(args if args else "This command requires no arguments!"), inline=False)
+        return embed
 
+    async def send_command_help(self, command):
         destination = self.get_destination()
+        await destination.send(embed=await self.get_command_embed(command))
+
+    async def send_group_help(self, group: commands.Group):
+        destination = self.get_destination()
+        embed = discord.Embed(
+            title="Scibowlbot help",
+            color=discord.Color.purple(),
+            description=f"{group.qualified_name} - {group.short_doc}")
+        body = ""
+
+        for command in group.commands:
+            body += f"`{self.get_command_signature(command)}` - {docstring_parser.parse(command.help).short_description}\n"
+
+        embed.add_field(name="Commands", value=(body if body.strip() else "No commands here yet...."))
+
         await destination.send(embed=embed)
-
-    async def send_group_help(self, group):
-        destination = self.get_destination()
-        await destination.send('send_group_help got called')
 
     async def send_error_message(self, error):
         await self.context.bot.on_command_error(self.context, error)
