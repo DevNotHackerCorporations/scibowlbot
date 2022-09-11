@@ -124,6 +124,9 @@ async def _pd(ctx):
 async def _pc(ctx, subject: typing.Optional[discord.Member]):
     """
     Shows global percentiles
+
+    :param subject: Where is [subject] on the percentile chart? defaults to you
+    :type subject: discord.Member, optional
     """
     if subject is None:
         subject = ctx.author

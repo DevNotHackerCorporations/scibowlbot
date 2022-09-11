@@ -20,6 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For any questions, please contact DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
 """
 
+import json
+
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
@@ -44,13 +46,15 @@ class Utility(commands.Cog):
         """
         await ctx.send("I am currently in " + str(len(ctx.bot.guilds)) +
                        " servers!")
+
     @commands.hybrid_command(name="users")
     async def _dev_users(self, ctx):
         """
-        How many users user scibowlbot?
+        How many users use scibowlbot?
         """
         data = json.loads(open("points.json", "r").read())
-        await ctx.send(f"I currently help {len(data["points"])} get better at science!")
+        await ctx.send(f"I currently help {len(data['points'])} get better at science!")
+
     @commands.hybrid_command(name="clear")
     async def _dev_clear(self, message):
         """
@@ -76,7 +80,7 @@ class Utility(commands.Cog):
             raise BadArgument("Unauthorized. This command is dev only.")
         await ctx.bot.reload_extension(command_name)
         await ctx.send("Reloaded extention")
-                              
+
     @commands.hybrid_command(name="ping")
     async def _ping(self, ctx):
         """
@@ -93,11 +97,15 @@ class Utility(commands.Cog):
     async def _suggest(self, ctx, suggestion):
         """
         Suggest or report a bug to the scibowlbot developers!
+
+        :param suggestion: What's your suggestion/bug?
+        :type suggestion: str
         """
         if ctx.prefix == ".":
             suggestion = ctx.message.content[len("suggest "):].strip('"')
         embed = discord.Embed(title="Incoming Suggestion!", color=discord.Color.green(), description=suggestion)
-        embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} (ID: {ctx.author.id})", icon_url=ctx.author.avatar)
+        embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} (ID: {ctx.author.id})",
+                         icon_url=ctx.author.avatar)
         embed.add_field(name="Original", value=f"[Jump!]({ctx.message.jump_url})")
         await ctx.bot.suggestionLog.send(embed=embed)
         await ctx.message.add_reaction("✅")
