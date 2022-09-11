@@ -22,9 +22,11 @@ For any questions, please contant DevNotHackerCorporations by their email at <de
 """
 
 import discord
+from discord import app_commands
 from discord.ext import commands, tasks
 from discord.ext.commands import MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound, \
-    UserNotFound, BadUnionArgument, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound, NotOwner
+    UserNotFound, BadUnionArgument, ExtensionAlreadyLoaded, ExtensionNotLoaded, BadArgument, CommandNotFound, NotOwner, \
+    NoPrivateMessage
 
 import asyncio
 from datetime import datetime
@@ -39,7 +41,7 @@ import pyrebase
 alertdev_err = [
     MissingRequiredArgument, DisabledCommand, MemberNotFound, GuildNotFound,
     UserNotFound, BadUnionArgument, ExtensionNotLoaded, ExtensionAlreadyLoaded,
-    BadArgument, NotOwner, str
+    BadArgument, NotOwner, str, NoPrivateMessage
 ]
 
 log = logging.getLogger('werkzeug')
@@ -47,6 +49,7 @@ log.setLevel(logging.ERROR)
 
 if __name__ == "__main__":
     os.chdir("/opt/app/scibowlbot")
+
 
 class Sbb(commands.Bot):
     def __init__(self):

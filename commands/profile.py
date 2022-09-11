@@ -20,13 +20,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For any questions, please contant DevNotHackerCorporations by their email at <devnothackercorporations@gmail.com>
 """
 
-import asyncio
 from discord.ext import commands
 from discord.ext.commands import BadArgument
-import random
 import discord
 import typing
-import re
 import json
 
 intents = discord.Intents.default()

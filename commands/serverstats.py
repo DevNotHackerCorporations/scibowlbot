@@ -50,6 +50,8 @@ def standard_deviation_approx(arr):
 
 
 def get_points(ctx, global_=False):
+    if not ctx.guild:
+        return [ctx.bot.getpoints(str(ctx.author.id))]
     memberlist = {str(member.id) for member in ctx.guild.members}
     points = json.loads(open("points.json", "r").read()).get("points")
     people = []
@@ -59,6 +61,7 @@ def get_points(ctx, global_=False):
     return people
 
 
+@commands.guild_only()
 @commands.hybrid_group(fallback="stats", invoke_without_command=True, pass_context=True, aliases=["ss"])
 async def stats(ctx):
     """
@@ -91,6 +94,7 @@ async def stats(ctx):
     await ctx.send(embed=embed)
 
 
+@commands.guild_only()
 @stats.command(name='points_distribution', aliases=["pd"])
 async def _pd(ctx):
     """
@@ -114,6 +118,8 @@ async def _pd(ctx):
 
     await ctx.send(file=discord.File("image.png"))
 
+
+@commands.guild_only()
 @stats.command(name='percentile', aliases=["pc"])
 async def _pc(ctx, subject: typing.Optional[discord.Member]):
     """

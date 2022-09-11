@@ -85,6 +85,9 @@ class Utility(commands.Cog):
 
     @commands.hybrid_command(name="suggest")
     async def _suggest(self, ctx, suggestion):
+        """
+        Suggest or report a bug to the scibowlbot developers!
+        """
         if ctx.prefix == ".":
             suggestion = ctx.message.content[len("suggest "):].strip('"')
         embed = discord.Embed(title="Incoming Suggestion!", color=discord.Color.green(), description=suggestion)
