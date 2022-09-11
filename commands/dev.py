@@ -44,7 +44,13 @@ class Utility(commands.Cog):
         """
         await ctx.send("I am currently in " + str(len(ctx.bot.guilds)) +
                        " servers!")
-
+    @commands.hybrid_command(name="users")
+    async def _dev_users(self, ctx):
+        """
+        How many users user scibowlbot?
+        """
+        data = json.loads(open("points.json", "r").read())
+        await ctx.send(f"I currently help {len(data["points"])} get better at science!")
     @commands.hybrid_command(name="clear")
     async def _dev_clear(self, message):
         """
