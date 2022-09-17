@@ -192,7 +192,7 @@ class HelpView(discord.ui.View):
         await self.goto(0, interaction.response)
 
     async def goto(self, pagenum=0, interaction: discord.Interaction = None, edit=True):
-        if interaction.user.id != self.ctx.author.id:
+        if interaction and interaction.user.id != self.ctx.author.id:
             return await interaction.response.send_message("This is not your command!", ephemeral=True)
         self.embed.clear_fields()
         self.embed.add_field(name=f"Page {pagenum + 1}/{len(self.body.pages)}", value=self.body.pages[pagenum],
