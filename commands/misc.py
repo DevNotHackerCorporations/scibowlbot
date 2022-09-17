@@ -48,6 +48,7 @@ category_emojis = {
 async def setup(bot: commands.Bot):
     bot.help_command = MyHelp()
 
+
 class MyHelp(commands.HelpCommand):
     def help_embed(self):
         embed = discord.Embed(
@@ -116,7 +117,8 @@ class MyHelp(commands.HelpCommand):
                                   linesep="\n")
 
         for command in group.commands:
-            body.add_line(f"`{self.get_command_signature(command)}` - {docstring_parser.parse(command.help).short_description}\n")
+            body.add_line(
+                f"`{self.get_command_signature(command)}` - {docstring_parser.parse(command.help).short_description}\n")
         if not group.commands:
             body.add_line("No commands here yet....")
 
@@ -140,7 +142,8 @@ class MyHelp(commands.HelpCommand):
             cog = cog.get_commands()
 
         for command in cog:
-            body.add_line(f"`{self.get_command_signature(command)}` - {docstring_parser.parse(command.help).short_description}\n")
+            body.add_line(
+                f"`{self.get_command_signature(command)}` - {docstring_parser.parse(command.help).short_description}\n")
 
         return embed, body
 
@@ -188,9 +191,12 @@ class HelpView(discord.ui.View):
         self.embed, self.body = self.help.get_cog_embed(cog, name) if cog else self.help.help_embed()
         await self.goto(0, interaction.response)
 
-    async def goto(self, pagenum=0, interactionResponse=None, edit=True):
+    async def goto(self, pagenum=0, interaction: discord.Interaction = None, edit=True):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("This is not your command!", ephemeral=True)
         self.embed.clear_fields()
-        self.embed.add_field(name=f"Page {pagenum + 1}/{len(self.body.pages)}", value=self.body.pages[pagenum], inline=True)
+        self.embed.add_field(name=f"Page {pagenum + 1}/{len(self.body.pages)}", value=self.body.pages[pagenum],
+                             inline=True)
         for child in self.children:
             if child.custom_id in ["btnBack", "btnPrev"]:
                 child.disabled = pagenum == 0
@@ -199,26 +205,26 @@ class HelpView(discord.ui.View):
 
         self.curPage = pagenum
         if edit:
-            if interactionResponse:
-                await interactionResponse.edit_message(embed=self.embed, view=self)
+            if interaction.response:
+                await interaction.response.edit_message(embed=self.embed, view=self)
             else:
                 await self.message.edit(embed=self.embed, view=self)
 
     @discord.ui.button(label="<<", style=discord.ButtonStyle.gray, row=1, custom_id="btnBack")
     async def leftBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(0, interaction.response)
+        await self.goto(0, interaction)
 
     @discord.ui.button(label="Previous", style=discord.ButtonStyle.blurple, row=1, custom_id="btnPrev")
     async def prevBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(self.curPage - 1, interaction.response)
+        await self.goto(self.curPage - 1, interaction)
 
     @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple, row=1, custom_id="btnNext")
     async def nextBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(self.curPage + 1, interaction.response)
+        await self.goto(self.curPage + 1, interaction)
 
     @discord.ui.button(label=">>", style=discord.ButtonStyle.gray, row=1, custom_id="btnForward")
     async def rightBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(max(len(self.body.pages) - 1, 0), interaction.response)
+        await self.goto(max(len(self.body.pages) - 1, 0), interaction)
 
     @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
     async def quitBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
