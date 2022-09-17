@@ -35,6 +35,49 @@ async def setup(bot):
     await bot.add_cog(Utility(bot))
 
 
+class QuestionView(discord.ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=300.0)
+        self.ctx = ctx
+
+    async def run(self):
+        self.message = await self.ctx.send(view=self, ephemeral=True)
+
+    @discord.ui.button(label="Launch Suggestion Modal", style=discord.ButtonStyle.blurple)
+    async def btn(self, interaction, button):
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message("Sorry, this is not your command!", ephemeral=True)
+        else:
+            await interaction.response.send_modal(QuestionReq(self.ctx))
+
+    async def on_timeout(self):
+        for item in self.children:
+            item.disabled = True
+
+        await self.message.edit(view=self)
+
+
+class QuestionReq(discord.ui.Modal, title='Question Request'):
+    category = discord.ui.TextInput(label='Question Category', required=True, placeholder="Physics, Chemistry, "
+                                                                                          "Biology, etc.")
+    text = discord.ui.TextInput(label='Question', style=discord.TextStyle.paragraph, required=True)
+    answer = discord.ui.TextInput(label="Question Answer", style=discord.TextStyle.paragraph, required=True)
+
+    def __init__(self, ctx):
+        self.ctx = ctx
+        super().__init__()
+
+    async def on_submit(self, interaction: discord.Interaction):
+        embed = discord.Embed(title="Incoming Question Suggestion!", color=discord.Color.blue())
+        embed.set_author(name=f"{self.ctx.author.name}#{self.ctx.author.discriminator} (ID: {self.ctx.author.id})",
+                         icon_url=self.ctx.author.avatar)
+        embed.add_field(name="Category", value=f"`{self.category}`", inline=False)
+        embed.add_field(name="Question Statement", value=f"`{self.text}`", inline=False)
+        embed.add_field(name="Answer", value=f"`{self.answer}`", inline=False)
+        await self.ctx.bot.suggestionLog.send(embed=embed)
+        await interaction.response.send_message(f'Your response was recorded.', ephemeral=True)
+
+
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -108,4 +151,15 @@ class Utility(commands.Cog):
                          icon_url=ctx.author.avatar)
         embed.add_field(name="Original", value=f"[Jump!]({ctx.message.jump_url})")
         await ctx.bot.suggestionLog.send(embed=embed)
-        await ctx.message.add_reaction("✅")
+        if ctx.prefix == ".":
+            await ctx.message.add_reaction("✅")
+        else:
+            await ctx.send("Success! Your suggestion was sent!", ephemeral=True)
+
+    @commands.hybrid_command("suggest_question", aliases=["sg"])
+    async def _sg(self, ctx):
+        """
+        Suggest a question that may be considered for publishing
+        """
+        question = QuestionView(ctx)
+        await question.run()

@@ -69,12 +69,8 @@ class MyHelp(commands.HelpCommand):
         body.add_line('**Credits**\n'
                       "Scibowlbot is made by `Actinium#6072` with help from `hi-person#8594` and `goodbye#5213`. "
                       "Special thanks to `Fyssion#5985`, `ilovetocode#9113`, and `Streakwind#5347` for their support "
-                      "helping troubleshoot and figure out discord.py.")
-
-        body.add_line('**Credits**\n'
-                      "Scibowlbot is made by `Actinium#6072` with help from `hi-person#8594` and `goodbye#5213`. "
-                      "Special thanks to `Fyssion#5985`, `ilovetocode#9113`, and `Streakwind#5347` for their support "
-                      "helping troubleshoot and figure out discord.py.")
+                      "helping troubleshoot and figure out discord.py. Questions are sourced from [CQCumbers's scibowldb](https://github.com/CQCumbers/scibowldb).")
+        body.add_line("**Changelog**\n" + open("Changelog.md", "r").read())
 
         return embed, body
 
