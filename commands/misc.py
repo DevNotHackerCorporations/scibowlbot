@@ -189,7 +189,7 @@ class HelpView(discord.ui.View):
     async def rebind(self, cog, interaction: discord.Interaction, name=None):
         self.selectMenu.add_options(["Homepage"] + list(map(self.cogName, self.help.get_bot_mapping().keys())), name)
         self.embed, self.body = self.help.get_cog_embed(cog, name) if cog else self.help.help_embed()
-        await self.goto(0, interaction.response)
+        await self.goto(0, interaction)
 
     async def goto(self, pagenum=0, interaction: discord.Interaction = None, edit=True):
         if interaction and interaction.user.id != self.ctx.author.id:
