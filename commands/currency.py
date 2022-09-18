@@ -24,6 +24,8 @@ from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
 import json
+import pathlib
+import typing
 from utils.menu import Menu
 from utils.func import get_points
 
@@ -42,13 +44,15 @@ standingEmojis = {
     3: ":third_place: ",
 }
 
+
 class Currency(commands.Cog):
     """
     Commands that relate to scibowlbot currency (aka. points)
     """
+
     @commands.guild_only()
     @commands.hybrid_command(name="leaderboard", aliases=["lb"])
-    async def _leaderboard(self, ctx, max_people: int = 3, global_: bool = False):
+    async def _leaderboard(self, ctx, max_people: typing.Optional[int] = 3, global_: typing.Optional[bool] = False):
         """
         View the server leaderboard (and your place in it)
 
@@ -57,14 +61,16 @@ class Currency(commands.Cog):
         """
 
         embed = discord.Embed(
-            title=f"The points leaderboard for **{ctx.guild.name}**",
+            title=f"The points leaderboard for **{ctx.guild.name}**" if not global_ else "Global leaderboard",
             description=f"Top {max_people} people",
             color=0xFF5733)
         embed.set_author(name=ctx.author.display_name,
                          url="",
                          icon_url=ctx.author.avatar)
-        embed.set_thumbnail(url=ctx.guild.icon)
-        body = commands.Paginator(prefix="**The people and their scores**", suffix=f"\n**What place am I?**\nYou are not among the top {max_people}", max_size=1024 - 10 - len(embed.title),
+        embed.set_thumbnail(url=ctx.guild.icon if not global_ else f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/website/globe.png")
+        body = commands.Paginator(prefix="**The people and their scores**",
+                                  suffix=f"\n**What place am I?**\nYou are not among the top {max_people}",
+                                  max_size=1024 - 10 - len(embed.title),
                                   linesep="\n")
 
         points = {x: y for x, y in sorted(get_points(ctx, global_, True).items(), key=lambda x: x[1], reverse=True)}
@@ -76,14 +82,13 @@ class Currency(commands.Cog):
                 body.suffix = f"\n**What place am I?**\nYou occupy place #{index + 1}"
 
             if not global_:
-                member = ctx.guild.get_member(int(id))
+                name = ctx.guild.get_member(int(id)).display_name
             else:
-                member = ctx.bot.get_user(int(id))
-
+                name = f"<@{id}>"
 
             emoji = standingEmojis.get(index + 1, ":medal:")
-            body.add_line(emoji + " **" + str(member.display_name) + "** (" +
-                       str(points) + "pt)")
+            body.add_line(emoji + " **" + str(name) + "** (" +
+                          str(points) + "pt)")
 
         view = Menu(ctx, self)
 

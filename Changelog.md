@@ -16,3 +16,5 @@
 > Suggest something to the devs (`.suggest`)
 
 > Suggest a question for publishing (`.suggest_question||sg`) 
+
+> Global Leaderboard 

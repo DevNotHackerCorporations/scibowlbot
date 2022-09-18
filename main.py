@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
 class Sbb(commands.Bot):
     def __init__(self):
+        self.suggestionLog = None
         self.devs = None
         self.auth_id = None
         intents = discord.Intents.default()
