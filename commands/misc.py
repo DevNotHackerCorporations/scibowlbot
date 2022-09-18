@@ -24,6 +24,7 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 import docstring_parser
+from utils.menu import Menu
 
 intents = discord.Intents.default()
 intents.members = True
@@ -76,7 +77,7 @@ class MyHelp(commands.HelpCommand):
         return embed, body
 
     async def send_bot_help(self, mapping):
-        view = HelpView(self.context, self)
+        view = Menu(self.context, self)
         view.add_categories(dict(mapping), "Homepage")
 
         destination = self.get_destination()
@@ -87,24 +88,36 @@ class MyHelp(commands.HelpCommand):
         await view.goto(0, edit=False)
         view.message = await destination.send(embed=view.embed, view=view)
 
-    async def get_command_embed(self, command):
+    def get_command_embed(self, command):
         dstr = docstring_parser.parse(command.help)
 
         embed = discord.Embed(title="Scibowlbot help", color=discord.Color.blurple())
-        embed.add_field(name=f"`{self.get_command_signature(command)}`", value=((dstr.short_description or "") + (
-            f"\n\n{dstr.long_description or ''}") or "Strangely, there's nothing here..."), inline=False)
+
+        body = commands.Paginator(prefix="", suffix="", max_size=1024 - 10 - len(embed.title),
+                                  linesep="\n\n")
+
+        body.add_line(self.get_command_signature(command)),
+        body.add_line(((dstr.short_description or "") + (dstr.long_description or '')) or "Strangely, there's nothing "
+                                                                                          "here...")
 
         args = ""
         for arg in dstr.params:
             args += f"{arg.arg_name} {'= ' + arg.default if arg.default else ''} " \
                     f"({type_emojis.get(arg.type_name, arg.type_name)}" \
                     f"{', optional' if arg.is_optional else ''})\n> {arg.description}\n\n"
-        embed.add_field(name="Arguments", value=(args if args else "This command requires no arguments!"), inline=False)
-        return embed
+        body.add_line("**Arguments**\n" + (args if args else "This command requires no arguments!"))
+        return embed, body
 
     async def send_command_help(self, command):
+        view = Menu(self.context, self)
+
         destination = self.get_destination()
-        await destination.send(embed=await self.get_command_embed(command))
+        embed, body = self.get_command_embed(command)
+
+        view.body = body
+        view.embed = embed
+        await view.goto(0, edit=False)
+        view.message = await destination.send(embed=view.embed, view=view)
 
     async def send_group_help(self, group: commands.Group):
         destination = self.get_destination()
@@ -122,7 +135,7 @@ class MyHelp(commands.HelpCommand):
         if not group.commands:
             body.add_line("No commands here yet....")
 
-        view = HelpView(self.context, self)
+        view = Menu(self.context, self)
         view.body = body
         view.embed = embed
         await view.goto(0, edit=False)
@@ -148,7 +161,7 @@ class MyHelp(commands.HelpCommand):
         return embed, body
 
     async def send_cog_help(self, cog):
-        view = HelpView(self.context, self)
+        view = Menu(self.context, self)
 
         destination = self.get_destination()
         embed, body = self.get_cog_embed(cog)
@@ -157,107 +170,6 @@ class MyHelp(commands.HelpCommand):
         view.embed = embed
         await view.goto(0, edit=False)
         view.message = await destination.send(embed=view.embed, view=view)
-
-
-class HelpView(discord.ui.View):
-    def __init__(self, ctx, source):
-        self.selectMenu = None
-        self.ctx = ctx
-        self.help = source
-        self.message = None
-        self.mapping = None
-        self.embed = None
-        self.body = None
-        self.current = None
-        self.curPage = 0
-        super().__init__(timeout=30.0)
-
-    def cogName(self, cog):
-        if cog is None:
-            return "Miscellaneous"
-        if isinstance(cog, discord.ext.commands.Cog):
-            return cog.qualified_name
-        return str(cog)
-
-    def add_categories(self, mapping: dict, current: str = "Homepage"):
-        self.mapping = mapping
-        self.current = current
-        self.selectMenu = HelpSelect()
-        self.selectMenu.add_options(["Homepage"] + list(map(self.cogName, mapping.keys())), current)
-        self.add_item(self.selectMenu)
-
-    async def rebind(self, cog, interaction: discord.Interaction, name=None):
-        self.selectMenu.add_options(["Homepage"] + list(map(self.cogName, self.help.get_bot_mapping().keys())), name)
-        self.embed, self.body = self.help.get_cog_embed(cog, name) if cog else self.help.help_embed()
-        await self.goto(0, interaction)
-
-    async def goto(self, pagenum=0, interaction: discord.Interaction = None, edit=True):
-        if interaction and interaction.user.id != self.ctx.author.id:
-            return await interaction.response.send_message("This is not your command!", ephemeral=True)
-        self.embed.clear_fields()
-        self.embed.add_field(name=f"Page {pagenum + 1}/{len(self.body.pages)}", value=self.body.pages[pagenum],
-                             inline=True)
-        for child in self.children:
-            if child.custom_id in ["btnBack", "btnPrev"]:
-                child.disabled = pagenum == 0
-            if child.custom_id in ["btnNext", "btnForward"]:
-                child.disabled = pagenum == len(self.body.pages) - 1
-
-        self.curPage = pagenum
-        if edit:
-            if interaction.response:
-                await interaction.response.edit_message(embed=self.embed, view=self)
-            else:
-                await self.message.edit(embed=self.embed, view=self)
-
-    @discord.ui.button(label="<<", style=discord.ButtonStyle.gray, row=1, custom_id="btnBack")
-    async def leftBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(0, interaction)
-
-    @discord.ui.button(label="Previous", style=discord.ButtonStyle.blurple, row=1, custom_id="btnPrev")
-    async def prevBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(self.curPage - 1, interaction)
-
-    @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple, row=1, custom_id="btnNext")
-    async def nextBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(self.curPage + 1, interaction)
-
-    @discord.ui.button(label=">>", style=discord.ButtonStyle.gray, row=1, custom_id="btnForward")
-    async def rightBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.goto(max(len(self.body.pages) - 1, 0), interaction)
-
-    @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
-    async def quitBtnCallback(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.on_timeout()
-        self.stop()
-
-    async def on_timeout(self) -> None:
-        self.clear_items()
-        # THANK YOU ilovetocode#9113
-        await self.message.edit(view=self)
-
-
-class HelpSelect(discord.ui.Select):
-    def __init__(self):
-        super().__init__(placeholder="What category do you want to check out?", row=0)
-
-    def add_options(self, subjects, default):
-        self.options = [
-            discord.SelectOption(
-                label=subject,
-                value=subject,
-                default=(subject == default),
-                emoji=category_emojis[subject])
-            for subject in subjects
-        ]
-
-    async def callback(self, interaction):
-        if self.values[0] == "Homepage":
-            await self.view.rebind(None, interaction, "Homepage")
-        elif self.values[0] == "Miscellaneous":
-            await self.view.rebind(self.view.help.get_bot_mapping()[None], interaction, "Miscellaneous")
-        else:
-            await self.view.rebind(self.view.ctx.bot.get_cog(self.values[0]), interaction, self.values[0])
 
 
 intents = discord.Intents.default()

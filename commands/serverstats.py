@@ -25,6 +25,7 @@ import math
 import discord
 import json
 import typing
+from utils.func import get_points
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -47,18 +48,6 @@ def standard_deviation_approx(arr):
         top += (val - average) ** 2
     top = int(top // len(arr))
     return math.isqrt(top)
-
-
-def get_points(ctx, global_=False):
-    if not ctx.guild:
-        return [ctx.bot.getpoints(str(ctx.author.id))]
-    memberlist = {str(member.id) for member in ctx.guild.members}
-    points = json.loads(open("points.json", "r").read()).get("points")
-    people = []
-    for k in points:
-        if str(k) in memberlist or global_:
-            people.append(points[k])
-    return people
 
 
 @commands.guild_only()

@@ -1,23 +1,17 @@
 Traceback (most recent call last):
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 655, in _do_call
-    return await self._callback(self.binding, interaction, **params)  # type: ignore
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 154, in _suggest
-    await ctx.message.add_reaction("✅")
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/message.py", line 1061, in add_reaction
-    await self._state.http.add_reaction(self.channel.id, self.id, emoji)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/http.py", line 503, in request
-    raise NotFound(response, data)
-discord.errors.NotFound: 404 Not Found (error code: 10008): Unknown Message
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 200, in wrapped
+    ret = await coro(*args, **kwargs)
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/currency.py", line 85, in _leaderboard
+    body.add_line(emoji + " **" + str(member.display_name) + "** (" +
+AttributeError: 'NoneType' object has no attribute 'display_name'
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 425, in _invoke_with_namespace
-    value = await self._do_call(ctx, ctx.kwargs)  # type: ignore
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 674, in _do_call
-    raise CommandInvokeError(self, e) from e
-discord.app_commands.errors.CommandInvokeError: Command 'suggest' raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
-
-The above exception was the direct cause of the following exception:
-
-discord.ext.commands.errors.HybridCommandError: Hybrid command raised an error: Command 'suggest' raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1330, in invoke
+    await ctx.command.invoke(ctx)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 995, in invoke
+    await injected(*ctx.args, **ctx.kwargs)  # type: ignore
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
+    raise CommandInvokeError(exc) from exc
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'display_name'

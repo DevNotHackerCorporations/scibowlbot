@@ -24,6 +24,8 @@ from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
 import json
+from utils.menu import Menu
+from utils.func import get_points
 
 intents = discord.Intents.default()
 intents.members = True
@@ -34,107 +36,61 @@ async def setup(bot):
     await bot.add_cog(Currency())
 
 
+standingEmojis = {
+    1: ":first_place: ",
+    2: ":second_place: ",
+    3: ":third_place: ",
+}
+
 class Currency(commands.Cog):
     """
     Commands that relate to scibowlbot currency (aka. points)
     """
-    @commands.hybrid_command(name="leaderboard")
-    async def _leaderboard(self, message, max_people: int = 3):
+    @commands.guild_only()
+    @commands.hybrid_command(name="leaderboard", aliases=["lb"])
+    async def _leaderboard(self, ctx, max_people: int = 3, global_: bool = False):
         """
         View the server leaderboard (and your place in it)
 
         :param max_people: How many people should we show on the leaderboard? Must be between 3 and 30, inclusive.
         :type max_people: int
         """
-        if not message.guild:
-            embed = discord.Embed(
-                title=f":warning: Error :warning:",
-                description="While processing this request, we ran into an error",
-                color=0xFFFF00)
-            embed.set_author(name=message.author.display_name,
-                             url="",
-                             icon_url=message.author.avatar)
-            embed.add_field(name=f'Invalid enviorment',
-                            value="Leaderboards don't work in a DM")
-            await message.channel.send(embed=embed)
-            return
-        if max_people > 30 or max_people < 3:
-            embed = discord.Embed(
-                title=f":warning: Error :warning:",
-                description="While processing this request, we ran into an error",
-                color=0xFFFF00)
-            embed.set_author(name=message.author.display_name,
-                             url="",
-                             icon_url=message.author.avatar)
-            embed.add_field(
-                name=f'Invalid range "{max_people}"',
-                value="Please enter a number between 3 and 30 (inclusive)")
-            await message.channel.send(embed=embed)
-            return
 
-        points = json.loads(open("points.json", "r").read()).get("points")
-        points = {
-            k: v
-            for k, v in sorted(
-                points.items(), key=lambda item: item[1], reverse=True)
-        }
-        numusers = 0
-        # Setting up embed
         embed = discord.Embed(
-            title=f"The points leaderboard for **{message.guild.name}**",
+            title=f"The points leaderboard for **{ctx.guild.name}**",
             description=f"Top {max_people} people",
             color=0xFF5733)
-        embed.set_author(name=message.author.display_name,
+        embed.set_author(name=ctx.author.display_name,
                          url="",
-                         icon_url=message.author.avatar)
-        embed.set_thumbnail(url=message.guild.icon)
-        # end set up
-        memberlist = set()
-        for member in message.guild.members:
-            memberlist.add(str(member.id))
-        whatplace = {
-            1: ":first_place: ",
-            2: ":second_place: ",
-            3: ":third_place: ",
-        }
-        prev = float("-inf")
-        result = ""
-        my_id = int(message.author.id)
-        place = f"You're not among the top {max_people} people."
+                         icon_url=ctx.author.avatar)
+        embed.set_thumbnail(url=ctx.guild.icon)
+        body = commands.Paginator(prefix="**The people and their scores**", suffix=f"\n**What place am I?**\nYou are not among the top {max_people}", max_size=1024 - 10 - len(embed.title),
+                                  linesep="\n")
 
-        for k in points:
-            if str(k) in memberlist:
-                if points[k] != prev:
-                    numusers += 1
-                prev = points[k]
-                if numusers > max_people:
-                    break
-                if my_id == int(k):
-                    place = f"You occupy place #{numusers}!"
-                member = message.guild.get_member(int(k))
-                if numusers > 3:
-                    emoji = ":medal: "
-                else:
-                    emoji = whatplace[numusers]
-                result += (emoji + " **" + str(member.display_name) + "** (" +
-                           str(points[k]) + "pt)\n")
-                if len(result) >= 800:
-                    embed.add_field(name=f"The people and their scores",
-                                    value=result,
-                                    inline=False)
-                    await message.send(embed=embed)
-                    embed = discord.Embed(
-                        title=f"Overflow",
-                        description=
-                        "We went over 1024 chars so we had to split it into two messages",
-                        color=0xFF5733)
-                    result = ""
+        points = {x: y for x, y in sorted(get_points(ctx, global_, True).items(), key=lambda x: x[1], reverse=True)}
 
-        embed.add_field(name=f"The people and their scores",
-                        value=result,
-                        inline=False)
-        embed.add_field(name=f"What place am I?", value=place, inline=False)
-        await message.send(embed=embed)
+        for index, (id, points) in enumerate(points.items()):
+            if index > max_people - 1:
+                break
+            if str(ctx.author.id) == str(id):
+                body.suffix = f"\n**What place am I?**\nYou occupy place #{index + 1}"
+
+            if not global_:
+                member = ctx.guild.get_member(int(id))
+            else:
+                member = ctx.bot.get_user(int(id))
+
+
+            emoji = standingEmojis.get(index + 1, ":medal:")
+            body.add_line(emoji + " **" + str(member.display_name) + "** (" +
+                       str(points) + "pt)")
+
+        view = Menu(ctx, self)
+
+        view.body = body
+        view.embed = embed
+        await view.goto(0, edit=False)
+        view.message = await ctx.send(embed=view.embed, view=view)
 
     @commands.hybrid_command(name="gift")
     async def _gift(self, message, amount: int, to_user: discord.Member):
