@@ -1,4 +1,9 @@
 
+*9/24/2022*
+> Competitions are finally released! Start a competition with `.competition||comp new` Note that this isn't that polished yet, so there will be bugs.
+
+> Bug fix: Cannot click the "new __ question" buttons after the question timeouts
+
 *9/16/2022*
 
 > Add Changelog
@@ -18,3 +23,5 @@
 > Suggest a question for publishing (`.suggest_question||sg`) 
 
 > Global Leaderboard 
+ 
+> Removed the 30 people limit on the leaderboard
