@@ -51,6 +51,12 @@ async def setup(client):
         ]
     }
 
+    client.comps = {}
+
+    client.in_comp = {}
+
+    client.scibowl_subjects = ["BIO", "CHEM", "EAS", "ASTRO", "MATH", "PHY", "ES"]
+
     client.emoj = {
         "phy": "🍎",
         "gen": "🧪",

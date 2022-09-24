@@ -31,9 +31,10 @@ intents.members = True
 client = commands.Bot(command_prefix=".", intents=intents)
 
 type_emojis = {
-    "int": ":1234: integer",
+    "int": ":1234: Integer",
     "discord.Member": ":person_standing: Discord User",
-    "str": ":abc: string"
+    "str": ":abc: String",
+    "bool": "<:binary:1020904671017177108> Binary"
 }
 
 category_emojis = {

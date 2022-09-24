@@ -1,40 +1,29 @@
 Traceback (most recent call last):
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 917, in _load_from_module_spec
     spec.loader.exec_module(lib)  # type: ignore
-  File "<frozen importlib._bootstrap_external>", line 855, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 851, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 988, in get_code
+  File "<frozen importlib._bootstrap_external>", line 918, in source_to_code
   File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/currency.py", line 47, in <module>
-    class Currency(commands.Cog):
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/currency.py", line 54, in Currency
-    async def _leaderboard(self, ctx, max_people: typing.Optional[int] = 3, global_: typing.Union[bool, str] = None):
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 844, in decorator
-    return HybridCommand(func, name=name, with_app_command=with_app_command, **attrs)  # type: ignore  # ???
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 483, in __init__
-    HybridAppCommand(self) if self.with_app_command else None
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 291, in __init__
-    params = replace_parameters(wrapped.params, wrapped.callback, signature)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 268, in replace_parameters
-    param = replace_parameter(param, converter, callback, parameter, params)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 190, in replace_parameter
-    app_commands.transformers.get_supported_annotation(converter)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/transformers.py", line 703, in get_supported_annotation
-    raise TypeError(f'unsupported types given inside {annotation!r}')
-TypeError: unsupported types given inside typing.Union[bool, str]
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/question2.py", line 283
+    await self.comp.after_question()
+    ^
+SyntaxError: 'await' outside async function
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 200, in wrapped
     ret = await coro(*args, **kwargs)
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 124, in _reload
-    raise BadArgument("Unauthorized. This command is dev only.")
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 125, in _reload
+    await ctx.bot.reload_extension(command_name)
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1097, in reload_extension
     await self.load_extension(name)
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 995, in load_extension
     await self._load_from_module_spec(spec, name)
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 920, in _load_from_module_spec
     raise errors.ExtensionFailed(key, e) from e
-discord.ext.commands.errors.ExtensionFailed: Extension 'commands.currency' raised an error: TypeError: unsupported types given inside typing.Union[bool, str]
+discord.ext.commands.errors.ExtensionFailed: Extension 'commands.question2' raised an error: SyntaxError: 'await' outside async function (question2.py, line 283)
 
 The above exception was the direct cause of the following exception:
 
@@ -45,4 +34,4 @@ Traceback (most recent call last):
     await injected(*ctx.args, **ctx.kwargs)  # type: ignore
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
     raise CommandInvokeError(exc) from exc
-discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionFailed: Extension 'commands.currency' raised an error: TypeError: unsupported types given inside typing.Union[bool, str]
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionFailed: Extension 'commands.question2' raised an error: SyntaxError: 'await' outside async function (question2.py, line 283)

@@ -38,13 +38,6 @@ async def setup(bot):
     await bot.add_cog(Currency())
 
 
-standingEmojis = {
-    1: ":first_place: ",
-    2: ":second_place: ",
-    3: ":third_place: ",
-}
-
-
 class Currency(commands.Cog):
     """
     Commands that relate to scibowlbot currency (aka. points)
@@ -56,10 +49,17 @@ class Currency(commands.Cog):
         """
         View the server leaderboard (and your place in it)
 
-        :param max_people: How many people should we show on the leaderboard? Must be between 3 and 30, inclusive.
+        :param max_people: How many people should we show on the leaderboard? defaults to 3
         :type max_people: int
+        :param global_: Should we show the global leaderboard? defaults to no
+        :type global_: bool
         """
 
+        standingEmojis = {
+            1: ":first_place: ",
+            2: ":second_place: ",
+            3: ":third_place: ",
+        }
         embed = discord.Embed(
             title=f"The points leaderboard for **{ctx.guild.name}**" if not global_ else "Global leaderboard",
             description=f"Top {max_people} people",
@@ -68,7 +68,7 @@ class Currency(commands.Cog):
                          url="",
                          icon_url=ctx.author.avatar)
         embed.set_thumbnail(url=ctx.guild.icon if not global_ else f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/website/globe.png")
-        body = commands.Paginator(prefix="**The people and their scores**",
+        body = commands.Paginator(prefix="",
                                   suffix=f"\n**What place am I?**\nYou are not among the top {max_people}",
                                   max_size=1024 - 10 - len(embed.title),
                                   linesep="\n")

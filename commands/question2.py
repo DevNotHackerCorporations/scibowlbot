@@ -24,11 +24,14 @@ import difflib
 import readtime
 import requests
 import json
+import time
+import asyncio
 import re
 import discord
 import random
 from discord.ext import commands
 from discord.ext.commands import BadArgument
+from utils.func import Competition
 
 intents = discord.Intents.default()
 intents.members = True
@@ -98,14 +101,16 @@ async def q_autocomplete(interaction, current):
 
 
 class Question(discord.ui.View):
-    def __init__(self, ctx, subject: str):
+    def __init__(self, ctx, subject: str, competition: Competition = None):
         super().__init__(timeout=15.0)
+        self.responder = None
         self.mc = None
         self.question = None
         self.question_header = None
         self.question_json = None
         self.algorithm_correct = None
         self.ctx = ctx
+        self.comp = competition
         self.yay_reactions = [
             "\N{Thumbs Up Sign}", "\N{White Heavy Check Mark}", "\N{Brain}",
             "\N{Hundred Points Symbol}", "\N{Direct Hit}",
@@ -130,12 +135,14 @@ class Question(discord.ui.View):
         self.isweird = subject == "WEIRD"
         self.iscrazy = subject == "CRAZY"
         self.author = ctx.author.id
-        self.timedout = False
-        self.buzzed = False
-        self.postedBtns = False
+        # self.timedout = False
+        # self.buzzed = False
+        # self.postedBtns = False
+        self.state = 0
         self.graded = False
+        self.view = self
         self.buzzer = None
-        self.embed = discord.Embed(title=f"Question",
+        self.embed = discord.Embed(title=f"Question" if not self.comp else self.comp.get_title(),
                                    color=discord.Colour.blue())
         self.embed.set_author(name="Unattempted", url="")
 
@@ -233,7 +240,7 @@ class Question(discord.ui.View):
         self.embed.add_field(name=self.question_header,
                              value=self.question,
                              inline=False)
-        self.message = await self.ctx.send(embed=self.embed, view=self)
+        self.message = await self.ctx.send(embed=self.embed, view=self.view)
 
     @discord.ui.button(label="Buzz!", style=discord.ButtonStyle.green)
     async def buzz(self, interaction, button):
@@ -242,10 +249,10 @@ class Question(discord.ui.View):
         self.embed.set_author(name=self.responder.display_name,
                               url="",
                               icon_url=self.responder.avatar)
-        await self.message.edit(embed=self.embed)
-        self.buzzed = True
+        self.state = 1
         self.children[0].disabled = True
         self.children[0].style = discord.ButtonStyle.gray
+
         if self.mc:
             self.add_item(
                 MCOption(self.ctx, "W)", self.answers[0], self.author))
@@ -255,41 +262,57 @@ class Question(discord.ui.View):
                 MCOption(self.ctx, "Y)", self.answers[2], self.author))
             self.add_item(
                 MCOption(self.ctx, "Z)", self.answers[3], self.author))
-            await interaction.response.edit_message(view=self)
             self.timeout = self.mc_timeout
         else:
-            self.children[0].disabled = True
-            await self.message.edit(view=self)
-            await interaction.response.send_modal(
-                GetResponse(self, self.calc_timeout(self.answer_list[0]),
+            timeout = 5 + round(max(map(lambda answer: len(answer), self.answer_list))/30, 2)
+            return await interaction.response.send_modal(
+                GetResponse(self, timeout,
                             self.author))
 
-    def remove_id(self):
+        await interaction.response.edit_message(embed=self.embed, view=self.view)
+
+    async def remove_id(self):
+        self.state = 3
         if self.ctx.channel.id in self.ctx.bot.hasQuestion:
             self.ctx.bot.hasQuestion.remove(self.ctx.channel.id)
-        self.add_item(
-            AfterButton(self.ctx,
-                        f"New {self.subject} question",
-                        value=self.subject,
-                        style=discord.ButtonStyle.blurple))
-        self.add_item(
-            AfterButton(self.ctx,
-                        f"New question (Any Subject)",
-                        value="ALL",
-                        style=discord.ButtonStyle.blurple))
-        self.postedBtns = True
-        self.timeout = 15
+        if not self.comp:
+            self.add_item(
+                AfterButton(self.ctx,
+                            f"New {self.subject} question",
+                            value=self.subject,
+                            style=discord.ButtonStyle.blurple))
+            self.add_item(
+                AfterButton(self.ctx,
+                            f"New question (Any Subject)",
+                            value="ALL",
+                            style=discord.ButtonStyle.blurple))
+        else:
+            await self.comp.after_question()
+            self.add_item(AfterButton(self.ctx, "Next Question", value=None, style=discord.ButtonStyle.green, comp=self.comp))
+            self.add_item(AfterButton(self.ctx, "End Competition", value=None, style=discord.ButtonStyle.red, comp=self.comp, callback_=self.comp.end))
+        self.view = CloneView(self)
+        await self.view.add_items()
 
-    async def on_timeout(self, element=False):
-        if self.postedBtns:
+    async def disable_all(self):
+        for item in self.children:
+            item.disabled = True
+
+    async def on_timeout(self, element=False, external=False):
+        if external:
+            await self.disable_all()
+        elif self.state == 0:
+            await self.disable_all()
+            self.embed.add_field(
+                name="Timeout",
+                value=
+                f"No one has buzzed. The answer was `{self.answer_list[0]}`")
+            await self.remove_id()
+
+        elif self.state == 1:
+
             for item in self.children:
                 item.disabled = True
-            self.postedBtns = False
 
-        if self.buzzed and not self.graded:
-
-            for item in self.children:
-                item.disabled = True
                 if self.mc:
                     if item.label[0] == self.answer_list[0][0]:
                         item.style = discord.ButtonStyle.green
@@ -299,31 +322,25 @@ class Question(discord.ui.View):
                         item.style = discord.ButtonStyle.red
                 item.disabled = True
 
-            self.changepoints(self.author, -1)
-
             self.embed.add_field(
                 name="Question Timed Out",
-                value=f"Incorrect **{self.responder.display_name}**, you ran out of time. The answer was `{self.answer_list[0]}`. You now have **{self.ctx.bot.getpoints(self.author)}** (-1) points"
+                value=f"Incorrect **{self.responder.display_name}**, you ran out of time. The answer was "
+                      f"`{self.answer_list[0]}`. You now have **{self.changepoints(self.author, -1)}** (-1) points"
             )
 
             await self.message.add_reaction(random.choice(self.aw_reactions))
 
-            self.remove_id()
+            await self.remove_id()
             self.graded = True
 
-        if not self.buzzed and not self.graded:
-            for item in self.children:
-                item.disabled = True
-            self.embed.add_field(
-                name="Timeout",
-                value=
-                f"No one has buzzed. The answer was `{self.answer_list[0]}`")
-            self.remove_id()
+        elif self.state == 3:
+            if not self.comp:
+                await self.disable_all()
 
-        if self.override:
-            self.children[-1].disabled = True
+        else:
+            await self.disable_all()
 
-        await self.message.edit(view=self, embed=self.embed)
+        await self.message.edit(view=self.view, embed=self.embed)
 
     def changepoints(self, author, amount):
         # Deal with achievements
@@ -363,7 +380,7 @@ class Question(discord.ui.View):
                              value=f"`{answer}`",
                              inline=False)
         answer = answer.upper()
-
+        self.state = 2
         # Decide Verdict
         self.correct = True
         self.answer_list = list(map(lambda x: x.upper(), self.answer_list))
@@ -385,6 +402,8 @@ class Question(discord.ui.View):
         elif answer in self.answer_list:
             verdict = f"Correct **{responder}** You now have **{self.changepoints(self.author, 2)}** (+2) points"
             await self.message.add_reaction(random.choice(self.yay_reactions))
+            if self.comp:
+                self.comp.scoreboard[self.author][0] += 1
 
         elif algorithm_correct:
             verdict = f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your " \
@@ -396,13 +415,17 @@ class Question(discord.ui.View):
                          self.author,
                          change=(False if self.iscrazy else True)))
             await self.message.add_reaction(random.choice(self.yay_reactions))
-            self.override = True
+            self.state = 4
             self.timeout = self.override_timeout
+            if self.comp:
+                self.comp.scoreboard[self.author][0] += 1
 
         else:
             self.correct = False
             verdict = f"Incorrect **{responder}**, the answer was `{self.correct_answer}`. You now have **{self.changepoints(self.author, -1)}** (-1) points"
             await self.message.add_reaction(random.choice(self.aw_reactions))
+            if self.comp:
+                self.comp.scoreboard[self.author][1] += 1
 
         self.embed.add_field(name="Verdict", value=verdict, inline=False)
         self.graded = True
@@ -416,8 +439,21 @@ class Question(discord.ui.View):
                     item.style = (discord.ButtonStyle.gray
                                   if self.correct else discord.ButtonStyle.red)
                 item.disabled = True
-        self.remove_id()
-        await self.message.edit(view=self, embed=self.embed)
+        await self.remove_id()
+        await self.message.edit(view=self.view, embed=self.embed)
+
+
+class CloneView(discord.ui.View):
+    def __init__(self, view):
+        self.view = view
+        super().__init__(timeout=180.0)
+
+    async def add_items(self):
+        for child in self.view.children:
+            self.add_item(child)
+
+    async def on_timeout(self):
+        await self.view.on_timeout(external=True)
 
 
 class GetResponse(discord.ui.Modal, title="Short Response"):
@@ -463,7 +499,7 @@ class MCOption(discord.ui.Button):
                 ephemeral=True)
 
         await self.view.validate(self.val[0])
-        await interaction.response.edit_message(view=self.view)
+        await interaction.response.edit_message(view=self.view.view)
 
 
 class Override(discord.ui.Button):
@@ -488,23 +524,40 @@ class Override(discord.ui.Button):
             value=f"The verdict has been overriden by **{interaction.user.display_name}**. They now have **{self.view.changepoints(interaction.user.id, -3 if self.change else 0)}** {'(-1 from original) points.' if self.change else '(No Change)'} "
         )
         await interaction.response.edit_message(embed=self.view.embed,
-                                                view=self.view)
+                                                view=self.view.view)
+
+        if self.view.comp:
+            self.view.comp.scoreboard[self.author][0] -= 1
+            self.view.comp.scoreboard[self.author][1] += 1
 
         await self.view.message.add_reaction(
             random.choice(self.view.aw_reactions))
 
 
 class AfterButton(discord.ui.Button):
-    def __init__(self, ctx, label, value, style):
+    def __init__(self, ctx, label, value, style, comp=None, callback_=None):
+        self.callback_ = callback_
         self.ctx = ctx
         self.value = value
+        self.comp = comp
         super().__init__(style=style, label=label, row=0)
 
     async def callback(self, interaction):
+        if self.comp and str(interaction.user.id) != str(self.ctx.author.id):
+            return await interaction.response.send_message("You are not the contest host!", ephemeral=True)
+
         for item in self.view.children:
             item.disabled = True
 
-        await interaction.response.edit_message(view=self.view)
+        await interaction.response.edit_message(view=self.view.view)
 
-        obj = Question(self.ctx, self.value.upper())
-        await obj.run()
+        if self.callback_:
+            return await self.callback_()
+
+        if not self.comp:
+            obj = Question(self.ctx, self.value.upper())
+            await obj.run()
+        else:
+            await self.comp.send_question(interaction)
+
+
