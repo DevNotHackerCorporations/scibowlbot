@@ -244,6 +244,8 @@ class Question(discord.ui.View):
 
     @discord.ui.button(label="Buzz!", style=discord.ButtonStyle.green)
     async def buzz(self, interaction, button):
+        if self.comp and interaction.user.id not in self.comp.participants:
+            return interaction.response.send_message("You are not part of this competition!", ephemeral=True)
         self.responder = interaction.user
         self.author = self.responder.id
         self.embed.set_author(name=self.responder.display_name,

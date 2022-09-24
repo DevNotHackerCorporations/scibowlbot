@@ -82,7 +82,7 @@ class NewComp(discord.ui.View):
 
     @discord.ui.button(label="Join", style=discord.ButtonStyle.green)
     async def join(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.ctx.author.id in self.ctx.bot.in_comp and self.ctx.bot.in_comp[self.ctx.author.id] != self.comp.id:
+        if interaction.user.id in self.ctx.bot.in_comp and self.ctx.bot.in_comp[self.ctx.author.id] != self.comp.contest_id:
             return await interaction.response.send_message("You are already in another competition! You may not join this one.", ephemeral=True)
         if interaction.user.id in self.comp.participants or interaction.user.id in self.comp.queue:
             return await interaction.response.send_message("You already signed up!", ephemeral=True)
@@ -114,6 +114,8 @@ class NewComp(discord.ui.View):
 
     @discord.ui.button(label="Cancel Competition", style=discord.ButtonStyle.red, row=1)
     async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.comp.creator.id:
+            return await interaction.response.send_message("You are not the contest host!", ephemeral=True)
         self.stop()
         for child in self.children:
             child.disabled = True
@@ -131,6 +133,8 @@ class NewComp(discord.ui.View):
 
     @discord.ui.button(label="Start", style=discord.ButtonStyle.gray, row=1)
     async def start(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.comp.creator.id:
+            return await interaction.response.send_message("You are not the contest host!", ephemeral=True)
         if len(self.comp.participants) < 2:
             return await interaction.response.send_message("There must be at least 2 participants to start", ephemeral=True)
 

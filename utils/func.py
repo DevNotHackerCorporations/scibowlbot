@@ -39,11 +39,11 @@ class Competition:
         self.question = 1
         self.scoreboard = {}
         self.max_question = 23
-        self.id = generate_id()
-        while self.id in self.ctx.bot.comps.keys():
-            self.id = generate_id()
-        self.ctx.bot.in_comp[self.creator.id] = self.id
-        self.ctx.bot.comps[self.id] = self.creator.id
+        self.contest_id = generate_id()
+        while self.contest_id in self.ctx.bot.comps.keys():
+            self.contest_id = generate_id()
+        self.ctx.bot.in_comp[self.creator.id] = self.contest_id
+        self.ctx.bot.comps[self.contest_id] = self.creator.id
 
     def get_title(self):
         return f"Question {self.question}/{self.max_question}"
@@ -61,8 +61,10 @@ class Competition:
             self.ctx.bot.in_comp.pop(person)
         for person in self.participants:
             self.ctx.bot.in_comp.pop(person)
-        self.ctx.bot.in_comp.pop(self.creator.id)
-        self.ctx.bot.comps.pop(self.id)
+        if self.creator.id in self.ctx.bot.in_comp:
+            self.ctx.bot.in_comp.pop(self.creator.id)
+        if self.contest_id in self.ctx.bot.comps:
+            self.ctx.bot.comps.pop(self.contest_id)
 
     async def end(self):
         await self.purge()
@@ -73,7 +75,7 @@ class Competition:
         }
         embed = discord.Embed(
             title=f"The host has ended the contest!",
-            description=f"Standings for Competition `{self.id}`",
+            description=f"Standings for Competition `{self.contest_id}`",
             color=0xFF5733)
         embed.set_author(name=self.ctx.author.display_name,
                          url="",
@@ -87,7 +89,7 @@ class Competition:
                                   max_size=1024 - 10 - len(embed.title) - len(embed.description),
                                   linesep="\n")
 
-        self.scoreboard = {k: v for k, v in sorted(self.scoreboard.items(), reverse=True, key=lambda x: x[0] - x[1])}
+        self.scoreboard = {k: v for k, v in sorted(self.scoreboard.items(), reverse=True, key=lambda x: x[1][0] - x[1][1])}
 
         for index, (id, points) in enumerate(self.scoreboard.items()):
             name = self.ctx.guild.get_member(int(id)).display_name
