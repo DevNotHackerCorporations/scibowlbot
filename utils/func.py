@@ -52,6 +52,9 @@ class Competition:
         self.question += 1
 
     async def send_question(self, interaction: discord.Interaction = None):
+        if self.question > self.max_question:
+            return await self.end()
+
         from commands.question2 import Question
         obj = Question(self.ctx, random.choice(self.ctx.bot.scibowl_subjects), self)
         await obj.run()
