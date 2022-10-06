@@ -70,6 +70,8 @@ async def setup(client):
         "cs": "💻",
     }
 
+    discord.Color.none = lambda: 0x2f3136
+
     def changepoints(user, point):
         user = str(user)
         points = json.loads(open("points.json", "r").read())

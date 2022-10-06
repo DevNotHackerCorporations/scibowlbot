@@ -21,6 +21,8 @@ For any questions, please contant DevNotHackerCorporations by their email at <de
 """
 
 import difflib
+import math
+
 import readtime
 import requests
 import json
@@ -201,7 +203,7 @@ class Question(discord.ui.View):
                                    "source"] + ")\n**"
         self.question = self.question_json["tossup_question"]
         self.mc = self.question_json[
-                      "tossup_format"] == "Multiple Choice"
+                      "tossup_format"].upper() == "Multiple Choice".upper()
         self.algorithm_correct = False
 
         self.timeout = self.calc_timeout(self.question)
@@ -237,9 +239,8 @@ class Question(discord.ui.View):
 
         self.answer_list = self.generate_answers(self.correct_answer)
 
-        self.embed.add_field(name=self.question_header,
-                             value=self.question,
-                             inline=False)
+        self.embed.add_field(name=self.question_header, value=self.question, inline=False)
+        self.embed.add_field(name="Timer", value=f"Question expires <t:{math.floor(time.time()) + self.timeout}:R>", inline=False)
         self.message = await self.ctx.send(embed=self.embed, view=self.view)
 
     @discord.ui.button(label="Buzz!", style=discord.ButtonStyle.green)
@@ -265,8 +266,12 @@ class Question(discord.ui.View):
             self.add_item(
                 MCOption(self.ctx, "Z)", self.answers[3], self.author))
             self.timeout = self.mc_timeout
+            self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + self.timeout)}:R>",
+                                 inline=False)
         else:
             timeout = 5 + round(max(map(lambda answer: len(answer), self.answer_list))/30, 2)
+            self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + timeout)}:R>",
+                                 inline=False)
             return await interaction.response.send_modal(
                 GetResponse(self, timeout,
                             self.author))
@@ -341,6 +346,9 @@ class Question(discord.ui.View):
 
         else:
             await self.disable_all()
+
+        self.embed.set_field_at(1, name="Timer", value=f"Question has expired",
+                                inline=False)
 
         await self.message.edit(view=self.view, embed=self.embed)
 

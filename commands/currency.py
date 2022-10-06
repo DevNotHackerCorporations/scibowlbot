@@ -63,7 +63,7 @@ class Currency(commands.Cog):
         embed = discord.Embed(
             title=f"The points leaderboard for **{ctx.guild.name}**" if not global_ else "Global leaderboard",
             description=f"Top {max_people} people",
-            color=0xFF5733)
+            color=discord.Color.none())
         embed.set_author(name=ctx.author.display_name,
                          url="",
                          icon_url=ctx.author.avatar)

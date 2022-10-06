@@ -46,7 +46,7 @@ async def competition(ctx):
 async def new(ctx: commands.Context):
     if ctx.author.id in ctx.bot.in_comp:
         return await ctx.send("You are already in a competition! You may not create another.", ephemeral=True)
-    embed = discord.Embed(title="New Competition", color=discord.Color.default())
+    embed = discord.Embed(title="New Competition", color=discord.Color.none())
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
     comp = Competition(ctx)
     view = NewComp(ctx, embed, comp)
