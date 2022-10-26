@@ -97,7 +97,7 @@ class Utility(commands.Cog):
         How many users use scibowlbot?
         """
         data = json.loads(open("points.json", "r").read())
-        await ctx.send(f"I currently help {len(data['points'])} get better at science!")
+        await ctx.send(f"I currently help {len(data['points'])} users get better at science!")
 
     @commands.hybrid_command(name="clear")
     async def _dev_clear(self, message):
