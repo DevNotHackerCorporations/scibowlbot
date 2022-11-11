@@ -5,7 +5,7 @@ Traceback (most recent call last):
     await ctx.bot.reload_extension(command_name)
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1082, in reload_extension
     raise errors.ExtensionNotLoaded(name)
-discord.ext.commands.errors.ExtensionNotLoaded: Extension 'commands.interaction' has not been loaded.
+discord.ext.commands.errors.ExtensionNotLoaded: Extension 'commands.question' has not been loaded.
 
 The above exception was the direct cause of the following exception:
 
@@ -16,4 +16,4 @@ Traceback (most recent call last):
     await injected(*ctx.args, **ctx.kwargs)  # type: ignore
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
     raise CommandInvokeError(exc) from exc
-discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionNotLoaded: Extension 'commands.interaction' has not been loaded.
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionNotLoaded: Extension 'commands.question' has not been loaded.

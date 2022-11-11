@@ -205,7 +205,7 @@ class Question(discord.ui.View):
         self.mc = self.question_json[
                       "tossup_format"].upper() == "Multiple Choice".upper()
         self.algorithm_correct = False
-
+        self.embed.title = f"Question ID: `{self.question_json['id']}`"
         self.timeout = self.calc_timeout(self.question)
 
         # Regexp fetching all the metadata hidden in the problem text
@@ -253,8 +253,8 @@ class Question(discord.ui.View):
                               url="",
                               icon_url=self.responder.avatar)
         self.state = 1
-        self.children[0].disabled = True
-        self.children[0].style = discord.ButtonStyle.gray
+        button.disabled = True
+        button.style = discord.ButtonStyle.gray
 
         if self.mc:
             self.add_item(
@@ -277,6 +277,11 @@ class Question(discord.ui.View):
                             self.author))
 
         await interaction.response.edit_message(embed=self.embed, view=self.view)
+
+    @discord.ui.button(label="Report Error", style=discord.ButtonStyle.red)
+    async def error(self, interaction: discord.Interaction, button: discord.ui.Button):
+        button.disabled = True
+        await interaction.response.send_modal(ErrorModal(self, button))
 
     async def remove_id(self):
         self.state = 3
@@ -448,7 +453,8 @@ class Question(discord.ui.View):
                 elif item.label[0] != self.answer_list[0][0]:
                     item.style = (discord.ButtonStyle.gray
                                   if self.correct else discord.ButtonStyle.red)
-                item.disabled = True
+                if item.label != "Report Error":
+                    item.disabled = True
         await self.remove_id()
         await self.message.edit(view=self.view, embed=self.embed)
 
@@ -490,6 +496,27 @@ class GetResponse(discord.ui.Modal, title="Short Response"):
     async def on_timeout(self):
         self.timeouted = True
         await self.view.on_timeout(True)
+        self.stop()
+
+
+class ErrorModal(discord.ui.Modal, title="Report Error"):
+    problem = discord.ui.TextInput(label="What's the problem?", style=discord.TextStyle.paragraph, placeholder="What's wrong?")
+
+    def __init__(self, view: Question, btn: discord.ui.Button):
+        super().__init__(timeout=1000.0)
+        self.view = view
+        self.invoker = btn
+
+    async def on_submit(self, interaction: discord.Interaction):
+        self.invoker.disabled = True
+        await interaction.response.edit_message(view=self.view)
+        embed = discord.Embed(title="Question Error", color=discord.Color.red(), description="")
+        embed.set_author(icon_url=interaction.user.avatar, name=f"{interaction.user.name}#{interaction.user.discriminator} (ID: {interaction.user.id})")
+        embed.add_field(name=f"{self.view.question_json['category']} #`{self.view.question_json['id']}`", value=self.view.question, inline=False)
+        embed.add_field(name="Error", value=self.problem.value, inline=False)
+        await self.view.ctx.bot.suggestionLog.send(embed=embed)
+
+    async def on_timeout(self):
         self.stop()
 
 
@@ -550,7 +577,7 @@ class AfterButton(discord.ui.Button):
         self.ctx = ctx
         self.value = value
         self.comp = comp
-        super().__init__(style=style, label=label, row=0)
+        super().__init__(style=style, label=label, row=3)
 
     async def callback(self, interaction):
         if self.comp and str(interaction.user.id) != str(self.ctx.author.id):
