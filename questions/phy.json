@@ -11516,7 +11516,7 @@
     "id": 5219,
     "search_vector": "'0.25':106 '0.50':90 '15m/s':121 '2.0':137 '25m':96 '3.0':158 '5.0':161 '6.5':164 '7.1':167,170 'accur':8 'along':124 'ball':92,101,154 'bodi':37,48,61,83 'center':10,53,65,147 'closer':27,39,73 'collid':132 'consist':16 'drop':94 'earth':18,41,70,98,113,142 'either':33,44,79 'end':135 'follow':4 'form':57 'geometr':52 'height':140 'initi':118 'instant':87 'join':69 'kg':91,107 'line':68,126 'm':159,162,165,168,171 'mar':24,72 'mass':12,104,149 'move':123 'nearbi':125 'pass':128 'planet':23 'second':100 'speed':119 'straight':110 'sun':20,30,76 'surfac':115,144 'system':15,155 'three':60 'thrown':109 'triangl':56 'two':153 'two-bal':152 'upward':111 'w':26,157 'without':131 'x':38,160 'y':49,163 'z':62,166,169",
     "source": "16Exchange-Stuy-Physics",
-    "tossup_answer": ") closer to the Sun than to either of the other bodies",
+    "tossup_answer": "W) closer to the Sun than to either of the other bodies",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Which of the following is the most accurate? The center of mass of the system consisting of Earth, the Sun, and the planet Mars is:\nW) closer to the Sun than to either of the other bodies\nX) closer to Earth than to either of the other bodies\nY) at the geometric center of the triangle formed by the three bodies\nZ) at the center of the line joining Earth and Mars",
     "uri": "https://scibowldb.com/tossup/5219"

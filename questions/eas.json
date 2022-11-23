@@ -70,20 +70,6 @@
     "uri": "https://scibowldb.com/tossup/1300"
   },
   {
-    "api_url": "https://scibowldb.com/api/questions/1305",
-    "bonus_answer": "W) THE CHEMICAL MAKEUP OF THEIR SHELLS REFLECTS THE WATER CHEMISTRY AT THEIR TIME OF FORMATION",
-    "bonus_format": "Multiple Choice",
-    "bonus_question": "What property of diatoms make them useful as climate proxies?\nW) The chemical makeup of their shells reflects the water chemistry at their time of formation\nX) The narrow temperature range in which they exist makes them markers for paleo0ocean temperatures\nY) Their well-preserved digestive system provide ample evidence for ancient food webs\nZ) Their limited diversity and low adaptability make them key indicators of specific aquatic environments",
-    "category": "EARTH AND SPACE",
-    "id": 1305,
-    "search_vector": "'abund':27 'adapt':127 'ampl':115 'ancient':118 'aquat':134 'best':5 'chemic':78,138 'chemistri':86,146 'climat':74 'decreas':19 'diatom':69 'digest':112 'divers':56,124 'ecosystem':14 'elimin':8,32 'environ':135 'evid':116 'exist':100 'explain':6 'follow':4 'food':119 'format':91,151 'increas':36,45,54,58 'indic':131 'key':130 'level':11,24,34,42,51,64 'limit':123 'low':126 'make':70,101,128 'makeup':79,139 'marker':103 'narrow':94 'often':15 'one':9,40,62 'organ':21,39,48,61 'paleo0ocean':105 'predat':37,46,55,59 'preserv':111 'prey':29 'properti':67 'provid':114 'proxi':75 'rang':96 'reflect':83,143 'result':16 'shell':82,142 'specif':133 'system':113 'temperatur':95,106 'time':89,149 'trophic':10,23,33,41,50,63 'two':22,49 'use':72 'w':26,76,136 'water':85,145 'web':120 'well':110 'well-preserv':109 'x':35,57,92 'y':44,107 'z':53,121",
-    "source": "Official-set4-round10",
-    "tossup_answer": "X) INCREASED PREDATION BY ORGANISMS ONE TROPHIC LEVEL DOWN",
-    "tossup_format": "Multiple Choice",
-    "tossup_question": "Which of the following best explains why eliminating one trophic level in an ecosystem often results in a decrease in organisms two trophic levels down?\nW) Abundance of prey in the eliminated trophic level\nX) Increased predation by organisms one trophic level down\nY) Increased predation by organisms two trophic levels down\nZ) Increased predator diversity",
-    "uri": "https://scibowldb.com/tossup/1305"
-  },
-  {
     "api_url": "https://scibowldb.com/api/questions/1310",
     "bonus_answer": "X) CARBONATE AND SULFIDE",
     "bonus_format": "Multiple Choice",
@@ -261,7 +247,7 @@
     "search_vector": "'antarct':34 'april':42 'argon':23,25 'bromin':21 'chlorin':19 'chloroflurocarbon':17 'destroy':10 'follow':4,30 'hole':36 'januari':40 'juli':44 'known':8 'largest':38 'molecul':5,12 'month':31 'ozon':11,35 'septemb':46,48 'stratospher':15 'w':16,39 'x':18,41 'y':20,43 'z':22,24,45,47",
     "source": "Official-set4-round13",
     "tossup_answer": "Z) ARGON",
-    "tossup_format": "Short Answer",
+    "tossup_format": "Multiple Choice",
     "tossup_question": "Which of the following molecules is NOT known to destroy ozone molecules in our stratosphere?\nW) Chloroflurocarbons\nX) Chlorine\nY) Bromine\nZ) Argon",
     "uri": "https://scibowldb.com/tossup/1395"
   },
@@ -4348,7 +4334,7 @@
     "id": 5058,
     "search_vector": "'cannot':17 'constel':16 'eclips':3 'hemispher':27 'moon':12,14 'new':13 'northern':26 'occur':6 'orion':28 'phase':9 'seen':19 'sky':23 'solar':2 'summer':22",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": "New Moon",
+    "tossup_answer": "New Moon (Accept: new)",
     "tossup_format": "Short Answer",
     "tossup_question": "A solar eclipse can only occur at what phase of the moon?",
     "uri": "https://scibowldb.com/tossup/5058"
@@ -4698,7 +4684,7 @@
     "id": 5083,
     "search_vector": "'accept':24 'activ':21 'bodi':2 'effect':13 'energi':17 'forc':28,30,34 'friction':26 'give':14 'heat':23 'jupit':32,36 'lo':11,15 'moon':39 'solar':9 'system':10 'tidal':22,25,27,29,33 'volcan':6,20",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": "lo",
+    "tossup_answer": "io",
     "tossup_format": "Short Answer",
     "tossup_question": "What body is the most volcanic in the solar system?",
     "uri": "https://scibowldb.com/tossup/5083"
@@ -4880,7 +4866,7 @@
     "id": 5096,
     "search_vector": "'alway':45 'astronom':91 'best':6 'call':92 'consist':19,24,56,61,66,71 'describ':7 'diagram':96,100 'differ':9 'discov':87 'dust':26,73 'emit':46,51 'energi':63 'follow':4 'galaxi':12,18,41,44,55,65 'gas':28,75 'h':98 'h-r':97 'hertzsprung':94 'hertzsprung-russel':93 'independ':88 'light':47,52 'luminos':81 'matter':58 'nebula':15,23,35,49,70 'nebular':60 'never':50 'one':38 'plot':79 'r':99 'russel':95 'star':21,68,86 'statement':5 'surfac':83 'temperatur':84 'two':32,90 'type':33,39 'versus':82 'w':16 'x':29 'y':42 'z':53",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": ") A galaxy consists of stars; a nebula consists of dust and gas.",
+    "tossup_answer": "W) A galaxy consists of stars; a nebula consists of dust and gas.",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Which of the following statements best describes the difference between a galaxy and a nebula?\nW) A galaxy consists of stars; a nebula consists of dust and gas.\nX) There are two types of nebula, but only one type of galaxy.\nY) A galaxy always emits light; a nebula never emits light.\nZ) A galaxy consists of matter; a nebular consists of energy.",
     "uri": "https://scibowldb.com/tossup/5096"
@@ -4950,7 +4936,7 @@
     "id": 5101,
     "search_vector": "'center':36,55,101 'chemic':63 'combin':64 'concentr':128 'convect':112,119,145 'core':124,150 'crust':134 'current':113,120,146 'dens':68 'densiti':22,32,41,51,62,74,81,87,97 'differenti':15 'earli':3 'earth':4,25,44,90,102,115,122,132,148 'energi':138 'field':105 'float':42 'form':66,75,82 'gase':76 'high':31,40,59,73,96,127,137 'high-energi':136 'iron':130 'known':13 'like':107 'low':21,50,61,80,86 'magnet':104 'mantl':117 'molten':7 'particl':139 'process':12 'region':8 'result':109 'rise':23,88 'sink':33,52,98 'solar':142 'solid':83 'substan':19,84 'substanc':9,38,57,69,71 'surfac':27,46,92 'toward':34,53,99 'underw':10 'uniform':67 'vast':6 'w':18,111 'wind':143 'within':1 'x':37,118,144 'y':56,125 'z':70,135",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": ") substanes of low density rise to Earth's surface, while those of high density sink toward its center",
+    "tossup_answer": "W) substanes of low density rise to Earth's surface, while those of high density sink toward its center",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Within the early Earth's vast molten region, substances underwent a process known as differentiation, during which\nW) substanes of low density rise to Earth's surface, while those of high density sink toward its center\nX) substances of high density float to Earth's surface, while those of low density sink toward its center.\nY) substances of high and low density chemically combine to form uniformly dense substances.\nZ) substances of high density form gases, while those of low density form solids.",
     "uri": "https://scibowldb.com/tossup/5101"

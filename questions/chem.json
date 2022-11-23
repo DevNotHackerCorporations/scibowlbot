@@ -16112,5 +16112,19 @@
     "tossup_format": "Short Answer",
     "tossup_question": "Normal hydrogen at room temperature contains what two forms of hydrogen, as defined by the spins of their electrons and nuclei?",
     "uri": "https://scibowldb.com/tossup/6245"
+  },
+    {
+    "api_url": "https://scibowldb.com/api/questions/5890",
+    "bonus_answer": "X) 2",
+    "bonus_format": "Multiple Choice",
+    "bonus_question": "Each antibody molecule is made up of how many PAIR of polypeptide chains, joined together by disulfide bonds.      \nW) 1        \nX) 2        \nY) 3        \nZ) 4",
+    "category": "CHEMISTRY",
+    "id": 5890,
+    "search_vector": "'1':63 '2':65,71 '3':67 '4':69 'accumul':11 'acid':6 'aluminum':25 'antibodi':45 'biolog':21 'bond':61 'chain':15,56 'danger':18 'dissolv':4 'disulfid':60 'food':14 'high':34,42 'includ':24 'join':57 'level':19 'made':48 'magnif':22 'mani':52 'mercuri':27 'metal':3 'molecul':46 'pair':53 'ph':35,43 'polypeptid':55 'rain':7 'reach':17 'result':29,37 'togeth':58 'toxic':2 'w':10,62 'water':31,39 'x':16,64,70 'y':23,66 'z':28,36,68",
+    "source": "HW-BIOLOGY",
+    "tossup_answer": "Z) result in water with a high pH",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "The toxic metals dissolved by acid rain do not      \nW) accumulate in the food chain        \nX) reach dangerous levels by biological magnification        \nY) include aluminum and mercury        \nZ) result in water with a high pH",
+    "uri": "https://scibowldb.com/tossup/5890"
   }
 ]

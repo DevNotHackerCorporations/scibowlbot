@@ -1242,7 +1242,7 @@
     "source": "Official-set2-round12",
     "tossup_answer": "W) RESTRICTION ENZYME",
     "tossup_format": "Multiple Choice",
-    "tossup_question": "Which of the following molecules is best described as recognizing a specific nucleotide sequence and sniping the DNA at or near this recognition site:\nW) restriction enzyme\nX) DNA polymerase\nY) RNA polymerase\nZ) DNA ligase",
+    "tossup_question": "Which of the following molecules is best described as recognizing a specific nucleotide sequence and snipping the DNA at or near this recognition site:\nW) restriction enzyme\nX) DNA polymerase\nY) RNA polymerase\nZ) DNA ligase",
     "uri": "https://scibowldb.com/tossup/503"
   },
   {
@@ -12540,7 +12540,7 @@
     "source": "HW-BIOLOGY",
     "tossup_answer": "X) an abnormal female",
     "tossup_format": "Multiple Choice",
-    "tossup_question": "An individual with three \nX) chromosomes is likely t be:      \nW) a clinically normal female        \nX) an abnormal female        \nY) a Turner's individual        \nZ) a Kleinfelter's individual",
+    "tossup_question": "An individual with three chromosomes is likely to be:      \nW) a clinically normal female        \nX) an abnormal female        \nY) a Turner's individual        \nZ) a Kleinfelter's individual",
     "uri": "https://scibowldb.com/tossup/5753"
   },
   {
@@ -13170,7 +13170,7 @@
     "source": "HW-BIOLOGY",
     "tossup_answer": "X) herpes",
     "tossup_format": "Multiple Choice",
-    "tossup_question": "Of the following, which is NOT a bacterial disease Is it:      \nW) strep throat        \nX) herpes        \nY) Bubonic Plague        \nZ) Diphtheria",
+    "tossup_question": "Of the following, which is NOT a bacterial disease? Is it:      \nW) strep throat        \nX) herpes        \nY) Bubonic Plague        \nZ) Diphtheria",
     "uri": "https://scibowldb.com/tossup/5798"
   },
   {
@@ -14448,20 +14448,6 @@
     "uri": "https://scibowldb.com/tossup/5889"
   },
   {
-    "api_url": "https://scibowldb.com/api/questions/5890",
-    "bonus_answer": "X) 2",
-    "bonus_format": "Multiple Choice",
-    "bonus_question": "Each antibody molecule is made up of how many PAIR of polypeptide chains, joined together by disulfide bonds.      \nW) 1        \nX) 2        \nY) 3        \nZ) 4",
-    "category": "BIOLOGY",
-    "id": 5890,
-    "search_vector": "'1':63 '2':65,71 '3':67 '4':69 'accumul':11 'acid':6 'aluminum':25 'antibodi':45 'biolog':21 'bond':61 'chain':15,56 'danger':18 'dissolv':4 'disulfid':60 'food':14 'high':34,42 'includ':24 'join':57 'level':19 'made':48 'magnif':22 'mani':52 'mercuri':27 'metal':3 'molecul':46 'pair':53 'ph':35,43 'polypeptid':55 'rain':7 'reach':17 'result':29,37 'togeth':58 'toxic':2 'w':10,62 'water':31,39 'x':16,64,70 'y':23,66 'z':28,36,68",
-    "source": "HW-BIOLOGY",
-    "tossup_answer": "Z) result in water with a high pH",
-    "tossup_format": "Multiple Choice",
-    "tossup_question": "The toxic metals dissolved by acid rain do not      \nW) accumulate in the food chain        \nX) reach dangerous levels by biological magnification        \nY) include aluminum and mercury        \nZ) result in water with a high pH",
-    "uri": "https://scibowldb.com/tossup/5890"
-  },
-  {
     "api_url": "https://scibowldb.com/api/questions/5891",
     "bonus_answer": "W) adenine",
     "bonus_format": "Multiple Choice",
@@ -14528,7 +14514,7 @@
     "source": "HW-BIOLOGY",
     "tossup_answer": "Calmodulin",
     "tossup_format": "Short Answer",
-    "tossup_question": "What is the primary calcium-binding protein in eukaryotic cells, that is about 148 amino acids long, and has a wide variety of functions often through kinases andphosphatases (read as: foss-fah-TAY-sis)?",
+    "tossup_question": "What is the primary calcium-binding protein in eukaryotic cells, that is about 148 amino acids long, and has a wide variety of functions often through kinases and phosphatases (read as: foss-fah-TAY-sis)?",
     "uri": "https://scibowldb.com/tossup/5895"
   },
   {
@@ -15930,5 +15916,18 @@
     "tossup_format": "Multiple Choice",
     "tossup_question": "Asthma is anergic reaction in which      \nW)  smooth muscles around lung passageways contract.         \nX)  suppressor T-cells and helper T-cells die.         \nY)  histamine production decreases.         \nZ)  antihistamine production increases.",
     "uri": "https://scibowldb.com/tossup/5995"
+  },{
+    "api_url": "https://scibowldb.com/api/questions/1305",
+    "bonus_answer": "W) THE CHEMICAL MAKEUP OF THEIR SHELLS REFLECTS THE WATER CHEMISTRY AT THEIR TIME OF FORMATION",
+    "bonus_format": "Multiple Choice",
+    "bonus_question": "What property of diatoms make them useful as climate proxies?\nW) The chemical makeup of their shells reflects the water chemistry at their time of formation\nX) The narrow temperature range in which they exist makes them markers for paleo0ocean temperatures\nY) Their well-preserved digestive system provide ample evidence for ancient food webs\nZ) Their limited diversity and low adaptability make them key indicators of specific aquatic environments",
+    "category": "BIOLOGY",
+    "id": 1305,
+    "search_vector": "'abund':27 'adapt':127 'ampl':115 'ancient':118 'aquat':134 'best':5 'chemic':78,138 'chemistri':86,146 'climat':74 'decreas':19 'diatom':69 'digest':112 'divers':56,124 'ecosystem':14 'elimin':8,32 'environ':135 'evid':116 'exist':100 'explain':6 'follow':4 'food':119 'format':91,151 'increas':36,45,54,58 'indic':131 'key':130 'level':11,24,34,42,51,64 'limit':123 'low':126 'make':70,101,128 'makeup':79,139 'marker':103 'narrow':94 'often':15 'one':9,40,62 'organ':21,39,48,61 'paleo0ocean':105 'predat':37,46,55,59 'preserv':111 'prey':29 'properti':67 'provid':114 'proxi':75 'rang':96 'reflect':83,143 'result':16 'shell':82,142 'specif':133 'system':113 'temperatur':95,106 'time':89,149 'trophic':10,23,33,41,50,63 'two':22,49 'use':72 'w':26,76,136 'water':85,145 'web':120 'well':110 'well-preserv':109 'x':35,57,92 'y':44,107 'z':53,121",
+    "source": "Official-set4-round10",
+    "tossup_answer": "X) INCREASED PREDATION BY ORGANISMS ONE TROPHIC LEVEL DOWN",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "Which of the following best explains why eliminating one trophic level in an ecosystem often results in a decrease in organisms two trophic levels down?\nW) Abundance of prey in the eliminated trophic level\nX) Increased predation by organisms one trophic level down\nY) Increased predation by organisms two trophic levels down\nZ) Increased predator diversity",
+    "uri": "https://scibowldb.com/tossup/1305"
   }
 ]
