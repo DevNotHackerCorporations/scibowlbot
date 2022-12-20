@@ -79,5 +79,21 @@
     "tossup_answer": "Among Us",
     "tossup_format": "Short Answer",
     "tossup_question": "Which video game is sus?"
+  },
+  {
+    "category": "BRUH",
+    "id": -11,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "undefined",
+    "tossup_format": "Short Answer",
+    "tossup_question": "Which letter in this question is the fourth letter after the 4th a after the fourth e after the 4th i after the fourth o after the 4th u?"
+  },
+  {
+    "category": "INTERESTING",
+    "id": -12,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "112359",
+    "tossup_format": "Short Answer",
+    "tossup_question": "How many digits long is 2^3^4^3^2^3^4^3^2^3^4^3^2?"
   }
 ]
