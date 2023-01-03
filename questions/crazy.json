@@ -96,4 +96,12 @@
     "tossup_format": "Short Answer",
     "tossup_question": "How many digits long is 2^3^4^3^2^3^4^3^2^3^4^3^2?"
   }
+  {
+    "category": "GENERAL SCIENCE",
+    "id": -13,
+    "source": "Scibowlbot Round 1",
+    "tossup_answer": "Z) 0.0000411613535 miles",
+    "tossup_format": "Multiple Choice",
+    "tossup_question": "What is closest to the width of a 330ml Coke Can? ?\nW) 2.2 in\nX) 6.6cm\nY) 66.5mm\nZ) 0.0000411613535 miles"
+  }
 ]
