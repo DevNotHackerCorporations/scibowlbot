@@ -4439,7 +4439,7 @@
   },
   {
     "api_url": "https://scibowldb.com/api/questions/5066",
-    "bonus_answer": ") It orbits in retrograde motion.",
+    "bonus_answer": "W) It orbits in retrograde motion.",
     "bonus_format": "Multiple Choice",
     "bonus_question": "Which one of these statements about Neptune's moon, Triton, is true?\nW) It orbits in retrograde motion.\nX) Its orbit is highly eccentric.\nY) It fractured billions of years ago and reformed.\nZ) It does not have an atmosphere.",
     "category": "EARTH AND SPACE",
@@ -4481,7 +4481,7 @@
   },
   {
     "api_url": "https://scibowldb.com/api/questions/5069",
-    "bonus_answer": ") Americium",
+    "bonus_answer": "W) Americium",
     "bonus_format": "Multiple Choice",
     "bonus_question": "Which radioactive element is generally present in smoke detectors today?\nW) Americium\nX) Radium\nY) Radon\nZ) Actinium",
     "category": "EARTH AND SPACE",
@@ -4649,7 +4649,7 @@
   },
   {
     "api_url": "https://scibowldb.com/api/questions/5081",
-    "bonus_answer": ") Carbon dioxide",
+    "bonus_answer": "W) Carbon dioxide",
     "bonus_format": "Multiple Choice",
     "bonus_question": "What gas is most abundant in the troposphere of Venus?\nW) Carbon dioxide\nX) Nitrogen\nY) Sulfur dioxide\nZ) Methane",
     "category": "EARTH AND SPACE",
@@ -4733,7 +4733,7 @@
   },
   {
     "api_url": "https://scibowldb.com/api/questions/5087",
-    "bonus_answer": ") High magnetic field flux, and cooler temperature",
+    "bonus_answer": "W) High magnetic field flux, and cooler temperature",
     "bonus_format": "Multiple Choice",
     "bonus_question": "Sunspots are characterized by\nW) High magnetic field flux, and cooler temperature\nX) High magnetic field flux, and hotter temperature\nY) Low magnetic field flux, and cooler temperature\nZ) Low magnetic field flux, and hotter temperature",
     "category": "EARTH AND SPACE",
@@ -4782,7 +4782,7 @@
     "id": 5090,
     "search_vector": "'closest':16 'color':67 'determin':58 'distanc':60 'earth':1,14,34 'fall':46 'farthest':3 'greatest':38 'hemispher':10,23,32 'inform':49 'known':56 'must':54 'nearbi':52 'northern':9,22,31 'observ':63 'orbit':36 'parallax':71,73 'season':28 'size':65 'spring':42 'star':53 'summer':12,44 'sun':6,19 'temperatur':69 'veloc':37 'w':39,64 'winter':25,40,47 'x':41,66 'y':43,68 'z':45,70,72",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": ") Winter",
+    "tossup_answer": "W) Winter",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Earth is farthest from the Sun during the Northern Hemisphere's summer, and Earth is closest to the Sun during the Northern Hemisphere's winter. During which season in the Northern Hemisphere is Earth's orbital velocity greatest?\nW) Winter\nX) Spring\nY) Summer\nZ) Fall",
     "uri": "https://scibowldb.com/tossup/5090"
