@@ -1,11 +1,11 @@
 *2/19/2023 9:46PM PST*
-> :tada: :tada: :tada: VERIFIED!!! tada: :tada: :tada: Thanks to y'all for making this possible. It's amazing that Scibowlbot has grown from a random training bot for a small science club to being into verified with almost 100 servers. Once again, thank you to y'all for making this possible. - Actinium
-
+> :tada: :tada: :tada: VERIFIED!!! :tada: :tada: :tada: Thanks to y'all for making this possible. It's amazing that Scibowlbot has grown from a random training bot for a small science club to being into verified with almost 100 servers. Once again, thank you to y'all for making this possible. - Actinium
+[END]
 *9/24/2022*
 > Competitions are finally released! Start a competition with `.competition||comp new` Note that this isn't that polished yet, so there will be bugs.
 
 > Bug fix: Cannot click the "new __ question" buttons after the question timeouts
-
+[END]
 *9/16/2022*
 
 > Add Changelog

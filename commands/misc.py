@@ -73,7 +73,9 @@ class MyHelp(commands.HelpCommand):
                       "Scibowlbot is made by `Actinium#6072` with help from `hi-person#8594` and `goodbye#5213`. "
                       "Special thanks to `Fyssion#5985`, `ilovetocode#9113`, and `Streakwind#5347` for their support "
                       "helping troubleshoot and figure out discord.py. Questions are sourced from [CQCumbers's scibowldb](https://github.com/CQCumbers/scibowldb).")
-        body.add_line("**Changelog**\n" + open("Changelog.md", "r").read())
+        body.add_line("**Changelog**\n")
+        for line in open("Changelog.md", "r").read().split("\n[END]\n"):
+            body.add_line(line)
 
         return embed, body
 
