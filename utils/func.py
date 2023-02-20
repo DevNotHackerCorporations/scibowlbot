@@ -55,7 +55,7 @@ class Competition:
         if self.question > self.max_question:
             return await self.end()
 
-        from commands.question2 import Question
+        from commands.question import Question
         obj = Question(self.ctx, random.choice(self.ctx.bot.scibowl_subjects), self)
         await obj.run()
 

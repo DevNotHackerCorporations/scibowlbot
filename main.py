@@ -86,7 +86,7 @@ class Sbb(commands.Bot):
     async def setup_hook(self):
         await self.load_extension('jishaku')
         await self.load_extension('commands.constants')
-        await self.load_extension('commands.question2')
+        await self.load_extension('commands.question')
         await self.load_extension('commands.profile')
         await self.load_extension('commands.serverstats')
         await self.load_extension('commands.dev')
@@ -115,10 +115,10 @@ class Sbb(commands.Bot):
             return
         await self.invoke(await super().get_context(message))
 
-        if self.user.mention in message.content:
-            await message.channel.send(
-                "Hi there! I'm active and ready to serve up questions. For help, type "
-                + ".help")
+        #if self.user.mention in message.content:
+        #    await message.channel.send(
+        #        "Hi there! I'm active and ready to serve up questions. For help, type "
+        #        + ".help")
 
     async def on_command_error(self, ctx, err):
         if isinstance(err, CommandNotFound):

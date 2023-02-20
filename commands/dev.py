@@ -26,7 +26,6 @@ from discord.ext import commands
 from discord.ext.commands import BadArgument
 import discord
 
-
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix=".", intents=intents)
@@ -138,15 +137,14 @@ class Utility(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="suggest")
-    async def _suggest(self, ctx, suggestion):
+    async def _suggest(self, ctx, *, suggestion):
         """
         Suggest or report a bug to the scibowlbot developers!
 
         :param suggestion: What's your suggestion/bug?
         :type suggestion: str
         """
-        if ctx.prefix == ".":
-            suggestion = ctx.message.content[len("suggest "):].strip('"')
+
         embed = discord.Embed(title="Incoming Suggestion!", color=discord.Color.green(), description=suggestion)
         embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} (ID: {ctx.author.id})",
                          icon_url=ctx.author.avatar)
