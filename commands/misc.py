@@ -70,7 +70,7 @@ class MyHelp(commands.HelpCommand):
                         "Scibowlbot has many features like serving questions, a points system, profiles, achievements, and much more!")
 
         body.add_line('**Credits**\n'
-                      "Scibowlbot is made by `Actinium#6072` with help from `hi-person#8594` and `goodbye#5213`. "
+                      "Scibowlbot is made by `Actinium#6072` with help from `hi-person#8594`, `goodbye#5213`, and `pulsar|not|black_hole#5039`. "
                       "Special thanks to `Fyssion#5985`, `ilovetocode#9113`, and `Streakwind#5347` for their support "
                       "helping troubleshoot and figure out discord.py. Questions are sourced from [CQCumbers's scibowldb](https://github.com/CQCumbers/scibowldb).")
         body.add_line("**Changelog**\n")
