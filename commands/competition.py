@@ -36,14 +36,33 @@ async def setup(bot):
 
 
 @commands.guild_only()
-@commands.hybrid_group(fallback="competition", invoke_without_command=True, pass_context=True, aliases=["comp", "co"])
+@commands.hybrid_group(fallback=None, invoke_without_command=True, pass_context=True, aliases=["comp", "co"])
 async def competition(ctx):
-    pass
+    """
+    Challenge your friends and enemies in a competition!
+    """
+    await info(ctx)
+
+
+@commands.guild_only()
+@competition.command(name="info")
+async def info(ctx):
+    """
+    Instructions
+    """
+    help_command = ctx.bot.help_command
+    await help_command.prepare_help_command(ctx)
+    help_command.context = ctx
+    help_command.get_destination = lambda: ctx
+    await help_command.command_callback(ctx, command="competition")
 
 
 @commands.guild_only()
 @competition.command(name="new")
 async def new(ctx: commands.Context):
+    """
+    Create a new competition
+    """
     if ctx.author.id in ctx.bot.in_comp:
         return await ctx.send("You are already in a competition! You may not create another.", ephemeral=True)
     embed = discord.Embed(title="New Competition", color=discord.Color.none())

@@ -22,7 +22,9 @@ For any questions, please contant DevNotHackerCorporations by their email at <de
 
 from discord.ext import commands
 from discord.ext.commands import BadArgument
+from discord import app_commands
 import discord
+
 import json
 import pathlib
 import typing
@@ -45,6 +47,7 @@ class Currency(commands.Cog):
 
     @commands.guild_only()
     @commands.hybrid_command(name="leaderboard", aliases=["lb"])
+    @app_commands.rename(max_people="top", global_="global")
     async def _leaderboard(self, ctx, max_people: typing.Optional[int] = 3, global_: typing.Optional[bool] = False):
         """
         View the server leaderboard (and your place in it)
@@ -98,6 +101,7 @@ class Currency(commands.Cog):
         view.message = await ctx.send(embed=view.embed, view=view)
 
     @commands.hybrid_command(name="gift")
+    @app_commands.rename(to_user="to")
     async def _gift(self, message, amount: int, to_user: discord.Member):
         """
         Gift some of your points to someone!

@@ -59,8 +59,10 @@ class Sbb(commands.Bot):
         intents = discord.Intents.default()
         intents.members = True
 
+        #intents.message_content = True  # FOR DEBUG ONLY
+
         super().__init__(
-            command_prefix=".",
+            command_prefix=commands.when_mentioned_or("."),
             description="The best way to do science on discord!",
             owner_ids=[728297793646624819, 712426753238237274],
             case_insensitive=True,

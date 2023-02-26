@@ -67,7 +67,7 @@ async def q(ctx, subject):
     ```
     Note: Each channel can only host one question at the time.
 
-    :param subject: The subject of the question
+    :param subject: The subject of the question.
     :type subject: str
     """
     try:

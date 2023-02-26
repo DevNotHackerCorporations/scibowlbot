@@ -24,6 +24,7 @@ import json
 
 from discord.ext import commands
 from discord.ext.commands import BadArgument
+from discord import app_commands
 import discord
 
 intents = discord.Intents.default()
@@ -111,6 +112,7 @@ class Utility(commands.Cog):
 
     @commands.is_owner()
     @commands.hybrid_command(name="reload")
+    @app_commands.rename(command_name="command-name")
     async def _reload(self, ctx, command_name):
         """
         Refresh a file without restarting the bot.

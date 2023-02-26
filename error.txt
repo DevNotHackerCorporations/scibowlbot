@@ -1,11 +1,42 @@
 Traceback (most recent call last):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 917, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 82, in <module>
+    class Utility(commands.Cog):
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 116, in Utility
+    async def _reload(self, ctx, command_name):
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 844, in decorator
+    return HybridCommand(func, name=name, with_app_command=with_app_command, **attrs)  # type: ignore  # ???
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 483, in __init__
+    HybridAppCommand(self) if self.with_app_command else None
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/hybrid.py", line 295, in __init__
+    super().__init__(
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 527, in __init__
+    self._params: Dict[str, CommandParameter] = _extract_parameters_from_callback(callback, callback.__globals__)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 405, in _extract_parameters_from_callback
+    _populate_renames(result, renames.copy())
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 308, in _populate_renames
+    new_name = validate_name(new_name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/app_commands/commands.py", line 209, in validate_name
+    raise ValueError(
+ValueError: 'command nmae' must be between 1-32 characters and contain only lower-case letters, numbers, hyphens, or underscores.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 200, in wrapped
     ret = await coro(*args, **kwargs)
-  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 125, in _reload
-    await ctx.bot.reload_extension(command_name)
-  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1082, in reload_extension
-    raise errors.ExtensionNotLoaded(name)
-discord.ext.commands.errors.ExtensionNotLoaded: Extension 'commands.question' has not been loaded.
+  File "/Users/andrewchen/PycharmProjects/scibowlbot/commands/dev.py", line 124, in _reload
+    if ctx.author not in ctx.bot.devs:
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 1097, in reload_extension
+    await self.load_extension(name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 995, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/bot.py", line 920, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'commands.dev' raised an error: ValueError: 'command nmae' must be between 1-32 characters and contain only lower-case letters, numbers, hyphens, or underscores.
 
 The above exception was the direct cause of the following exception:
 
@@ -16,4 +47,4 @@ Traceback (most recent call last):
     await injected(*ctx.args, **ctx.kwargs)  # type: ignore
   File "/Users/andrewchen/Library/Python/3.9/lib/python/site-packages/discord/ext/commands/core.py", line 209, in wrapped
     raise CommandInvokeError(exc) from exc
-discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionNotLoaded: Extension 'commands.question' has not been loaded.
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: ExtensionFailed: Extension 'commands.dev' raised an error: ValueError: 'command nmae' must be between 1-32 characters and contain only lower-case letters, numbers, hyphens, or underscores.

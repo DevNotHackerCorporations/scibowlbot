@@ -110,15 +110,15 @@ async def _pd(ctx):
 
 @commands.guild_only()
 @stats.command(name='percentile', aliases=["pc"])
-async def _pc(ctx, subject: typing.Optional[discord.Member]):
+async def _pc(ctx, user: typing.Optional[discord.Member]):
     """
     Shows global percentiles
 
-    :param subject: Where is [subject] on the percentile chart? defaults to you
-    :type subject: discord.Member, optional
+    :param user: Where is [subject] on the percentile chart? defaults to you
+    :type user: discord.Member, optional
     """
-    if subject is None:
-        subject = ctx.author
+    if user is None:
+        user = ctx.author
 
     async with ctx.typing():
         people = get_points(ctx, True)
@@ -131,7 +131,7 @@ async def _pc(ctx, subject: typing.Optional[discord.Member]):
         y = [float(np.percentile(nparr, i)) for i in x]
 
         plt.plot(x, y, color='green')
-        mypercent = scistats.percentileofscore(people, ctx.bot.getpoints(str(subject.id)))
+        mypercent = scistats.percentileofscore(people, ctx.bot.getpoints(str(user.id)))
         plt.plot(mypercent, round((np.percentile(nparr, mypercent)), 2), "ro")
 
         plt.xlabel("Percentile")

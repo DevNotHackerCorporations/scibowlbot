@@ -25,6 +25,7 @@ from discord import app_commands
 import discord
 import docstring_parser
 from utils.menu import Menu
+import typing
 
 intents = discord.Intents.default()
 intents.members = True
@@ -49,6 +50,8 @@ category_emojis = {
 
 async def setup(bot: commands.Bot):
     bot.help_command = MyHelp()
+    bot.remove_command("help")
+    bot.add_command(_help)
 
 
 class MyHelp(commands.HelpCommand):
@@ -174,6 +177,20 @@ class MyHelp(commands.HelpCommand):
         await view.goto(0, edit=False)
         view.message = await destination.send(embed=view.embed, view=view)
 
+
+@commands.hybrid_command(name="help")
+async def _help(ctx, command: typing.Optional[str] = None):
+    """
+    Get help with Scibowlbot
+
+    :param command: Any commands?
+    :type command: str
+    """
+    help_command = ctx.bot.help_command
+    await help_command.prepare_help_command(ctx)
+    help_command.context = ctx
+    help_command.get_destination = lambda: ctx
+    await help_command.command_callback(ctx, command=command)
 
 intents = discord.Intents.default()
 intents.members = True
