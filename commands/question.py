@@ -274,7 +274,7 @@ class Question(discord.ui.View):
             self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + self.timeout)}:R>",
                                  inline=False)
         else:
-            timeout = 5 + round(max(map(lambda answer: len(answer), self.answer_list))/30, 2)
+            timeout = 3 + round(max(map(lambda answer: len(answer), self.answer_list))/3.333, 2)
             self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + timeout)}:R>",
                                  inline=False)
             return await interaction.response.send_modal(
