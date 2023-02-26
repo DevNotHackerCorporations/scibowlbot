@@ -143,6 +143,7 @@ class Question(discord.ui.View):
         self.state = 0
         self.graded = False
         self.view = self
+        self.buzzed = False
         self.buzzer = None
         self.answer = ""
         self.embed = discord.Embed(title=f"Question" if not self.comp else self.comp.get_title(),
@@ -248,6 +249,9 @@ class Question(discord.ui.View):
     async def buzz(self, interaction, button):
         if self.comp and interaction.user.id not in self.comp.participants:
             return interaction.response.send_message("You are not part of this competition!", ephemeral=True)
+        if self.buzzed:
+            return interaction.response.send_message("You lost the buzzer race :(", ephemeral=True)
+        self.buzzed = True
         self.responder = interaction.user
         self.author = self.responder.id
         self.embed.set_author(name=self.responder.display_name,
@@ -488,8 +492,7 @@ class GetResponse(discord.ui.Modal, title="Short Response"):
     async def on_submit(self, interaction: discord.Interaction):
         if interaction.user.id != self.a:
             return await interaction.response.send_message(
-                "I have no idea how in the world you managed to circumvent our buzzer disable and answer another "
-                "person's question, but you did it. (We have a check here, so your submit didn't do anything)",
+                "Surprisingly, you lost the buzzer race, but still got this embed. In other words, this isn't your question. Sorry.",
                 ephemeral=True)
         if not self.timeouted:
             await self.view.validate(self.answer.value)
