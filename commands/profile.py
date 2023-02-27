@@ -373,7 +373,7 @@ class SearchButton(discord.ui.Button):
         good_at, bad_at = map(set, self.view.data)
         memberlist = {str(member.id) for member in self.ctx.guild.members}
 
-        with open("points.json") as raw_data:
+        with open("assets/points.json") as raw_data:
             raw_data = json.loads(raw_data.read())
             profiles = raw_data["profile"]
             matches = []

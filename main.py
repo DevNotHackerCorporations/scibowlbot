@@ -178,7 +178,7 @@ class Sbb(commands.Bot):
 
     @tasks.loop(minutes=5.0)
     async def update_data_from_firebase(self):
-        open("points.json", "w").write(json.dumps(self.db.get().val()))
+        open("assets/points.json", "w").write(json.dumps(self.db.get().val()))
 
     @tasks.loop(minutes=60.0)
     async def regenerate_token(self):
@@ -193,7 +193,7 @@ app = Flask("app")
 
 @app.route("/")
 def home():
-    return open("website/index.html", "r").read()
+    return open("index.html", "r").read()
 
 
 from threading import Thread
@@ -201,14 +201,14 @@ from threading import Thread
 
 @app.route("/style.css")
 def cssfile():
-    return open("website/style.css", "r").read(), 200, {
+    return open("assets/css/style.css", "r").read(), 200, {
         'Content-Type': 'text/css; charset=utf-8'
     }
 
 
 @app.route("/atom.png")
 def logopng():
-    return send_file("website/atom.png", mimetype='image/png')
+    return send_file("assets/atom.png", mimetype='image/png')
 
 
 @app.route("/LICENSE.txt")
@@ -220,7 +220,7 @@ def license():
 
 @app.route("/api")
 def api():
-    return open("points.json", "r").read(), 200, {
+    return open("assets/points.json", "r").read(), 200, {
         'Content-Type': 'text/json; charset=utf-8'
     }
 

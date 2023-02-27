@@ -74,20 +74,20 @@ async def setup(client):
 
     def changepoints(user, point):
         user = str(user)
-        points = json.loads(open("points.json", "r").read())
+        points = json.loads(open("assets/points.json", "r").read())
         points["points"][user] = points.get("points").get(user, 0) + point
-        open("points.json", "w").write(json.dumps(points))
+        open("assets/points.json", "w").write(json.dumps(points))
         client.db.set(points)
         return points["points"][user]
 
     def getpoints(user):
         user = str(user)
-        points = json.loads(open("points.json", "r").read())
+        points = json.loads(open("assets/points.json", "r").read())
         return points.get("points").get(user, 0)
 
     def changeprofile(user, good=None, bad=None, bio=None):
         user = str(user)
-        points = json.loads(open("points.json", "r").read())
+        points = json.loads(open("assets/points.json", "r").read())
         if not points["profile"].get(user):
             points["profile"][user] = [[], [], ""]
         if good:
@@ -96,12 +96,12 @@ async def setup(client):
             points["profile"][user][1] = bad
         if bio:
             points["profile"][user][2] = bio
-        open("points.json", "w").write(json.dumps(points))
+        open("assets/points.json", "w").write(json.dumps(points))
         client.db.set(points)
 
     def getprofile(user):
         user = str(user)
-        points = json.loads(open("points.json", "r").read())
+        points = json.loads(open("assets/points.json", "r").read())
         return points.get("profile").get(user, [[], [], ""])
 
     def t_string(seconds: int) -> str:
@@ -151,7 +151,7 @@ async def setup(client):
             ]
             self.id = str(id)
 
-            raw = json.loads(open("points.json",
+            raw = json.loads(open("assets/points.json",
                                   "r").read())['achiev'].get(self.id, 0)
             self.progress = list(
                 map(lambda x: bool(int(x)), list(bin(raw)[2:])))
@@ -173,9 +173,9 @@ async def setup(client):
                 "".join([str(int(achiev['earned'])) for achiev in self.desc]),
                 2)
 
-            raw = json.loads(open("points.json", "r").read())
+            raw = json.loads(open("assets/points.json", "r").read())
             raw['achiev'][self.id] = binary
-            open("points.json", "w").write(json.dumps(raw))
+            open("assets/points.json", "w").write(json.dumps(raw))
             client.db.set(raw)
 
             return self.desc[index]

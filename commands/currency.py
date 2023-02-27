@@ -70,7 +70,7 @@ class Currency(commands.Cog):
         embed.set_author(name=ctx.author.display_name,
                          url="",
                          icon_url=ctx.author.avatar)
-        embed.set_thumbnail(url=ctx.guild.icon if not global_ else f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/website/globe.png")
+        embed.set_thumbnail(url=ctx.guild.icon if not global_ else f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/assets/globe.png")
         body = commands.Paginator(prefix="",
                                   suffix=f"\n**What place am I?**\nYou are not among the top {max_people}",
                                   max_size=1024 - 10 - len(embed.title),

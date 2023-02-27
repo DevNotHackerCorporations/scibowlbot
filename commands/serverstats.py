@@ -103,9 +103,9 @@ async def _pd(ctx):
         plt.xlabel("Points rounded down to the nearest 100")
         plt.ylabel("Number of people")
         plt.title("Points Distribution")
-        plt.savefig('image.png')
+        plt.savefig('assets/image.png')
 
-    await ctx.send(file=discord.File("image.png"))
+    await ctx.send(file=discord.File("assets/image.png"))
 
 
 @commands.guild_only()
@@ -137,6 +137,6 @@ async def _pc(ctx, user: typing.Optional[discord.Member]):
         plt.xlabel("Percentile")
         plt.ylabel("Number")
         plt.title("Percentiles")
-        plt.savefig('image.png')
+        plt.savefig('assets/image.png')
 
-    await ctx.send(file=discord.File("image.png"))
+    await ctx.send(file=discord.File("assets/image.png"))

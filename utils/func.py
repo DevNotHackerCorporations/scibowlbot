@@ -18,7 +18,7 @@ def get_points(ctx, global_=False, returnDict=False):
     if not ctx.guild:
         return [ctx.bot.getpoints(str(ctx.author.id))]
     memberlist = {str(member.id) for member in ctx.guild.members}
-    points = json.loads(open("points.json", "r").read()).get("points")
+    points = json.loads(open("assets/points.json", "r").read()).get("points")
     people = [] if not returnDict else {}
     for k in points:
         if str(k) in memberlist or global_:
@@ -85,7 +85,7 @@ class Competition:
                          icon_url=self.ctx.author.avatar)
 
         embed.set_thumbnail(
-            url=f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/website/trophy.png")
+            url=f"https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/assets/trophy.png")
 
         body = commands.Paginator(prefix="",
                                   suffix="",
