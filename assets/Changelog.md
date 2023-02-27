@@ -8,6 +8,8 @@
 > @scibowlbot mention prefix
 
 > Renaming descriptions & parameters to be more user friendly 
+
+> Tweaked the short answer timer to be (much) more realistic
 [END]
 *2/19/2023 9:46PM PST*
 > Verified! Thanks to y'all for making this possible. It's amazing that Scibowlbot has grown from a random training bot for a small science club to being into verified with almost 100 servers. Once again, thank you to y'all for making this possible. - Actinium
