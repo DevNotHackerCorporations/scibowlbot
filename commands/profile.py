@@ -25,6 +25,7 @@ from discord.ext.commands import BadArgument
 import discord
 import typing
 import json
+import typing
 
 intents = discord.Intents.default()
 intents.members = True
@@ -35,10 +36,65 @@ async def setup(bot):
     await bot.add_cog(Profile())
 
 
+def profile_embed(message, member: discord.Member):
+    profile = message.bot.getprofile(member.id)
+
+    embed = discord.Embed(
+        title=f"{member.display_name}'s profile",
+        description=(profile[2] if profile[2] else
+                     f"{member.display_name} does not have a bio yet."),
+        color=0xFF5733)
+    embed.set_author(name=member.display_name,
+                     url="",
+                     icon_url=member.avatar)
+    embed.set_thumbnail(url=member.avatar)
+    embed.add_field(
+        name=f"{member}'s point count",
+        value=
+        f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)",
+        inline=False)
+
+    if not profile[0]:
+        good_at = "∅"
+    else:
+        good_at = "\n".join(
+            list(
+                map(
+                    lambda x: message.bot.emoj[x.lower()] + " " + message.
+                    bot.apprev[x.upper()][0].lower(), profile[0])))
+    if not profile[1]:
+        bad_at = "∅"
+    else:
+        bad_at = "\n".join(
+            list(
+                map(
+                    lambda x: message.bot.emoj[x.lower()] + " " + message.
+                    bot.apprev[x.upper()][0].lower(), profile[1])))
+
+    embed.add_field(name=f"What {member} is good at",
+                    value=good_at,
+                    inline=False)
+    embed.add_field(name=f"What {member} is not so good at",
+                    value=bad_at,
+                    inline=False)
+
+    MyAchiev = message.bot.Achievements(str(member.id)).desc
+    achiev = ""
+    for node in MyAchiev:
+        if node['earned']:
+            achiev += f"{node['emoji']} {node['name']} - {node['description']}\n"
+    if not achiev:
+        achiev = "None"
+
+    embed.add_field(name="Earned Achievements", value=achiev, inline=False)
+    return embed
+
+
 class Profile(commands.Cog):
     """
     Commands that relate to your profile
     """
+
     @commands.hybrid_command(name="profile", aliases=["p"])
     async def _profile(self, message, member: typing.Optional[discord.Member]):
         """
@@ -52,58 +108,7 @@ class Profile(commands.Cog):
         if not member:
             member = message.author
 
-        profile = message.bot.getprofile(member.id)
-
-        embed = discord.Embed(
-            title=f"{member.display_name}'s profile",
-            description=(profile[2] if profile[2] else
-                         f"{member.display_name} does not have a bio yet."),
-            color=0xFF5733)
-        embed.set_author(name=member.display_name,
-                         url="",
-                         icon_url=member.avatar)
-        embed.set_thumbnail(url=member.avatar)
-        embed.add_field(
-            name=f"{member}'s point count",
-            value=
-            f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)",
-            inline=False)
-
-        if not profile[0]:
-            good_at = "∅"
-        else:
-            good_at = "\n".join(
-                list(
-                    map(
-                        lambda x: message.bot.emoj[x.lower()] + " " + message.
-                        bot.apprev[x.upper()][0].lower(), profile[0])))
-        if not profile[1]:
-            bad_at = "∅"
-        else:
-            bad_at = "\n".join(
-                list(
-                    map(
-                        lambda x: message.bot.emoj[x.lower()] + " " + message.
-                        bot.apprev[x.upper()][0].lower(), profile[1])))
-
-        embed.add_field(name=f"What {member} is good at",
-                        value=good_at,
-                        inline=False)
-        embed.add_field(name=f"What {member} is not so good at",
-                        value=bad_at,
-                        inline=False)
-
-        MyAchiev = message.bot.Achievements(str(member.id)).desc
-        achiev = ""
-        for node in MyAchiev:
-            if node['earned']:
-                achiev += f"{node['emoji']} {node['name']} - {node['description']}\n"
-        if not achiev:
-            achiev = "None"
-
-        embed.add_field(name="Earned Achievements", value=achiev, inline=False)
-
-        await message.send(embed=embed)
+        await message.send(embed=profile_embed(message, member))
 
     @commands.hybrid_command(name="change_profile", aliases=["cp"])
     async def _c_profile(self, message):
@@ -116,7 +121,7 @@ class Profile(commands.Cog):
         await obj.run()
 
     @commands.hybrid_command(name="set_bio", aliases=["bio"])
-    async def _c_bio(self, ctx, bio):
+    async def _c_bio(self, ctx, *, bio):
         """
         Sets your bio for your profile
 
@@ -156,57 +161,42 @@ class Profile(commands.Cog):
         obj = SearchView(ctx)
         await obj.run()
 
+    @commands.hybrid_command(name="settings", aliases=["s"])
+    async def _c_settings(self, ctx):
+        """
+        Changes your settings
+        """
+        obj = SettingsMainView(ctx)
+        await obj.run()
+
 
 class ChangeProfile(discord.ui.View):
-    def __init__(self, ctx):
+    def __init__(self, ctx, parent):
         super().__init__(timeout=60.0)
         self.ctx = ctx
+        self.parent = parent
+        self.message = self.parent.message
         self.add_item(CPGood(self.ctx, self))
         self.add_item(CPBad(self.ctx, self))
 
-    async def run(self):
-        profile = self.ctx.bot.getprofile(self.ctx.author.id)
-        if not profile[0]:
-            good_at = "∅"
-        else:
-            good_at = "\n".join(
-                list(
-                    map(
-                        lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
-                        .bot.apprev[x.upper()][0].lower(), profile[0])))
-        if not profile[1]:
-            bad_at = "∅"
-        else:
-            bad_at = "\n".join(
-                list(
-                    map(
-                        lambda x: self.ctx.bot.emoj[x.lower()] + " " + self.ctx
-                        .bot.apprev[x.upper()][0].lower(), profile[1])))
-
-        em = discord.Embed(title="Change your profile", color=0x2ecc71)
-        em.set_author(name=str(self.ctx.author),
-                      icon_url=self.ctx.author.display_avatar.url)
-        em.add_field(name=f"Your current data for 'good at'",
-                     value=good_at,
-                     inline=False)
-        em.add_field(name=f"Your current data for 'not so good at'",
-                     value=bad_at,
-                     inline=False)
-        em.set_footer(text=f"Confused? Learn more with .help change_profile")
-
-        self.message = await self.ctx.send(embed=em, view=self)
+    @discord.ui.button(label="Back", style=discord.ButtonStyle.green, row=2)
+    async def back(self, interaction, button):
+        self.parent.cur = self.parent
+        await interaction.response.edit_message(view=self.parent)
 
     async def on_timeout(self):
         for item in self.children:
             item.disabled = True
 
         await self.message.edit(view=self)
+        await self.parent.on_timeout()
 
 
 class CPGood(discord.ui.Select):
     def __init__(self, ctx, view):
         self.ctx = ctx
         self.author = ctx.author.id
+        self.parent = view
         good_at, bad_at, bio = ctx.bot.getprofile(int(self.author))
         if not good_at:
             good_at = []
@@ -217,9 +207,9 @@ class CPGood(discord.ui.Select):
                 value=subject,
                 default=(subject in good_at),
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                    "math", "es", "cs"
-                ]
+                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                "math", "es", "cs"
+            ]
         ]
 
         super().__init__(placeholder='Things you are good at',
@@ -233,13 +223,15 @@ class CPGood(discord.ui.Select):
                 "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
                 ephemeral=True)
         self.ctx.bot.changeprofile(self.author, good=self.values)
-        await interaction.response.defer()
+        self.parent.parent.cur = ChangeProfile(self.ctx, self.parent.parent)
+        await self.parent.parent.refresh(interaction)
 
 
 class CPBad(discord.ui.Select):
     def __init__(self, ctx, view):
         self.ctx = ctx
         self.author = ctx.author.id
+        self.parent = view
         good_at, bad_at, bio = ctx.bot.getprofile(int(self.author))
         if not bad_at:
             bad_at = []
@@ -250,9 +242,9 @@ class CPBad(discord.ui.Select):
                 value=subject,
                 default=(subject in bad_at),
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                    "math", "es", "cs"
-                ]
+                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                "math", "es", "cs"
+            ]
         ]
         super().__init__(placeholder='Things you are good at',
                          min_values=1,
@@ -265,7 +257,8 @@ class CPBad(discord.ui.Select):
                 "Sorry, this select menu is not controlled by you! Your changes have not been saved. Maybe create one by youself with `.change_profile`..?",
                 ephemeral=True)
         self.ctx.bot.changeprofile(self.author, bad=self.values)
-        await interaction.response.defer()
+        self.parent.parent.cur = ChangeProfile(self.ctx, self.parent.parent)
+        await self.parent.parent.refresh(interaction)
 
 
 class SearchView(discord.ui.View):
@@ -309,9 +302,9 @@ class SearchGood(discord.ui.Select):
                 value=subject,
                 default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                    "math", "es", "cs"
-                ]
+                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                "math", "es", "cs"
+            ]
         ]
         super().__init__(placeholder='Query for good at',
                          min_values=0,
@@ -339,9 +332,9 @@ class SearchBad(discord.ui.Select):
                 value=subject,
                 default=False,
                 emoji=ctx.bot.emoj[subject]) for subject in [
-                    "phy", "gen", "energy", "eas", "chem", "bio", "astro",
-                    "math", "es", "cs"
-                ]
+                "phy", "gen", "energy", "eas", "chem", "bio", "astro",
+                "math", "es", "cs"
+            ]
         ]
         super().__init__(placeholder='Query for bad at',
                          min_values=0,
@@ -385,7 +378,7 @@ class SearchButton(discord.ui.Button):
                 if id in memberlist and len(
                         set(good).intersection(good_at)
                 ) == len(good_at) and len(
-                        set(bad).intersection(bad_at)) == len(bad_at):  # Match
+                    set(bad).intersection(bad_at)) == len(bad_at):  # Match
                     matches.append([
                         self.ctx.bot.get_user(int(id)), bio,
                         self.ctx.bot.getpoints(id), id
@@ -495,3 +488,62 @@ class SearchPagRight(discord.ui.Button):
             await interaction.response.edit_message(embed=em, view=self.view)
         else:
             await interaction.response.defer()
+
+
+class SettingsMainView(discord.ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=600.0)
+        self.ctx = ctx
+        self.message = None
+        self.cur = self
+
+    async def run(self):
+        self.message = await self.ctx.send(embed=profile_embed(self.ctx, self.ctx.author), view=self)
+
+    async def on_timeout(self):
+        for item in self.children:
+            item.disabled = True
+
+        await self.message.edit(view=self)
+        self.stop()
+
+    async def refresh(self, interaction: discord.Interaction):
+        await interaction.response.edit_message(embed=profile_embed(self.ctx, self.ctx.author), view=self.cur)
+
+    @discord.ui.button(label="Change Skills", style=discord.ButtonStyle.blurple)
+    async def change_skills(self, interaction: discord.Interaction, button):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("This is not your command.", ephemeral=True)
+        self.cur = ChangeProfile(self.ctx, self)
+        await interaction.response.edit_message(view=self.cur)
+
+    @discord.ui.button(label="Set Biography", style=discord.ButtonStyle.blurple)
+    async def set_bio(self, interaction: discord.Interaction, button):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("This is not your command.", ephemeral=True)
+        await interaction.response.send_modal(SetBio(self))
+
+    @discord.ui.button(label="Change Visibility", style=discord.ButtonStyle.blurple)
+    async def change_vis(self, interaction: discord.Interaction, button):
+        if interaction.user.id != self.ctx.author.id:
+            return await interaction.response.send_message("This is not your command.", ephemeral=True)
+
+
+class SetBio(discord.ui.Modal, title="Set Biography"):
+    answer = discord.ui.TextInput(label='Your biography',
+                               style=discord.TextStyle.short,
+                               max_length=200,
+                               placeholder="Quick! Your answer")
+
+    def __init__(self, view):
+        super().__init__(timeout=600.0)
+        self.view = view
+
+    async def on_submit(self, interaction: discord.Interaction):
+        self.view.ctx.bot.changeprofile(self.view.ctx.author.id, bio=self.answer.value)
+        self.view.cur = self.view
+        await self.view.refresh(interaction)
+
+    async def on_timeout(self):
+        await self.view.on_timeout(True)
+        self.stop()
