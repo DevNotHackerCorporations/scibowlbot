@@ -115,6 +115,23 @@ async def setup(client):
         return ("%d days, %d hours, %d minutes, and %d seconds!" %
                 (day, hour, minutes, seconds))
 
+    def changevisibility(user: int):
+        user = str(user)
+        points = json.loads(open("assets/points.json", "r").read())
+        if not points.get("private"):
+            points["private"] = {}
+        points["private"][user] = not points["private"].get(user, False)
+
+        open("assets/points.json", "w").write(json.dumps(points))
+        client.db.set(points)
+
+    def getvisibility(user: int):
+        user = str(user)
+        points = json.loads(open("assets/points.json", "r").read())
+        if not points.get("private"):
+            return False
+        return bool(points["private"].get(user))
+
     class Achievements:
         def __init__(self, id: str):
             self.desc = [
@@ -207,3 +224,5 @@ async def setup(client):
     client.getprofile = getprofile
     client.hasQuestion = set()
     client.Achievements = Achievements
+    client.changevisibility = changevisibility
+    client.getvisibility = getvisibility

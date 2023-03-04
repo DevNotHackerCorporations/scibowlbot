@@ -1,3 +1,8 @@
+*3/4/2023*
+> `/refresh_database (rd)` command (devs only) 
+
+> Retired `/change_profile` and `/set_bio` for `/settings`
+[END]
 *2/26/2023*
 > `/competition info` command
 

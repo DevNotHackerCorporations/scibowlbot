@@ -36,8 +36,20 @@ async def setup(bot):
     await bot.add_cog(Profile())
 
 
-def profile_embed(message, member: discord.Member):
-    profile = message.bot.getprofile(member.id)
+def profile_embed(ctx, member: discord.Member, bypassPrivate=False):
+    profile = ctx.bot.getprofile(member.id)
+    private = ctx.bot.getvisibility(member.id)
+
+    if private and not bypassPrivate:
+        embed = discord.Embed(
+            title=f"{member.display_name}'s profile",
+            description="This user is private. Therefore you may not see their data.",
+            color=0xFF5733)
+        embed.set_author(name=member.display_name,
+                         url="",
+                         icon_url=member.avatar)
+        embed.set_thumbnail(url=member.avatar)
+        return embed
 
     embed = discord.Embed(
         title=f"{member.display_name}'s profile",
@@ -51,7 +63,7 @@ def profile_embed(message, member: discord.Member):
     embed.add_field(
         name=f"{member}'s point count",
         value=
-        f"**{str(member.display_name)}** has **{str(message.bot.getpoints(str(member.id)))}** point(s)",
+        f"**{str(member.display_name)}** has **{str(ctx.bot.getpoints(str(member.id)))}** point(s)",
         inline=False)
 
     if not profile[0]:
@@ -60,7 +72,7 @@ def profile_embed(message, member: discord.Member):
         good_at = "\n".join(
             list(
                 map(
-                    lambda x: message.bot.emoj[x.lower()] + " " + message.
+                    lambda x: ctx.bot.emoj[x.lower()] + " " + ctx.
                     bot.apprev[x.upper()][0].lower(), profile[0])))
     if not profile[1]:
         bad_at = "∅"
@@ -68,7 +80,7 @@ def profile_embed(message, member: discord.Member):
         bad_at = "\n".join(
             list(
                 map(
-                    lambda x: message.bot.emoj[x.lower()] + " " + message.
+                    lambda x: ctx.bot.emoj[x.lower()] + " " + ctx.
                     bot.apprev[x.upper()][0].lower(), profile[1])))
 
     embed.add_field(name=f"What {member} is good at",
@@ -78,7 +90,7 @@ def profile_embed(message, member: discord.Member):
                     value=bad_at,
                     inline=False)
 
-    MyAchiev = message.bot.Achievements(str(member.id)).desc
+    MyAchiev = ctx.bot.Achievements(str(member.id)).desc
     achiev = ""
     for node in MyAchiev:
         if node['earned']:
@@ -87,6 +99,10 @@ def profile_embed(message, member: discord.Member):
         achiev = "None"
 
     embed.add_field(name="Earned Achievements", value=achiev, inline=False)
+
+    if private and bypassPrivate:
+        embed.set_footer(text="This user is private.")
+
     return embed
 
 
@@ -108,48 +124,21 @@ class Profile(commands.Cog):
         if not member:
             member = message.author
 
-        await message.send(embed=profile_embed(message, member))
+        await message.send(embed=profile_embed(message, member, message.author.id == member.id))
 
     @commands.hybrid_command(name="change_profile", aliases=["cp"])
     async def _c_profile(self, message):
         """
-        Changes your server profile
-
-        You get to change what you are good at and what you are bad at. You can change your bio with .set_bio (or .bio)
+        DISCONTINUED - Use /settings instead
         """
-        obj = ChangeProfile(message)
-        await obj.run()
+        await message.send("This command has been discontinued. Please use /settings instead.", ephemeral=True)
 
     @commands.hybrid_command(name="set_bio", aliases=["bio"])
-    async def _c_bio(self, ctx, *, bio):
+    async def _c_bio(self, ctx):
         """
-        Sets your bio for your profile
-
-        How to use:
-        - type .set_bio "your bio" WITH THE QUOTES to set your biography for your profile.
-        - Make sure your bio is under 200 characters
-
-        You can view your bio with `.profile`
-
-        :param bio: Your new biography
-        :type bio: str
+        DISCONTINUED - Use /settings instead
         """
-        if not bio.strip():
-            raise BadArgument("You must set your bio to something!")
-
-        if len(bio) > 200:
-            raise BadArgument("Bio must be at most 200 characters.")
-        ctx.bot.changeprofile(ctx.author.id, bio=bio)
-        embed = discord.Embed(
-            title=f":white_check_mark: Success!",
-            description=f"We successfully set your bio as `{bio}`",
-            color=discord.Colour.green())
-        embed.set_author(name=ctx.author.display_name,
-                         url="",
-                         icon_url=ctx.author.avatar)
-        embed.set_footer(
-            text="Confused? Not what you wanted? Try running `.help set_bio`")
-        await ctx.send(embed=embed)
+        await ctx.send("This command has been discontinued. Please use /settings instead.", ephemeral=True)
 
     @commands.hybrid_command(name="search")
     async def _c_search(self, ctx):
@@ -508,7 +497,7 @@ class SettingsMainView(discord.ui.View):
         self.stop()
 
     async def refresh(self, interaction: discord.Interaction):
-        await interaction.response.edit_message(embed=profile_embed(self.ctx, self.ctx.author), view=self.cur)
+        await interaction.response.edit_message(embed=profile_embed(self.ctx, self.ctx.author, bypassPrivate=True), view=self.cur)
 
     @discord.ui.button(label="Change Skills", style=discord.ButtonStyle.blurple)
     async def change_skills(self, interaction: discord.Interaction, button):
@@ -527,6 +516,8 @@ class SettingsMainView(discord.ui.View):
     async def change_vis(self, interaction: discord.Interaction, button):
         if interaction.user.id != self.ctx.author.id:
             return await interaction.response.send_message("This is not your command.", ephemeral=True)
+        self.ctx.bot.changevisibility(self.ctx.author.id)
+        await self.refresh(interaction)
 
 
 class SetBio(discord.ui.Modal, title="Set Biography"):

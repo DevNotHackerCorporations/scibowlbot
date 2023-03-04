@@ -164,3 +164,8 @@ class Utility(commands.Cog):
         """
         question = QuestionView(ctx)
         await question.run()
+
+    @commands.is_owner()
+    @commands.command("refresh_database", aliases=["rd"])
+    async def _rd(self, ctx):
+        await ctx.bot.update_data_from_firebase.__call__()
