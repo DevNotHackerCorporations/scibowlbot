@@ -84,7 +84,9 @@ class Currency(commands.Cog):
             if str(ctx.author.id) == str(id):
                 body.suffix = f"\n**What place am I?**\nYou occupy place #{index + 1}"
 
-            if not global_:
+            if ctx.bot.getvisibility(id):
+                name = "`A Private User`"
+            elif not global_:
                 name = ctx.guild.get_member(int(id)).display_name
             else:
                 name = f"<@{id}>"

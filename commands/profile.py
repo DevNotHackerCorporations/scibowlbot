@@ -487,7 +487,7 @@ class SettingsMainView(discord.ui.View):
         self.cur = self
 
     async def run(self):
-        self.message = await self.ctx.send(embed=profile_embed(self.ctx, self.ctx.author), view=self)
+        self.message = await self.ctx.send(embed=profile_embed(self.ctx, self.ctx.author, bypassPrivate=True), view=self)
 
     async def on_timeout(self):
         for item in self.children:
