@@ -190,32 +190,17 @@ class Sbb(commands.Bot):
 
 app = Flask("app")
 
+from threading import Thread
+
 
 @app.route("/")
 def home():
     return open("index.html", "r").read()
 
 
-from threading import Thread
-
-
-@app.route("/style.css")
-def cssfile():
-    return open("assets/css/style.css", "r").read(), 200, {
-        'Content-Type': 'text/css; charset=utf-8'
-    }
-
-
-@app.route("/atom.png")
-def logopng():
-    return send_file("assets/atom.png", mimetype='image/png')
-
-
-@app.route("/LICENSE.txt")
-def license():
-    return open("LICENSE.txt", "r").read(), 200, {
-        'Content-Type': 'text/plain; charset=utf-8'
-    }
+@app.route("/edit")
+def edit():
+    return open("edit.html").read()
 
 
 @app.route("/api")
@@ -224,6 +209,15 @@ def api():
         'Content-Type': 'text/json; charset=utf-8'
     }
 
+
+@app.route("/<path:path>")
+def path(path):
+    extention = path.split(".")[-1]
+    if extention == "png":
+        return send_file(path, mimetype="image/png")
+    if extention == "txt":
+        extention = "plain"
+    return open(path, "r").read(), 200, {"Content-Type": 'text/' + extention + '; charset=utf-8'}
 
 client = Sbb()
 Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
