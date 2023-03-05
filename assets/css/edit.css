@@ -98,7 +98,7 @@ aside{
     display: flex;
     flex-direction: column;
     row-gap: 20px;
-    height: calc(100% - 100px);
+    height: calc(100% - 140px);
     overflow: auto;
 }
 
@@ -142,6 +142,14 @@ aside{
     background: var(--theme-light);
     color: white;
     border-color: var(--theme-light)
+}
+
+.page_link.disabled{
+    opacity: 0.5;
+    background: none;
+    color: var(--theme-dark);
+    border-color: var(--theme-dark);
+    pointer-events: none;
 }
 
 .page_link.highlighted{

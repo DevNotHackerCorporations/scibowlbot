@@ -30,6 +30,7 @@ function search_and_display(query){
     }
     $("search__statistics").text("Searching...")
     $("#results").html("")
+    page = 0
     let start = performance.now()
     search(query)
 
@@ -47,31 +48,86 @@ function search_and_display(query){
     }
 
     let amount = Math.ceil(Results.length / results_per_page)
-    if (amount < 1){
-        $("#results").append(`<div id="next_page"><div class="page_link highlighted" data-goto="0">1</div></div>`)
+    let res;
+    if (amount <= 1){
+        res = `<div class="page_link highlighted" data-goto="0">1</div>`
     }else{
-        let res = `<div id="next_page">
-            <div class="page_link"><i class="fa fa-angle-left" id="next_page_PREV"></i></div>
-            <div class="page_link" data-goto="0">1</div>
+        res = `<div id="next_page">
+            <div class="page_link disabled" data-goto="prev"><i class="fa fa-angle-left"></i></div>
+            <div class="page_link highlighted" data-goto="0">1</div>
             <div class="page_link" data-goto="1">2</div>`
 
-            if (amount > 4){
-                res += `<div class="page_link" id="next_page_CUSTOM">...</div>`
-            }
-            if (amount === 3){
-                res += `<div class="page_link" data-goto="2">3</div>`
-            }
-            else if (amount === 4){
-                res += `<div class="page_link" data-goto="2">3</div>`
-                res += `<div class="page_link" data-goto="3">4</div>`
-            }else{
-                res += `<div class="page_link" data-goto="${amount - 2}">${amount - 1}</div>`
-                res += `<div class="page_link" data-goto="${amount - 1}">${amount}</div>`
-            }
+        if (amount > 4){
+            res += `<div class="page_link" data-goto="custom">...</div>`
+        }
+        if (amount === 3){
+            res += `<div class="page_link" data-goto="2">3</div>`
+        }
+        else if (amount === 4){
+            res += `<div class="page_link" data-goto="2">3</div>`
+            res += `<div class="page_link" data-goto="3">4</div>`
+        }else{
+            res += `<div class="page_link" data-goto="${amount - 2}">${amount - 1}</div>`
+            res += `<div class="page_link" data-goto="${amount - 1}">${amount}</div>`
+        }
 
-        res += `<div class="page_link"><i class="fa fa-angle-right" id="next_page_NEXT"></i></div></div>`
-        $("#results").append(res)
+        res += `<div class="page_link" data-goto="next"><i class="fa fa-angle-right"></i></div></div>`
     }
+
+    $("#next_page").html(res)
+
+    $(".page_link").click((e)=>{
+        let element = $(e.currentTarget)
+        if ((element.data("goto") ?? "").toString() === page.toString()){
+            return
+        }
+        let goto = element.data("goto")
+        let size = Math.ceil(Results.length / results_per_page)
+        if (goto === "prev" && page !== 0){
+            page -= 1
+        }else if (goto === "next" && page !== size){
+            page += 1
+        }else if (goto === "custom"){
+            let input = Number(prompt("Page Number"))
+            if (1 <= input && input <= size){
+                page = input - 1
+            }
+        }else{
+            page = goto
+        }
+
+        $(".page_link").removeClass("highlighted disabled")
+
+        if (page === 0 || page === 1 || page === size - 1 || page === size - 2){
+            $(".page_link[data-goto="+page+"]").addClass("highlighted")
+            $(".page_link[data-goto=custom]").html("...")
+        }else{
+            $(".page_link[data-goto=custom]").html(page + 1).addClass("highlighted")
+        }
+
+        if (page === 0){
+            $(".page_link[data-goto=prev]").addClass("disabled")
+        }
+        if (page === size - 1){
+            $(".page_link[data-goto=next]").addClass("disabled")
+        }
+
+        $("#results").html("")
+
+        let count = page * results_per_page
+        while (count < (page + 1) * results_per_page && count < Results.length){
+            let question = Results[count]
+            $("#results").append(`
+            <div class="result">
+                <h1>${question.category} - ${question.tossup_format}</h1>
+                <b>${question.source} (ID: ${question.id})</b>
+                <span>${question.tossup_question.replaceAll("\n", "<br>")}</span>
+                <span><b>ANSWER: </b> ${question.tossup_answer}</span>
+            </div>`)
+            count++
+        }
+        $("#results").animate({scrollTop: 0}, "smooth")
+    })
 
     $("#search__statistics").text(`${Results.length} Result${Results.length === 1 ? "" : "s"} in ${((performance.now() - start)/1000).toFixed(3)} Seconds`)
 }
