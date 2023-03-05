@@ -2,6 +2,28 @@ Questions = {}
 Results = []
 page = 0
 results_per_page = 50
+Stars = JSON.parse(localStorage.stars ?? "[]")
+
+Stars.push = function(data) { // override is awesome
+  Array.prototype.push.call(this, data);
+  localStorage.stars = JSON.stringify(this)
+  return this
+}
+
+Stars.clear = function(){
+    this.length = 0
+    localStorage.stars = "[]"
+}
+
+Stars.remove = function(id){
+    let index = Stars.indexOf(id);
+    if (index === -1){
+        return false
+    }
+    Stars.splice(index, 1);
+    localStorage.stars = JSON.stringify(this)
+    return true;
+}
 
 async function fetch_questions(){
     for (let subject of ["astro", "bio", "chem", "crazy", "cs", "eas", "energy", "es", "gen", "math", "phy", "weird"]){
@@ -24,10 +46,42 @@ function search(query){
     return Results
 }
 
+function apply_question_callbacks(){
+    $(".result__btn.star").click((e)=>{
+        let element = $(e.currentTarget)
+        let id = element.data("id").toString()
+        if (element.text() === " Star"){
+            Stars.push(id)
+            element.html("<i class=\"fa-solid fa-star\"></i> Unstar")
+            element.parent().parent().addClass("starred")
+        }else{
+            Stars.remove(id)
+            element.html("<i class=\"fa-solid fa-star\"></i> Star")
+            element.parent().parent().removeClass("starred")
+        }
+    })
+}
+
+function format_question(question, stars){
+    return `<div class="result${stars.has(question.id.toString()) ? ' starred' : ''}">
+        <div class="result__data">
+            <h1>${question.category} - ${question.tossup_format}</h1>
+            <b>${question.source} (ID: ${question.id})</b>
+            <span>${question.tossup_question.replaceAll("\n", "<br>")}</span>
+            <span><b>ANSWER: </b> ${question.tossup_answer}</span>
+        </div>
+        <div class="result__btns">
+            <div class="result__btn edit"><i class="fa-solid fa-pen-to-square"></i> Edit</div>
+            <div class="result__btn star" data-id="${question.id}"><i class="fa-solid fa-star"></i> ${stars.has(question.id.toString()) ? 'Unstar' : 'Star'}</div>
+        </div>
+    </div>`
+}
+
 function search_and_display(query){
     if (!query){
         return
     }
+    let Stars__lookup = new Set(Stars);
     $("search__statistics").text("Searching...")
     $("#results").html("")
     page = 0
@@ -37,15 +91,10 @@ function search_and_display(query){
     let count = 0
     while (count < results_per_page && count < Results.length){
         let question = Results[count]
-        $("#results").append(`
-        <div class="result">
-            <h1>${question.category} - ${question.tossup_format}</h1>
-            <b>${question.source} (ID: ${question.id})</b>
-            <span>${question.tossup_question.replaceAll("\n", "<br>")}</span>
-            <span><b>ANSWER: </b> ${question.tossup_answer}</span>
-        </div>`)
+        $("#results").append(format_question(question, Stars__lookup))
         count++
     }
+    apply_question_callbacks()
 
     let amount = Math.ceil(Results.length / results_per_page)
     let res;
@@ -66,7 +115,7 @@ function search_and_display(query){
         else if (amount === 4){
             res += `<div class="page_link" data-goto="2">3</div>`
             res += `<div class="page_link" data-goto="3">4</div>`
-        }else{
+        }else if (amount > 4){
             res += `<div class="page_link" data-goto="${amount - 2}">${amount - 1}</div>`
             res += `<div class="page_link" data-goto="${amount - 1}">${amount}</div>`
         }
@@ -117,15 +166,10 @@ function search_and_display(query){
         let count = page * results_per_page
         while (count < (page + 1) * results_per_page && count < Results.length){
             let question = Results[count]
-            $("#results").append(`
-            <div class="result">
-                <h1>${question.category} - ${question.tossup_format}</h1>
-                <b>${question.source} (ID: ${question.id})</b>
-                <span>${question.tossup_question.replaceAll("\n", "<br>")}</span>
-                <span><b>ANSWER: </b> ${question.tossup_answer}</span>
-            </div>`)
+            $("#results").append(format_question(question, Stars__lookup))
             count++
         }
+        apply_question_callbacks()
         $("#results").animate({scrollTop: 0}, "smooth")
     })
 

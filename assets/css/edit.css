@@ -62,7 +62,34 @@ aside{
     width: 200px;
     height: fit-content;
     height: 200px;
+    padding: 10px;
     background: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+aside h1{
+    margin: 0;
+    text-align: center;
+}
+
+aside button{
+    padding: 10px;
+    background: none;
+    border-radius: 4px;
+    border: 2px solid var(--theme-dark);
+    color: var(--theme-dark);
+    font-weight: bolder;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+aside button:hover{
+    opacity: 0.8;
+}
+
+aside button:active{
+    opacity: 0.5;
 }
 
 #searchbar{
@@ -105,7 +132,19 @@ aside{
 .result{
     border: 1px solid gray;
     border-radius: 4px;
-    padding: 20px;
+}
+
+.result.starred{
+    border: 3px solid gold;
+    box-shadow: 9px 5px 16px 0 gold;
+}
+
+.result.starred .star{
+    color: #a18700;
+}
+
+.result__data{
+    padding: 20px 20px 10px 20px;
     display: flex;
     flex-direction: column;
     row-gap: 10px;
@@ -157,6 +196,25 @@ aside{
     background: var(--theme-dark);
     border-color: var(--theme-dark);
     color: white;
+}
+
+.result__btns{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-top: solid;
+    border-width: inherit;
+    border-color: inherit;
+    justify-content: space-between;
+}
+
+.result__btn{
+    cursor: pointer;
+    user-select: none;
+}
+
+.result__btn:hover{
+    text-decoration: underline;
 }
 
 @media (max-width: 1030px){
