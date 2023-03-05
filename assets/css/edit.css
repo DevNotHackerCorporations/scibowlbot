@@ -109,6 +109,7 @@ aside{
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+    word-break: break-all;
 }
 
 .result h1{
