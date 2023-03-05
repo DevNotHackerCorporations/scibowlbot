@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*, *::before, *::after{
+    box-sizing: border-box;
+}
+
+:root{
+    --size: 1000px;
+    --theme-light: #889b6f;
+    --theme-dark: #667551;
+}
+
+body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+}
+
+nav{
+    background: #e8e8e8;
+    padding: 10px calc(50% - var(--size) / 2);
+    color: var(--theme-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#logo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+#nav__icons i{
+    font-size: 24px;
+    transition: 0.2s;
+    cursor: pointer;
+    color: var(--theme-dark);
+}
+
+#nav__icons i:hover{
+    color: var(--theme-light);
+}
+
+section{
+    display: flex;
+    width: var(--size);
+    margin: 15px auto auto;
+    column-gap: 15px;
+}
+
+main{
+    flex: 1;
+    height: calc(100vh - 80px);
+}
+
+aside{
+    width: 200px;
+    height: fit-content;
+    height: 200px;
+    background: #e8e8e8;
+}
+
+#searchbar{
+    display: flex;
+    column-gap: 5px;
+    margin-bottom: 5px;
+}
+
+#search{
+    height: 40px;
+    flex: 1;
+    outline: none;
+    padding: 0 10px;
+}
+
+#search__button{
+    height: 40px;
+    padding: 0 15px;
+    cursor: pointer;
+    background: var(--theme-light);
+    color: white;
+    border: 0;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+#search__button:hover{
+    background: var(--theme-dark);
+}
+
+#results{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    height: calc(100% - 100px);
+    overflow: auto;
+}
+
+.result{
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.result h1{
+    margin: 0;
+}
+
+@media (max-width: 1030px){
+    :root{
+        --size: calc(100vw - 30px);
+    }
+}
