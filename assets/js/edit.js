@@ -3,6 +3,7 @@ Results = []
 page = 0
 results_per_page = 50
 Stars = JSON.parse(localStorage.stars ?? "[]")
+mode = "questions"
 
 Stars.push = function(data) { // override is awesome
   Array.prototype.push.call(this, data);
@@ -77,16 +78,35 @@ function format_question(question, stars){
     </div>`
 }
 
-function search_and_display(query){
-    if (!query){
-        return
+function search_stars(query){
+    let Stars__search = new Set(Stars)
+    Results = []
+    query = query.toLowerCase()
+    for (let subject in Questions){
+        for (let question of Questions[subject]){
+            if (
+                Stars__search.has(question.id.toString())
+                && (question.tossup_question.toLowerCase().includes(query)
+                    || question.tossup_answer.toLowerCase().includes(query)
+                    || question.id.toString() === query)){
+                Results.push(question)
+           }
+        }
     }
+    return Results
+}
+
+function search_and_display(query){
     let Stars__lookup = new Set(Stars);
     $("search__statistics").text("Searching...")
     $("#results").html("")
     page = 0
     let start = performance.now()
-    search(query)
+    if (mode === "stars"){
+        search_stars(query)
+    }else{
+        search(query)
+    }
 
     let count = 0
     while (count < results_per_page && count < Results.length){
@@ -183,6 +203,18 @@ $("#search").keyup((e)=>{
 })
 
 $("#search__button").click(()=>{search_and_display($("#search").val().trim())})
+
+$("#toggle_questions").click(() => {
+    if ($("#toggle_questions").data("mode") === "questions"){
+        mode = "stars"
+        search_and_display("")
+        $("#toggle_questions").data("mode", "stars").html("Search All Questions")
+    }else{
+        mode = "questions"
+        search_and_display("")
+        $("#toggle_questions").data("mode", "questions").html("Search Starred Items")
+    }
+})
 
 window.onload = ()=>{
     fetch_questions()
