@@ -216,6 +216,26 @@ $("#toggle_questions").click(() => {
     }
 })
 
+$(".close").click((e)=>{
+    $(e.currentTarget).parent().parent().parent().toggle()
+})
+
+// Disord message config stuff
+window.$discordMessage = {
+	profiles: {
+		user: {
+			author: 'Discord User',
+			avatar: 'green',
+		},
+		scibowlbot: {
+			author: 'scibowlbot',
+			avatar: './assets/scibowlbot.png',
+			bot: true,
+			roleColor: '#ee82ee',
+		},
+	},
+}
+
 window.onload = ()=>{
     fetch_questions()
 }

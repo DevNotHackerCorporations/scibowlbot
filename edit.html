@@ -9,6 +9,7 @@
     <link rel="icon" href="./assets/scibowlbot.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/wc-discord-message@^2.0.0/dist/wc-discord-message/wc-discord-message.js"></script>
 </head>
 <body>
     <nav>
@@ -35,6 +36,56 @@
             <button id="toggle_questions" data-mode="questions">See Starred Items</button>
         </aside>
     </section>
+    <div id="edit__wrapper">
+        <div id="edit">
+            <h1>Propose an edit <span class="close">&times;</span></h1>
+            <discord-messages>
+                <discord-message profile="user">
+                    <discord-mention>scibowlbot</discord-mention> q astro
+                </discord-message>
+                <discord-message profile="scibowlbot">
+                    <discord-embed slot="embeds"
+                                   color="#3498db"
+                                   embed-title="Question ID: 7"
+                                   author-name="Unattempted"
+                    >
+                        <discord-embed-fields slot="fields">
+                            <discord-embed-field>
+                                <div class="discord-field-title">
+                                    <select id="edit__question_subject">
+                                        <option selected value="astro">Astronomy</option>
+                                        <option value="bio">Biology</option>
+                                        <option value="chem">Chemistry</option>
+                                        <option value="crazy">Crazy</option>
+                                        <option value="cs">Computer Science</option>
+                                        <option value="eas">Earth and Space</option>
+                                        <option value="energy">Energy</option>
+                                        <option value="es">Earth Science</option>
+                                        <option value="gen">General Science</option>
+                                        <option value="math">Mathematics</option>
+                                        <option value="phy">Physics</option>
+                                        <option value="weird">Weird</option>
+                                    </select>
+                                    <select id="edit__question_type">
+                                        <option selected value="Multiple Choice">Multiple Choice</option>
+                                        <option value="Short Answer">Short Answer</option>
+                                    </select>
+                                    (Source: Official-set1-round1)
+                                </div>
+                                <textarea id="edit__question_textarea">What is the proper name of the star that is most commonly noted to have coordinates closest to the north celestial pole?</textarea>
+                            </discord-embed-field>
+                            <discord-embed-field field-title="Timer">
+                                Question has expired.
+                            </discord-embed-field>
+                            <discord-embed-field field-title="Timeout">
+                                No one has buzzed. The answer was <span id="edit__answer__textarea" contenteditable="true" spellcheck="false">NORTH STAR (ACCEPT: POLARIS or ALPHA URSA MINORIS)</span>
+                            </discord-embed-field>
+                        </discord-embed-fields>
+                    </discord-embed>
+                </discord-message>
+            </discord-messages>
+        </div>
+    </div>
     <script src="./assets/js/edit.js" defer></script>
 </body>
 </html>
