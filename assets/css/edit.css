@@ -224,6 +224,7 @@ aside button:active{
     left: 0;
     width: 100%;
     height: 100%;
+    display: none;
 }
 
 #edit{
@@ -231,6 +232,8 @@ aside button:active{
     margin: 75px auto auto auto;
     background: white;
     padding: 20px;
+    max-height: calc(100vh - 115px);
+    overflow: auto;
 }
 
 .close{
@@ -272,13 +275,33 @@ aside button:active{
     outline: none;
 }
 
-#edit__answer__textarea{
+#edit__answer_textarea{
     background: #1e1f22;
     padding: 3px 5px;
     outline: none;
     font-family: monospace;
     border: 2px soid var(--theme-light);
 
+}
+
+#edit__save {
+    margin-top: 20px;
+    background: var(--theme-dark);
+    color: white;
+    padding: 16px;
+    border: 0;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+#edit__save:hover{
+    opacity: 0.8;
+}
+
+#edit__save:active{
+    opacity: 0.5;
 }
 
 @keyframes spin{

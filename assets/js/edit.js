@@ -29,6 +29,15 @@ function abbreviations(subject){
     return "crazy"
 }
 
+function toTitleCase(str) {
+    return str.replace(
+        /\w\S*/g,
+        function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
+}
+
 Stars.push = function(data) { // override is awesome
   Array.prototype.push.call(this, data);
   localStorage.stars = JSON.stringify(this)
@@ -92,6 +101,12 @@ function apply_question_callbacks(){
 
         $("#edit__wrapper").show()
         $("#edit__invoke_subject").html(abbreviations(question.category))
+        $("#edit__question_subject").val(abbreviations(question.category))
+        $("#edit__question_type").val(question.tossup_format)
+        $("#edit__question_textarea").val(question.tossup_question).height($("#edit__question_textarea").prop("scrollHeight"))
+        $("#edit__answer_textarea").html(question.tossup_answer)
+        $("#edit__source").html(question.source)
+        $("#edit__embed").attr("embed-title", "Question ID: " + id)
     })
 }
 
@@ -235,7 +250,7 @@ function search_and_display(query){
             count++
         }
         apply_question_callbacks()
-        $("#results").animate({scrollTop: 0}, "smooth")
+        $("#results").animate({scrollTop: 0}, {duration: 0})
     })
 
     $("#search__statistics").text(`${Results.length} Result${Results.length === 1 ? "" : "s"} in ${((performance.now() - start)/1000).toFixed(3)} Seconds`)
@@ -263,6 +278,14 @@ $("#toggle_questions").click(() => {
 
 $(".close").click((e)=>{
     $(e.currentTarget).parent().parent().parent().toggle()
+})
+
+$("#edit__question_textarea").on("input", ()=>{
+    $("#edit__question_textarea").css("height", "auto").height($("#edit__question_textarea").prop("scrollHeight"))
+})
+
+$("#edit__save").click(()=>{
+    $("#edit__wrapper").hide()
 })
 
 // Disord message config stuff
