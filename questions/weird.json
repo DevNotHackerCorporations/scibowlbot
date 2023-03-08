@@ -1,7 +1,7 @@
 [
   {
     "category": "WEIRD (General Knowledge)",
-    "id": -1,
+    "id": -14,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Z) 122 years",
     "tossup_format": "Multiple Choice",
@@ -9,7 +9,7 @@
   },
   {
     "category": "WEIRD (Physics)",
-    "id": -2,
+    "id": -15,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "10",
     "tossup_format": "Short Answer",
@@ -17,7 +17,7 @@
   },
   {
     "category": "WEIRD (Physics)",
-    "id": -3,
+    "id": -16,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Y) 4.17",
     "tossup_format": "Multiple Choice",
@@ -25,7 +25,7 @@
   },
   {
     "category": "WEIRD (Astronomy, Earth and Space)",
-    "id": -4,
+    "id": -17,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Andromeda Galaxy (Accept: Andromeda Nebula) (Accept: Messier 31, M31, or NGC 224 before it is said)",
     "tossup_format": "Short Answer",
@@ -33,7 +33,7 @@
   },
   {
     "category": "WEIRD (Chemistry)",
-    "id": -5,
+    "id": -18,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Z) Neutrinos",
     "tossup_format": "Multiple Choice",
@@ -41,7 +41,7 @@
   },
   {
     "category": "WEIRD (Math)",
-    "id": -6,
+    "id": -19,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "240",
     "tossup_format": "Short Answer",
@@ -49,7 +49,7 @@
   },
   {
     "category": "WEIRD (Earth Science)",
-    "id": -7,
+    "id": -20,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "X) Convergent Boundaries",
     "tossup_format": "Multiple Choice",
@@ -57,7 +57,7 @@
   },
   {
     "category": "WEIRD (Energy)",
-    "id": -8,
+    "id": -21,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Fusion (Accept: Nuclear Fusion)",
     "tossup_format": "Short Answer",
@@ -65,7 +65,7 @@
   },
   {
     "category": "WEIRD (MATH)",
-    "id": -9,
+    "id": -22,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "1/72",
     "tossup_format": "Short Answer",
@@ -73,7 +73,7 @@
   },
   {
     "category": "WEIRD (Earth Science)",
-    "id": -10,
+    "id": -23,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Y)",
     "tossup_format": "Multiple Choice",
@@ -81,7 +81,7 @@
   },
   {
     "category": "WEIRD (Astronomy)",
-    "id": -11,
+    "id": -24,
     "source": "Scibowlbot Round 1",
     "tossup_answer": "Z) The Summer Triangle",
     "tossup_format": "Multiple Choice",

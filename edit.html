@@ -41,19 +41,20 @@
             <h1>Propose an edit <span class="close">&times;</span></h1>
             <discord-messages>
                 <discord-message profile="user">
-                    <discord-mention>scibowlbot</discord-mention> q astro
+                    <discord-mention>scibowlbot</discord-mention> q <span id="edit__invoke_subject"></span>
                 </discord-message>
                 <discord-message profile="scibowlbot">
                     <discord-embed slot="embeds"
                                    color="#3498db"
-                                   embed-title="Question ID: 7"
+                                   embed-title="Question ID: "
                                    author-name="Unattempted"
+                                   id="edit__embed"
                     >
                         <discord-embed-fields slot="fields">
                             <discord-embed-field>
                                 <div class="discord-field-title">
                                     <select id="edit__question_subject">
-                                        <option selected value="astro">Astronomy</option>
+                                        <option value="astro">Astronomy</option>
                                         <option value="bio">Biology</option>
                                         <option value="chem">Chemistry</option>
                                         <option value="crazy">Crazy</option>
@@ -67,18 +68,18 @@
                                         <option value="weird">Weird</option>
                                     </select>
                                     <select id="edit__question_type">
-                                        <option selected value="Multiple Choice">Multiple Choice</option>
+                                        <option value="Multiple Choice">Multiple Choice</option>
                                         <option value="Short Answer">Short Answer</option>
                                     </select>
-                                    (Source: Official-set1-round1)
+                                    (Source: <span id="edit__source">Official-set1-round1</span>)
                                 </div>
-                                <textarea id="edit__question_textarea">What is the proper name of the star that is most commonly noted to have coordinates closest to the north celestial pole?</textarea>
+                                <textarea id="edit__question_textarea"></textarea>
                             </discord-embed-field>
                             <discord-embed-field field-title="Timer">
                                 Question has expired.
                             </discord-embed-field>
                             <discord-embed-field field-title="Timeout">
-                                No one has buzzed. The answer was <span id="edit__answer__textarea" contenteditable="true" spellcheck="false">NORTH STAR (ACCEPT: POLARIS or ALPHA URSA MINORIS)</span>
+                                No one has buzzed. The answer was <span id="edit__answer__textarea" contenteditable="true" spellcheck="false"></span>
                             </discord-embed-field>
                         </discord-embed-fields>
                     </discord-embed>

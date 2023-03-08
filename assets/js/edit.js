@@ -5,6 +5,30 @@ results_per_page = 50
 Stars = JSON.parse(localStorage.stars ?? "[]")
 mode = "questions"
 
+abbrev = {
+    "ASTRONOMY": "astro",
+    "BIOLOGY": "bio",
+    "CHEMISTRY": "chem",
+    "CRAZY": "crazy",
+    "COMPUTER SCIENCE": "cs",
+    "EARTH AND SPACE": "eas",
+    "ENERGY": "energy",
+    "EARTH SCIENCE": "es",
+    "GENERAL SCIENCE": "gen",
+    "MATH": "math",
+    "PHYSICS": "phy",
+    "WEIRD": "weird"
+}
+
+function abbreviations(subject){
+    if (abbrev[subject]){
+        return abbrev[subject]
+    } else if (subject.startsWith("WEIRD")){
+        return "weird"
+    }
+    return "crazy"
+}
+
 Stars.push = function(data) { // override is awesome
   Array.prototype.push.call(this, data);
   localStorage.stars = JSON.stringify(this)
@@ -61,10 +85,18 @@ function apply_question_callbacks(){
             element.parent().parent().removeClass("starred")
         }
     })
+    $(".result__btn.edit").click((e)=>{
+        let element = $(e.currentTarget)
+        let id = element.parent().parent().data("id")
+        let question = get_question_by_ID(id)
+
+        $("#edit__wrapper").show()
+        $("#edit__invoke_subject").html(abbreviations(question.category))
+    })
 }
 
 function format_question(question, stars){
-    return `<div class="result${stars.has(question.id.toString()) ? ' starred' : ''}">
+    return `<div class="result${stars.has(question.id.toString()) ? ' starred' : ''}" data-id="${question.id}">
         <div class="result__data">
             <h1>${question.category} - ${question.tossup_format}</h1>
             <b>${question.source} (ID: ${question.id})</b>
@@ -83,7 +115,8 @@ function search_stars(query){
     Results = []
     query = query.toLowerCase()
     for (let subject in Questions){
-        for (let question of Questions[subject]){
+        for (let i = 0; i < Questions[subject].length; i++){
+            question = Questions[subject][i]
             if (
                 Stars__search.has(question.id.toString())
                 && (question.tossup_question.toLowerCase().includes(query)
@@ -94,6 +127,18 @@ function search_stars(query){
         }
     }
     return Results
+}
+
+function get_question_by_ID(id){
+    id = id.toString()
+    for (let subject in Questions){
+        for (let question of Questions[subject]){
+            if (question.id.toString() === id){
+                return question
+            }
+        }
+    }
+    return {}
 }
 
 function search_and_display(query){
