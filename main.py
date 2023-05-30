@@ -103,7 +103,7 @@ class Sbb(commands.Bot):
             datetime.now().strftime("%B %d, %Y %H:%M:%S")))
         await client.change_presence(status=discord.Status.online,
                                      activity=discord.Game(
-                                         name="SLASH COMMANDS: RUN /help AND /q",
+                                         name="/help",
                                          type=discord.ActivityType.listening,
                                          start=datetime(2021, 12, 2, 16)))
         global dev
