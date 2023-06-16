@@ -1564,7 +1564,7 @@
     "source": "Official-set5-round8",
     "tossup_answer": "Z) IT COOLED SLOWLY, AT ONE TIME, AT DEPTH",
     "tossup_format": "Multiple Choice",
-    "tossup_question": "There is an igneous rock where all crystals are visible and the same size. Knowing only these two facts, what can be said about the cooling history of this rock?\nW) It cooled in stages, at different levels within the crust\nX) It cooled rapidly near the surface\nY) It cooled on the surface and was quenched z) It cooled slowly, at one time, at depth",
+    "tossup_question": "There is an igneous rock where all crystals are visible and the same size. Knowing only these two facts, what can be said about the cooling history of this rock?\nW) It cooled in stages, at different levels within the crust\nX) It cooled rapidly near the surface\nY) It cooled on the surface and was quenched \nZ) It cooled slowly, at one time, at depth",
     "uri": "https://scibowldb.com/tossup/2028"
   },
   {
@@ -4186,20 +4186,6 @@
     "uri": "https://scibowldb.com/tossup/4906"
   },
   {
-    "api_url": "https://scibowldb.com/api/questions/5048",
-    "bonus_answer": "Cassini-Huygens (Accept Cassini)",
-    "bonus_format": "Short Answer",
-    "bonus_question": "What is the name of the space probe that first orbited Saturn?",
-    "category": "EARTH AND SPACE",
-    "id": 5048,
-    "search_vector": "'10a12':11 '10a14':8 '10a16':5 '10a18':2 'accept':29 'cassini':27,30 'cassini-huygen':26 'first':23 'huygen':28 'meter':3,6,9,12 'name':17 'orbit':24 'probe':21 'saturn':25 'space':20 'w':1 'x':4,13 'y':7 'z':10",
-    "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": "X",
-    "tossup_format": "Multiple Choice",
-    "tossup_question": "W) 10A18 meters\nX) 10A16 meters\nY) 10A14 meters\nZ) 10A12 meters",
-    "uri": "https://scibowldb.com/tossup/5048"
-  },
-  {
     "api_url": "https://scibowldb.com/api/questions/5049",
     "bonus_answer": "Moh Accept: Moh Scale",
     "bonus_format": "Short Answer",
@@ -4908,7 +4894,7 @@
     "id": 5099,
     "search_vector": "'110':89 '220':93 '390':97,105 '850':101 'absolut':9 'activ':42 'approxim':77 'asteroid':67,86 'atmospher':26,59 'averag':78 'back':4 'belt':65,87 'biolog':41 'brought':3 'chemic':13 'distanc':79 'due':19 'evid':11 'extrem':31 'jupit':73 'kilomet':91,95,99,103,107 'lack':23,39,56 'larg':47 'like':18 'locat':69 'low':32 'lunar':53 'major':64,85 'mar':71 'million':90,94,98,102,106 'moon':7,29,37,45,62 'quantiti':48 'rock':1 'sampl':2 'sea':54 'show':8 'sun':82 'surfac':33 'temperatur':34 'w':21,88 'water':50 'weather':14 'x':30,92 'y':38,96,104 'z':46,100",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": ") the lack of an atmosphere on the Moon",
+    "tossup_answer": "W) the lack of an atmosphere on the Moon",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Rock samples brought back from the Moon show absolutely no evidence of chemical weathering. This is most likely due to\nW) the lack of an atmosphere on the Moon\nX) extremely low surface temperatures on the Moon\nY) lack of biological activity on the Moon\nZ) large quantities of water in the lunar \"seas\"",
     "uri": "https://scibowldb.com/tossup/5099"

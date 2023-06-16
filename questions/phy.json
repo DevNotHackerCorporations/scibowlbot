@@ -11704,20 +11704,6 @@
     "uri": "https://scibowldb.com/tossup/5232"
   },
   {
-    "api_url": "https://scibowldb.com/api/questions/5233",
-    "bonus_answer": "51 J",
-    "bonus_format": "Short Answer",
-    "bonus_question": "If the force of a non-linear spring is defined as F(x) = 3xA2+2x+5, what is the work done on the spring if it's stretched to 3 meters from equilibrium?",
-    "category": "PHYSICS",
-    "id": 5233,
-    "search_vector": "'+2':188 '+5':190 '-1':55 '-5':45 '1':36 '10':44 '10a23':53 '10a25':79,87 '10a26':83 '1m3':64 '2.5':77,85 '22.4':13 '28':5 '3':204 '300k':67 '33.6':33 '3xa2':187 '41':73 '42':22 '450':75 '5.4':81 '51':208 '6.02':51 '60':91 '8.2':42 'air':60 'answer':32,171 'approxim':57 'atm/mol':47 'atmospher':69 'bodi':96 'bonus':31,35 'capabl':103 'certain':9 'choic':39,94 'condit':17,29 'decreas':129,167 'defin':183 'done':195 'energi':111,132,151,170 'equilibrium':207 'f':185 'forc':175 'free':120,139,158 'g':6,23 'gas':11,26 'ideal':10 'increas':148 'j':209 'k':48 'kinet':169 'known':3 'linear':180 'liter':14,34 'm3':46 'meter':205 'mol':54 'molecul':61 'move':122,141,160 'multipl':38,93 'na':50 'non':179 'non-linear':178 'number':58 'occupi':12,20 'physic':37,92 'posit':116 'potenti':110,131,150 'pressur':70 'r':41 'rest':98 'spring':181,198 'standard':16,28 'stretch':202 'system':101,114,135,154 'toss':89 'toss-up':88 'use':40 'volum':19,65 'w':72,108 'way':126,145,164 'work':106,194 'x':43,52,74,78,82,86,117,172,186,189 'y':76,84,136 'z':80,155",
-    "source": "16Exchange-Stuy-Physics",
-    "tossup_answer": "Y) 2.5 x 10A25\nToss-Up\n60) PHYSICS Multiple Choice\nA body at rest in a system is capable of doing work if:\nW) the potential energy of the system is positive\nX) it is free to move in such a way as to decrease the potential energy of the system\nY) it is free to move in such a way as to increase the potential energy of the system\nZ) it is free to move in such a way as to decrease its kinetic energy\nAnswer: X",
-    "tossup_format": "Short Answer",
-    "tossup_question": "It is known that 28 g of a certain ideal gas occupy 22.4 liters at standard conditions. The volume occupied by 42 g of this gas at standard conditions is:\nBonus Answer 33.6 liters\nBonus\n1) PHYSICS Multiple Choice\nUse R = 8.2 x 10-5 m3 \u25a0 atm/mol \u25a0 K and NA = 6.02 x 10A23 mol-1. The approximate number of air molecules in a 1m3 volume at 300K and atmospheric pressure is:\nW) 41\nX) 450\nY) 2.5 x 10A25\nZ) 5.4 x 10A26",
-    "uri": "https://scibowldb.com/tossup/5233"
-  },
-  {
     "api_url": "https://scibowldb.com/api/questions/6730",
     "bonus_answer": "GIANT MAGNETORESISTANCE",
     "bonus_format": "Short Answer",
@@ -23446,7 +23432,7 @@
     "source": "HW-PHYSICS",
     "tossup_answer": "W) 660",
     "tossup_format": "Short Answer",
-    "tossup_question": "How many feet in a furlong? W) 660 X) 250 Y) 100 Z) 8",
+    "tossup_question": "How many feet in a furlong? \nW) 660 \nX) 250 \nY) 100 \nZ) 8",
     "uri": "https://scibowldb.com/tossup/7567"
   },
   {

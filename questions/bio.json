@@ -11138,7 +11138,7 @@
     "id": 4638,
     "search_vector": "'appear':10 'australia':44 'built':26 'calcer':24 'call':32 'carbonifer':18 'cyanobacteria':31 'devonian':14 'earliest':37 'exist':42 'first':7 'fossil':39 'known':38 'land':12 'layer':29 'mound':25,34 'ordivician':20,21 'period':4 'plant':9 'primit':8 'silurian':16 'still':41 'stromatolit':45 'time':3 'w':13 'x':15 'y':17 'z':19",
     "source": "16Exchange-Aug11-WWP_North",
-    "tossup_answer": "ORDIVICIAN",
+    "tossup_answer": "Z) ORDIVICIAN",
     "tossup_format": "Multiple Choice",
     "tossup_question": "In what time period did the first primitive plants appear on land?\nW) Devonian\nX) Silurian\nY) Carboniferous\nZ) Ordivician",
     "uri": "https://scibowldb.com/tossup/4638"
@@ -12258,7 +12258,7 @@
     "id": 4942,
     "search_vector": "'accumul':57 'auxin':43,56,66,71 'bend':39 'casparian':14,25 'diffus':51,79 'except':12,36 'follow':4,30 'found':6 'light':41 'occur':31 'phloem':18 'phototrop':34 'primari':17,20 'produc':45,73 'respons':35 'root':9 'secondari':23 'shadi':60 'shoot':38,48,64,76 'side':61 'stem':11,54,82 'strip':15,26 'tip':49,77 'toward':40 'transport':67 'unidirect':69 'w':13,37 'x':16,42,70 'xylem':21,24 'y':19,55 'z':22,65",
     "source": "16Exchange-Stuy-Biology",
-    "tossup_answer": ") Casparian strip",
+    "tossup_answer": "W) Casparian strip",
     "tossup_format": "Multiple Choice",
     "tossup_question": "All of the following are found in both roots and stems EXCEPT:\nW) Casparian strip\nX) primary phloem\nY) primary xylem\nZ) secondary xylem",
     "uri": "https://scibowldb.com/tossup/4942"
@@ -12272,7 +12272,7 @@
     "id": 4943,
     "search_vector": "'begin':4,29 'bird':25 'birth':11 'blastocyst':37 'blastodisc':35 'cycl':20 'develop':8,23 'embryon':7,22 'gastrul':28 'human':3 'mammal':27 'menstrual':19 'month':16 'oogenesi':1 'primit':39,42 'puberti':14 'streak':40,43 'trophoblast':33 'w':5,32 'x':9,34 'y':12,36 'z':15,38,41",
     "source": "16Exchange-Stuy-Biology",
-    "tossup_answer": ") during embryonic development",
+    "tossup_answer": "W) during embryonic development",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Oogenesis in humans begins\nW) during embryonic development\nX) at birth\nY) at puberty\nZ) monthly during the menstrual cycle",
     "uri": "https://scibowldb.com/tossup/4943"
@@ -12356,7 +12356,7 @@
     "id": 4949,
     "search_vector": "'articular':23 'axial':9 'bone':4 'clavicl':14 'coxa':16 'facet':28,35 'femur':18 'flatten':22 'fossa':30 'part':6 'ramus':34 'rib':12,19 'skeleton':10 'small':21 'surfac':24 'tuberos':32 'w':11,27 'x':13,29 'y':15,31 'z':17,33",
     "source": "16Exchange-Stuy-Biology",
-    "tossup_answer": ") rib",
+    "tossup_answer": "W) rib",
     "tossup_format": "Multiple Choice",
     "tossup_question": "Which of these bones is part of the axial skeleton?\nW) rib\nX) clavicle\nY) coxa\nZ) femur",
     "uri": "https://scibowldb.com/tossup/4949"
