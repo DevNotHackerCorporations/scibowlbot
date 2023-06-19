@@ -61,7 +61,7 @@ Stars.remove = function(id){
 
 async function fetch_questions(){
     for (let subject of ["astro", "bio", "chem", "crazy", "cs", "eas", "energy", "es", "gen", "math", "phy", "weird"]){
-        let res = await fetch(`https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/questions/${subject}.json`)
+        let res = await fetch(`../questions/${subject}.json`)
         res = await res.json()
         Questions[subject] = res
     }
@@ -297,7 +297,7 @@ window.$discordMessage = {
 		},
 		scibowlbot: {
 			author: 'scibowlbot',
-			avatar: './assets/scibowlbot.png',
+			avatar: '../assets/scibowlbot.png',
 			bot: true,
 			roleColor: '#ee82ee',
 		},

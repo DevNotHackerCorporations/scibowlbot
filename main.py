@@ -200,7 +200,7 @@ def home():
 
 @app.route("/edit")
 def edit():
-    return open("edit.html").read()
+    return open("website/edit.html").read()
 
 
 @app.route("/api")
