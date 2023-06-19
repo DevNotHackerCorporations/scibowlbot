@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Edit Scibowlbot</title>
-    <link rel="stylesheet" href="css/edit.css">
-    <link rel="icon" href="../assets/scibowlbot.png">
+    <link rel="stylesheet" href="/static/css/edit.css">
+    <link rel="icon" href="/static/scibowlbot.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://unpkg.com/wc-discord-message@^2.0.0/dist/wc-discord-message/wc-discord-message.js"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
         <div id="logo">
-            <img src="../assets/scibowlbot.png" height="40">
+            <img src="/static/scibowlbot.png" height="40">
             Scibowlbot
         </div>
         <div id="nav__icons">
@@ -33,7 +34,17 @@
         </main>
         <aside>
             <h1>Settings</h1>
-            <button id="toggle_questions" data-mode="questions">See Starred Items</button>
+            <button id="toggle_questions" data-mode="questions"><i class="fa-solid fa-star"></i> Search Starred Items</button>
+            <h1>Filters</h1>
+            <div class="select" id="filter_subjects">
+                <div class="select_title">
+                    <div class="select_selected"></div>
+                    <div class="icon">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+                <div class="select_body" style="display: none"></div>
+            </div>
         </aside>
     </section>
     <div id="edit__wrapper">
@@ -88,6 +99,6 @@
             <button id="edit__save"><i class="fas fa-save"></i> Save and Exit</button>
         </div>
     </div>
-    <script src="js/edit.js" defer></script>
+    <script src="/static/js/edit.js" defer></script>
 </body>
 </html>

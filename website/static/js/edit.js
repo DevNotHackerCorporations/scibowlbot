@@ -20,6 +20,21 @@ abbrev = {
     "WEIRD": "weird"
 }
 
+emoji = {
+    "phy": "🍎",
+    "gen": "🧪",
+    "energy": "⚡",
+    "eas": "🌃",
+    "chem": "⚛",
+    "bio": "🧬",
+    "astro": "🪐",
+    "math": "🔢",
+    "es": "🌎",
+    "cs": "💻",
+    "weird": "🙃",
+    "crazy": "😝"
+}
+
 function abbreviations(subject){
     if (abbrev[subject]){
         return abbrev[subject]
@@ -29,13 +44,8 @@ function abbreviations(subject){
     return "crazy"
 }
 
-function toTitleCase(str) {
-    return str.replace(
-        /\w\S*/g,
-        function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-    );
+String.prototype.toCapitalCase = function () {
+    return this.toLowerCase().split(" ").map(word => word[0].toUpperCase() + word.substring(1)).join(" ")
 }
 
 Stars.push = function(data) { // override is awesome
@@ -61,7 +71,7 @@ Stars.remove = function(id){
 
 async function fetch_questions(){
     for (let subject of ["astro", "bio", "chem", "crazy", "cs", "eas", "energy", "es", "gen", "math", "phy", "weird"]){
-        let res = await fetch(`../questions/${subject}.json`)
+        let res = await fetch(`https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/questions/${subject}.json`)
         res = await res.json()
         Questions[subject] = res
     }
@@ -268,11 +278,11 @@ $("#toggle_questions").click(() => {
     if ($("#toggle_questions").data("mode") === "questions"){
         mode = "stars"
         search_and_display("")
-        $("#toggle_questions").data("mode", "stars").html("Search All Questions")
+        $("#toggle_questions").data("mode", "stars").html("<i class=\"fa-solid fa-earth-americas\"></i> Search All Questions")
     }else{
         mode = "questions"
         search_and_display("")
-        $("#toggle_questions").data("mode", "questions").html("Search Starred Items")
+        $("#toggle_questions").data("mode", "questions").html("<i class=\"fa-solid fa-star\"></i> Search Starred Items")
     }
 })
 
@@ -297,13 +307,79 @@ window.$discordMessage = {
 		},
 		scibowlbot: {
 			author: 'scibowlbot',
-			avatar: '../assets/scibowlbot.png',
+			avatar: '../static/scibowlbot.png',
 			bot: true,
 			roleColor: '#ee82ee',
 		},
 	},
 }
 
+// Select Menu
+class SelectMenu{
+    constructor (options, selected, selector) {
+        this.options = options
+        this.selected = selected
+        this.selector = selector
+
+        $(`${this.selector} .select_title`).click(()=>{
+            $(`${this.selector} .select_body`).toggle()
+        })
+
+        this.reconstruct()
+    }
+
+    reconstruct(){
+        $(`${this.selector} .select_selected, ${this.selector} .select_body`).html("")
+
+        for (let option of this.selected){
+            $(`${this.selector} .select_selected`).append(`<div class="selected_option" data-value="${this.options[option].value}">${this.options[option].emoji}</div>`)
+        }
+
+        for (let option of Object.values(this.options)){
+            $(`${this.selector} .select_body`).append(`<div data-value="${option.value}" class="option ${this.selected.includes(option.value) ? 'selected' : ''}"><div class="emoji_container">${option.emoji}</div> <div class="title">${option.name.toCapitalCase()}</div> <div class="check"><i class="fa-solid fa-circle-check"></i></div></div>`)
+        }
+
+        let obj = this
+
+        $(`${this.selector} .select_body .option`).click((e)=>{
+            let value = $(e.currentTarget).data("value")
+
+            if (obj.selected.includes(value)){
+                obj.selected.splice(obj.selected.indexOf(value), 1)
+            }else{
+                obj.selected.push(value)
+            }
+
+            localStorage.filters = JSON.stringify(obj.selected)
+
+            obj.selected.sort()
+            obj.reconstruct()
+        })
+
+        twemoji.parse(document.querySelector(this.selector))
+    }
+}
+
+class Option{
+    constructor (emoji, name, value) {
+        this.emoji = emoji
+        this.name = name
+        this.value = value
+    }
+}
+
+let filters;
+
 window.onload = ()=>{
     fetch_questions()
+
+    let options = {}
+
+    for (let option in abbrev){
+        options[abbrev[option]] = new Option(emoji[abbrev[option]], option, abbrev[option])
+    }
+
+    let selected = JSON.parse(localStorage.filters ?? JSON.stringify(Object.values(abbrev)))
+
+    filters = new SelectMenu(options, selected, "#filter_subjects")
 }

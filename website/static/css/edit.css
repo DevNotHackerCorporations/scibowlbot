@@ -61,7 +61,6 @@ main{
 aside{
     width: 200px;
     height: fit-content;
-    height: 200px;
     padding: 10px;
     background: #e8e8e8;
     display: flex;
@@ -70,7 +69,7 @@ aside{
 }
 aside h1{
     margin: 0;
-    text-align: center;
+    text-align: left;
 }
 
 aside button{
@@ -302,6 +301,99 @@ aside button:active{
 
 #edit__save:active{
     opacity: 0.5;
+}
+
+.select_title{
+    background: #1e1e22;
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    transition: 0.2s;
+}
+
+.select_title:hover{
+    opacity: 0.9;
+}
+
+.select_title .select_selected{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.select_title .icon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+}
+
+.selected_option{
+    background: #313339;
+    display: flex;
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    column-gap: 10px;
+    width: fit-content;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.selected_option .emoji{
+    height: 16px;
+}
+
+.select_body{
+    position: absolute;
+    background: #2b2c31;
+    border-radius: 4px;
+    width: 300px;
+    transform: translateX(-120px);
+}
+
+.select_body .emoji_container .emoji{
+    height: 24px;
+}
+
+.select_body .option{
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    padding: 10px;
+    align-items: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.select_body .option .title{
+    color: white;
+    font-weight: 500;
+    flex: 1;
+}
+
+.select_body .option.selected{
+    background: #404149;
+}
+
+.select_body .option .check{
+    color: var(--theme-light);
+}
+
+.select_body .option:not(.selected) .check{
+    display: none;
+}
+.select_body .option:not(.selected):hover{
+    background: #36373e;
+}
+
+.select_selected:empty::before {
+    content: "Nothing Here...Yet";
+    color: white;
 }
 
 @keyframes spin{
