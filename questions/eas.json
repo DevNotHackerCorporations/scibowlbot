@@ -4726,9 +4726,9 @@
     "id": 5087,
     "search_vector": "'1':41 '41':66 'answer':38,46,88 'becom':54 'bonus':40 'brown':10 'character':93 'choic':71 'chromospher':85 'complet':33 'cool':24 'cooler':101,117,132 'corona':87 'dwarf':3,11 'earth':42,67 'exist':73 'field':98,106,114,122,129 'flux':99,107,115,123,130 'fusion':35 'giant':62 'heliospher':81 'high':96,104,127 'hotter':109,125 'larg':7 'layer':76 'leav':57 'low':112,120 'magnet':97,105,113,121,128 'main':17,28,59 'multipl':70 'nuclear':34 'photospher':83,90 'red':2,61 'remnant':14 'sequenc':18,29,60 'short':45 'small':22 'space':44,69 'star':19,25,50 'sun':53,79 'sunspot':72,91 'temperatur':102,110,118,126,133 'toss':36,64 'toss-up':63 'type':48 'unabl':31 'variat':8 'w':5,80,95 'x':12,82,89,103 'y':20,39,84,111 'z':30,86,119",
     "source": "16Exchange-Stuy-EarthSpace",
-    "tossup_answer": "Red giant\nToss-Up\n41) EARTH AND SPACE Multiple Choice\nSunspots exist on which layer of the sun?\nW) Heliosphere\nX) Photosphere\nY) Chromosphere\nZ) Corona\nAnswer: X) Photosphere",
+    "tossup_answer": "Y) A small and cool star in the main sequence",
     "tossup_format": "Multiple Choice",
-    "tossup_question": "A red dwarf is\nW) A large variation of brown dwarf\nX) The remnant of a main sequence star\nY) A small and cool star in the main sequence\nZ) Unable to complete nuclear fusion Toss Up Answer Y\nBonus\n1) EARTH AND SPACE Short Answer\nWhat type of star will the Sun become once it leaves the main sequence?",
+    "tossup_question": "A red dwarf is\nW) A large variation of brown dwarf\nX) The remnant of a main sequence star\nY) A small and cool star in the main sequence\nZ) Unable to complete nuclear fusion",
     "uri": "https://scibowldb.com/tossup/5087"
   },
   {
