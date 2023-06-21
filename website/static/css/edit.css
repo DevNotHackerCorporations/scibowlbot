@@ -354,6 +354,14 @@ aside button:active{
     border-radius: 4px;
     width: 300px;
     transform: translateX(-120px);
+    max-height:0;
+    overflow: clip;
+    outline: none;
+}
+
+/* Just some CSS Trickery */
+.select_body:focus, .select_body:focus-within{
+    max-height: 100000000px;
 }
 
 .select_body .emoji_container .emoji{
@@ -368,6 +376,7 @@ aside button:active{
     align-items: center;
     transition: 0.2s;
     cursor: pointer;
+    user-select: none;
 }
 
 .select_body .option .title{
@@ -393,6 +402,18 @@ aside button:active{
 
 .select_selected:empty::before {
     content: "Nothing Here...Yet";
+    color: white;
+}
+
+.select_extra_options{
+    padding: 10px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.select_extra_options button{
+    background: var(--theme-light);
+    border: none;
     color: white;
 }
 

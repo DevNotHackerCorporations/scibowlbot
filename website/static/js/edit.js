@@ -80,7 +80,7 @@ async function fetch_questions(){
 function search(query){
     Results = []
     query = query.toLowerCase()
-    for (let subject in Questions){
+    for (let subject of filters.selected){
         for (let question of Questions[subject]){
             if (question.tossup_question.toLowerCase().includes(query) || question.tossup_answer.toLowerCase().includes(query) || question.id.toString() === query){
                 Results.push(question)
@@ -322,26 +322,38 @@ class SelectMenu{
         this.selector = selector
 
         $(`${this.selector} .select_title`).click(()=>{
-            $(`${this.selector} .select_body`).toggle()
+            $(`${this.selector} .select_body`).attr("tabindex", "0").focus()
+        })
+
+        let obj = this;
+
+        $(`${this.selector} .select_select_all`).click(()=>{
+            obj.selected = Object.keys(obj.options)
+            obj.reconstruct()
+        })
+
+        $(`${this.selector} .select_deselect_all`).click(()=>{
+            obj.selected = []
+            obj.reconstruct()
         })
 
         this.reconstruct()
     }
 
     reconstruct(){
-        $(`${this.selector} .select_selected, ${this.selector} .select_body`).html("")
+        $(`${this.selector} .select_selected, ${this.selector} .select_body_container`).html("")
 
         for (let option of this.selected){
             $(`${this.selector} .select_selected`).append(`<div class="selected_option" data-value="${this.options[option].value}">${this.options[option].emoji}</div>`)
         }
 
         for (let option of Object.values(this.options)){
-            $(`${this.selector} .select_body`).append(`<div data-value="${option.value}" class="option ${this.selected.includes(option.value) ? 'selected' : ''}"><div class="emoji_container">${option.emoji}</div> <div class="title">${option.name.toCapitalCase()}</div> <div class="check"><i class="fa-solid fa-circle-check"></i></div></div>`)
+            $(`${this.selector} .select_body_container`).append(`<div data-value="${option.value}" class="option ${this.selected.includes(option.value) ? 'selected' : ''}"><div class="emoji_container">${option.emoji}</div> <div class="title">${option.name.toCapitalCase()}</div> <div class="check"><i class="fa-solid fa-circle-check"></i></div></div>`)
         }
 
         let obj = this
 
-        $(`${this.selector} .select_body .option`).click((e)=>{
+        $(`${this.selector} .select_body_container .option`).click((e)=>{
             let value = $(e.currentTarget).data("value")
 
             if (obj.selected.includes(value)){
