@@ -139,7 +139,7 @@ function search_stars(query){
     let Stars__search = new Set(Stars)
     Results = []
     query = query.toLowerCase()
-    for (let subject in Questions){
+    for (let subject of filters.selected){
         for (let i = 0; i < Questions[subject].length; i++){
             question = Questions[subject][i]
             if (
