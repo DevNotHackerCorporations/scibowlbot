@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Scibowlbot</title>
+    <link rel="stylesheet" href="/static/css/suggestions.css">
+    <link rel="icon" href="/static/scibowlbot.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/wc-discord-message@^2.0.0/dist/wc-discord-message/wc-discord-message.js"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/auth0/jwt-decode/build/jwt-decode.js"></script>
+</head>
+<body>
+    {% include "nav.html" %}
+    <main>
+        <h1>Suggestions/Issues</h1>
+    </main>
+
+    {% if not data %}
+        <div class="modal" style="display: block">
+            <div class="modal_content">
+                <h1>Login Needed</h1>
+                Please <a href="{{ login }}">log in</a> to access this website.
+            </div>
+        </div>
+    {% endif %}
+
+    {% if not authorized and data %}
+        <div class="modal" style="display: block">
+            <div class="modal_content">
+                <h1>Unauthorized</h1>
+                Sorry, you do not have authorization to proceed to this part of the website
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

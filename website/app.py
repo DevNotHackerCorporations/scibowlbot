@@ -1,10 +1,4 @@
-import datetime
-import math
 import os
-import re
-import string
-import time
-import urllib.parse
 
 from flask import Flask, render_template, request, jsonify, make_response, redirect
 import firebase_admin
@@ -12,19 +6,20 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import jwt
+import requests
 
 # Setup/Config
 cred = credentials.Certificate({
     "type": "service_account",
     "project_id": "scibowlbot-edit",
-    "private_key_id": "d804e81f777555f5dab10d9ee80ac56e07c9baa1",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgaagIxMxTEp07\nT6Up7XI0rqAVluyJe3GVkMl2XuCdiijtcocT80LwszNh8GpQEcOFkY8Gx7GSDKC3\nSNaxv3LfxCERHYUoBjrOqQdDnn4Oe0rVXVw7+Xa06rf3u8I6AItAuqBsfFUnTS1b\nYJjNRctNThdhvf3gHlruFZ/bEsgMOADEo4jBgFcd5u+1p95G8SKA/VWX3NX9Ft2n\nXvU2fs6WhA6qYyYVVTBOmdLNHisGvHMFhtPIF/szoZw1Tv4Kf9tpiXJPdYmJPJWZ\nvzJvTpCddhFG+TUyJDFyuwRxQwFcitD5lg091ytYCWBZrEGRt0yg6Ra0kvaFkq6A\n4arbvr95AgMBAAECggEACIkkRc8ceXVuCxU8skNQkn3o42FV9mW+XILBEvJJZ1yb\nsWpnhmP8khSy2eEP3iNK1VADyW17jNNTop0P43tldmrqmhDOIYdZIcaums0SvODG\nKCbwrOxQblG2NSNMYDHomgnvM6koAQJvvPfH4BjtQm+7tnFIUIe/DCrA5Y+JkeNW\nKZM+rQ0Ds2bc8NRCNZ3h2+YOWgk6Qe3uPHIZJSLyQ7NOigIYDFFmUxYgBw/VrMeX\nlR4dwLlQPXm8KkIDGamkn2fwu06iD/pQlLR02UxrGzx6EAx4rugBfaVCJqQVAcQa\nf4aZA/QtDI+QClxTOfyh0lZR8WnQK38ujkvKzVJlgQKBgQD+1Qzu5h4nY1xe4ZOF\nQiEssnOYMJxtRa5j8Lrw+ChO3lMzNLkcRg99G04ypmzWzQU3memc3nOF3snTCVJX\nH5C1iBwD1b05DLQLafAfdE8zsOfrETrzeZcHBJVtoW2AhS0dkJqJvpt1nX5xm4aO\n+2QldPX9LK/MHKj/k7jflrTfwQKBgQDhcOuIMDFAMdF4FY32ssx4kElFcVv0CRxO\n2YyeKdccx97hOs4AoJNm5bZeRucRJuuYsyX+4bpWLy5YfMQoONTG1CW1agv5pOFr\nMhcPTvoVdMZ/6fLdk9FKZ7PfRodcWQlOs5u30PYHc6tzpEFqxPbSWK+FflyLwt2c\nZEdcurxNuQKBgEnBL/UU9TVBNMLhVukCssdU/s/VgfC+cjLKwdBsgn4RKtNvNwRP\n4ru6428Va/rfa9sj2NFmMNlWGePSltpQcHmZ40HY4uNYIeQLzUvNRf8X/Ie0fPNr\nBaMqWHVae27vHJep+pBTcnsgEjCfatqHN/z/VRLplBfnU6JlBuTvoXoBAoGBALcv\nb2PRbSOxl3kRYrLUZMuOyssPqt1oTcVQhy+55d6wFk5D30KpOD1DaWXADWBllMkW\nwUgUGbqQSgODFk1sqJELr7xy+FoZfUYChLRew12N7wHfkwYzZ7wi+gjyoWkLvEFk\nNqMtu80gU2/7R2C/vaP8hltd60txw2uiHE6gOgSZAoGAKmr+g/bv4YoTIqYHZw9q\nYA3uEEqKdquM6N/fkz5ClUpGV6Is6zlZcueIzH5GlryJezBScTFpcBijIrw6ureT\nkONuk3zMWJEmLBslNnR/h20bNnpu1tIwEx30PDF6ZlcYJ2iyoHCrfkr7n5ntrJ71\nQepePoH5LKa3JuZqMtkx6ec=\n-----END PRIVATE KEY-----\n",
-    "client_email": "firebase-adminsdk-1b1vf@scibowlbot-edit.iam.gserviceaccount.com",
-    "client_id": "110206234798614625803",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "private_key_id": os.environ["PRIVATE_KEY_ID"],
+    "private_key": os.environ["PRIVATE_KEY"].replace("\\n", "\n"),
+    "client_email": os.environ["CLIENT_EMAIL"],
+    "client_id": os.environ["CLIENT_ID"],
+    "auth_uri": os.environ["AUTH_URI"],
     "token_uri": "https://oauth2.googleapis.com/token",
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1b1vf%40scibowlbot-edit.iam.gserviceaccount.com",
+    "client_x509_cert_url": os.environ["CLIENT_X509_CERT_URL"],
     "universe_domain": "googleapis.com"
 })
 firebase_admin.initialize_app(cred, {
@@ -37,12 +32,65 @@ db_games = root.child("games")
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+login_URL = os.environ["LOGIN_URL"]
+authorized_users = list(map(int, os.environ["AUTHORIZED"].split(",")))
+
 
 @app.route('/')
 def page_home():
     try:
-        decoded = jwt.decode(request.cookies["token"], os.getenv("JWTSECRET"), "HS256")
+        decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
     except:
-        return render_template("edit.html", title="Homepage", uname="")
+        return render_template("edit.html", title="Homepage", login=login_URL)
     else:
-        return render_template("edit.html", title="Homepage", uname=decoded['uname'])
+        return render_template("edit.html", title="Homepage", data=decoded)
+
+
+@app.route("/login")
+def page_login():
+    return render_template("login.html")
+
+
+@app.route("/suggestions")
+def page_suggestions():
+    try:
+        decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
+    except:
+        return render_template("suggestions.html", title="Homepage", login=login_URL)
+
+    if int(decoded["id"]) not in authorized_users:
+        return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False)
+
+    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True)
+
+
+@app.route("/login_get_token")
+def api_login_get_token():
+    key = request.args.get('access_token')
+
+    user_info = requests.get("https://discord.com/api/users/@me", headers={
+        "authorization": f"Bearer {key}"
+    })
+
+    if user_info.status_code != 200:
+        return "Something Went Wrong"
+
+    token = jwt.encode(user_info.json(), key=os.getenv("JWT_SECRET"), algorithm="HS256")
+
+    res = make_response(redirect("/"), 200)
+    res.set_cookie("token", token)
+
+    return res
+
+
+def get_avatar_link(data):
+    if data["avatar"]:
+        return f'https://cdn.discordapp.com/avatars/{ data["id"] }/{ data["avatar"] }.png'
+    else:
+        if int(data["discriminator"]) != 0:
+            return f'https://cdn.discordapp.com/embed/avatars/{int(data["discriminator"]) % 5}.png'
+        else:
+            return f'https://cdn.discordapp.com/embed/avatars/{(int(data["id"]) >> 22) % 6}.png'
+
+
+app.jinja_env.globals.update(get_avatar_link=get_avatar_link)

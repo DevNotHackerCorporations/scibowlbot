@@ -1,0 +1,17 @@
+<nav>
+    <link rel="stylesheet" href="/static/css/nav.css">
+    <div id="logo">
+        <img src="/static/scibowlbot.png" height="32">
+        Scibowlbot
+    </div>
+    <div id="nav__icons">
+        {% if data and "avatar" in data and "id" in data %}
+            <div id="nav__avatar_card">
+                <img id="nav__avatar" src="{{ get_avatar_link(data) }}" alt="User avatar">
+                <span>{{ data["global_name"] }}</span>
+            </div>
+        {% else %}
+            <a href="{{ login }}" id="nav__login"><i class="fa-solid fa-right-to-bracket"></i></a>
+        {% endif %}
+    </div>
+</nav>

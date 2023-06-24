@@ -15,37 +15,6 @@ body{
     margin: 0;
 }
 
-nav{
-    background: #e8e8e8;
-    padding: 10px calc(50% - var(--size) / 2);
-    color: var(--theme-dark);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#logo{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    column-gap: 5px;
-    font-size: 18px;
-    font-weight: 500;
-    cursor: pointer;
-    user-select: none;
-}
-
-#nav__icons i{
-    font-size: 24px;
-    transition: 0.2s;
-    cursor: pointer;
-    color: var(--theme-dark);
-}
-
-#nav__icons i:hover{
-    color: var(--theme-light);
-}
-
 section{
     display: flex;
     width: var(--size);
@@ -216,7 +185,7 @@ aside button:active{
     text-decoration: underline;
 }
 
-#edit__wrapper{
+.modal{
     background: rgba(0, 0, 0, 0.8);
     position: fixed;
     top: 0;
@@ -226,7 +195,7 @@ aside button:active{
     display: none;
 }
 
-#edit{
+.modal_content{
     width: var(--size);
     margin: 75px auto auto auto;
     background: white;

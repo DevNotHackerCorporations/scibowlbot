@@ -44,6 +44,23 @@ function abbreviations(subject){
     return "crazy"
 }
 
+function getCookie(c_name) {
+    let c_value = " " + document.cookie;
+    let c_start = c_value.indexOf(" " + c_name + "=");
+    if (c_start === -1) {
+        c_value = null;
+    }
+    else {
+        c_start = c_value.indexOf("=", c_start) + 1;
+        var c_end = c_value.indexOf(";", c_start);
+        if (c_end === -1) {
+            c_end = c_value.length;
+        }
+        c_value = unescape(c_value.substring(c_start,c_end));
+    }
+    return c_value;
+}
+
 String.prototype.toCapitalCase = function () {
     return this.toLowerCase().split(" ").map(word => word[0].toUpperCase() + word.substring(1)).join(" ")
 }
@@ -263,7 +280,7 @@ function search_and_display(query){
         $("#results").animate({scrollTop: 0}, {duration: 0})
     })
 
-    $("#search__statistics").text(`${Results.length} Result${Results.length === 1 ? "" : "s"} in ${((performance.now() - start)/1000).toFixed(3)} Seconds`)
+    $("#search__statistics").html(`${Results.length} Result${Results.length === 1 ? "" : "s"} in ${((performance.now() - start)/1000).toFixed(3)} Seconds<br>${results_per_page} results per page`)
 }
 
 $("#search").keyup((e)=>{
@@ -381,6 +398,7 @@ class Option{
 }
 
 let filters;
+let userdata;
 
 window.onload = ()=>{
     fetch_questions()
