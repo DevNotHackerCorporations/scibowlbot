@@ -23,11 +23,10 @@ cred = credentials.Certificate({
     "universe_domain": "googleapis.com"
 })
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://logle-e6f2a-default-rtdb.firebaseio.com/'
+    'databaseURL': 'https://scibowlbot-edit-default-rtdb.firebaseio.com/'
 })
 root = db.reference('/')
-db_password = root.child("passwords")
-db_games = root.child("games")
+db_issues = root.child("errors")
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -61,7 +60,7 @@ def page_suggestions():
     if int(decoded["id"]) not in authorized_users:
         return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False)
 
-    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True)
+    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=sort(dict(db_issues.get()), key=lambda x: x[1]["filed"], reverse=True))
 
 
 @app.route("/login_get_token")
@@ -91,6 +90,10 @@ def get_avatar_link(data):
             return f'https://cdn.discordapp.com/embed/avatars/{int(data["discriminator"]) % 5}.png'
         else:
             return f'https://cdn.discordapp.com/embed/avatars/{(int(data["id"]) >> 22) % 6}.png'
+
+
+def sort(obj: dict, **options):
+    return {k:v for (k, v) in sorted(obj.items(), **options)}
 
 
 app.jinja_env.globals.update(get_avatar_link=get_avatar_link)

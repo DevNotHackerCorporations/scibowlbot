@@ -3,6 +3,7 @@
 body{
     font-family: 'Roboto', sans-serif;
     margin: 0;
+    background: whitesmoke;
 }
 
 :root{
@@ -31,19 +32,134 @@ body{
     overflow: auto;
 }
 
-section, main{
+section, header{
     display: flex;
     width: var(--size);
     margin: 15px auto auto;
     column-gap: 15px;
 }
 
-main{
+header{
     margin-top: 0;
 }
 
-main h1{
+header h1{
     font-weight: 300;
+}
+
+#issues_list{
+    height: calc(100vh - 80px - 90px);
+    overflow: auto;
+}
+
+.issue{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ebecf0;
+}
+
+.issue_info{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.issue_open{
+    color: red;
+}
+
+.issue_closed{
+    color: green;
+}
+
+.issue_metainfo{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.issue_id{
+    color: #0052cc;
+    font-size: 14px;
+}
+#results{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    height: calc(100% - 140px);
+    overflow: auto;
+}
+
+.result{
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+.result.starred{
+    border: 3px solid gold;
+    box-shadow: 9px 5px 16px 0 gold;
+}
+
+.result.starred .star{
+    color: #a18700;
+}
+
+.result__data{
+    padding: 20px 20px 10px 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    word-break: break-all;
+}
+
+.result h1{
+    margin: 0;
+}
+
+.result__btns{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    border-top: solid;
+    border-width: inherit;
+    border-color: inherit;
+    justify-content: space-between;
+}
+
+.result__btn{
+    cursor: pointer;
+    user-select: none;
+}
+
+.result__btn:hover{
+    text-decoration: underline;
+}
+
+.warning {
+    background: #ff9800;
+    border-radius: 4px;
+    padding: 20px;
+    color: white;
+    font-size: 16px;
+}
+
+#focused_name{
+    font-weight: 300;
+    font-size: 30px;
+}
+
+section{
+    margin-top: 0;
+    padding-right: 15px;
+}
+
+main, section{
+    background: white;
 }
 
 @keyframes spin{
