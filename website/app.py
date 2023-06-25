@@ -55,10 +55,10 @@ def page_suggestions():
     try:
         decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
     except:
-        return render_template("suggestions.html", title="Homepage", login=login_URL)
+        return render_template("suggestions.html", title="Homepage", login=login_URL, issues={})
 
     if int(decoded["id"]) not in authorized_users:
-        return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False)
+        return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False, issues={})
 
     return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=sort(dict(db_issues.get()), key=lambda x: x[1]["filed"], reverse=True))
 
