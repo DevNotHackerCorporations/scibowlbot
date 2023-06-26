@@ -46,58 +46,7 @@
             </div>
         </aside>
     </section>
-    <div id="edit__wrapper" class="modal">
-        <div id="edit" class="modal_content">
-            <h1>Propose an edit <span class="close">&times;</span></h1>
-            <discord-messages>
-                <discord-message profile="user">
-                    <discord-mention>scibowlbot</discord-mention> q <span id="edit__invoke_subject"></span>
-                </discord-message>
-                <discord-message profile="scibowlbot">
-                    <discord-embed slot="embeds"
-                                   color="#3498db"
-                                   embed-title="Question ID: "
-                                   author-name="Unattempted"
-                                   id="edit__embed"
-                    >
-                        <discord-embed-fields slot="fields">
-                            <discord-embed-field>
-                                <div class="discord-field-title">
-                                    <select id="edit__question_subject">
-                                        <option value="astro">Astronomy</option>
-                                        <option value="bio">Biology</option>
-                                        <option value="chem">Chemistry</option>
-                                        <option value="crazy">Crazy</option>
-                                        <option value="cs">Computer Science</option>
-                                        <option value="eas">Earth and Space</option>
-                                        <option value="energy">Energy</option>
-                                        <option value="es">Earth Science</option>
-                                        <option value="gen">General Science</option>
-                                        <option value="math">Mathematics</option>
-                                        <option value="phy">Physics</option>
-                                        <option value="weird">Weird</option>
-                                    </select>
-                                    <select id="edit__question_type">
-                                        <option value="Multiple Choice">Multiple Choice</option>
-                                        <option value="Short Answer">Short Answer</option>
-                                    </select>
-                                    (Source: <span id="edit__source">Official-set1-round1</span>)
-                                </div>
-                                <textarea id="edit__question_textarea"></textarea>
-                            </discord-embed-field>
-                            <discord-embed-field field-title="Timer">
-                                Question has expired.
-                            </discord-embed-field>
-                            <discord-embed-field field-title="Timeout">
-                                No one has buzzed. The answer was <span id="edit__answer_textarea" contenteditable="true" spellcheck="false"></span>
-                            </discord-embed-field>
-                        </discord-embed-fields>
-                    </discord-embed>
-                </discord-message>
-            </discord-messages>
-            <button id="edit__save"><i class="fas fa-save"></i> Save and Exit</button>
-        </div>
-    </div>
+    {% include "edit_modal.html" %}
     <script src="/static/js/main.js" defer></script>
     <script src="/static/js/edit.js" defer></script>
 </body>

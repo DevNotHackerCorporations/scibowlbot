@@ -21,7 +21,11 @@
     <section>
         <aside id="issues_list">
             {% for id, data in issues.items() %}
-                <div class="issue">
+                <div
+                        class="issue {{ "highlighted" if id == suggestion else "" }}"
+                        id="issue_list_{{ id }}"
+                        onclick="location.href='/suggestions/{{ id }}#issue_list_{{ id }}'"
+                >
                     <div class="issue_status">
                         {% if data["open"] %}
                             <i class="fa-solid fa-circle-dot issue_open"></i>
@@ -43,27 +47,60 @@
                 </div>
             {% endfor %}
         </aside>
+        {% if suggestion %}
         <main>
-            <h1 id="focused_name">
-                Issue <span id="focused_id">VNRBU</span>
-            </h1>
+            <div id="focused_name">
+                <div id="focused_subheader">
+                    <div class="left">
+                        Scibowlbot
+                    </div>
+                    <div class="right">
+                        <div class="info">1 of {{ issues|length }}</div>
+                        <div id="focused_options_up"><i class="fa-solid fa-angle-up"></i></div>
+                        <div id="focused_options_down"><i class="fa-solid fa-angle-down"></i></div>
+                        <div id="focused_options_fullscreen"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+                    </div>
+                </div>
+                <h1>Issue <span id="focused_id">{{ suggestion }}</span></h1>
+            </div>
+            <select id="change_status">
+                <option {{ "selected" if issues[suggestion]["open"] else "" }}>Open</option>
+                <option {{ "selected" if not issues[suggestion]["open"] else "" }}>Closed</option>
+            </select>
             <div class="warning">
                 <b><i class="fa-solid fa-triangle-exclamation"></i> Warning:</b> This question has been edited since this issue was filed. Some aspects may already be fixed.
             </div>
-            <div class="result" data-id="323">
-                <div class="result__data">
-                    <h1>BIOLOGY - Short Answer</h1>
-                    <b>Official-set1-round5 (ID: 323)</b>
-                    <span>What are the common names for the 2 functional groups that combine to form a peptide bond?</span>
-                    <span><b>ANSWER: </b> AMINO; CARBOXYL (ACCEPT: AMINE AND CARBOXYLIC ACID)</span>
+            <div id="focused_details">
+                <h1 onclick="$('#focused_details').toggleClass('hide')"><i class="fa-solid fa-angle-down"></i> Details</h1>
+                <div class="focused_detail" id="focused_detail_time">
+                    <b>Filed: </b>
+                    <span>{{ issues[suggestion]["filed"] }}</span>
                 </div>
-                <div class="result__btns">
-                    <div class="result__btn edit"><i class="fa-solid fa-pen-to-square"></i> Edit</div>
-                    <div class="result__btn star" data-id="323"><i class="fa-solid fa-star"></i> Star</div>
+                <div class="focused_detail">
+                    <b>Reported By: </b>
+                    <span>
+                        <code data-content="{{ issues[suggestion]["sender_name"] }}">{{ issues[suggestion]["sender_name"] }}</code>
+                        (ID: <code data-content="{{ issues[suggestion]["sender_id"] }}">{{ issues[suggestion]["sender_id"] }}</code>)</span>
+                </div>
+                <div class="focused_detail">
+                    <b>Question: </b>
+                    <span>#{{ issues[suggestion]["question_id"] }}</span>
+                </div>
+                <div class="focused_detail">
+                    <b>User's Response: </b>
+                    <span><code data-content="{{ issues[suggestion]["response"] }}">{{ issues[suggestion]["response"] }}</code></span>
+                </div>
+                <div class="focused_detail">
+                    <b>Issue: </b>
+                    <span>{{ issues[suggestion]["error"] }}</span>
                 </div>
             </div>
+            <div id="focused_question"></div>
         </main>
+        {% endif %}
     </section>
+
+    {% include "edit_modal.html" %}
 
     {% if not data %}
         <div class="modal" style="display: block">
@@ -85,6 +122,7 @@
 
     <script>
         const issues_list = {{ issues|tojson|safe }}
+        const focused_question = `{{ issues[suggestion]["question_id"] }}`
     </script>
     <script src="/static/js/main.js" defer></script>
     <script src="/static/js/suggestions.js" defer></script>

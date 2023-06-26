@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from flask import Flask, render_template, request, jsonify, make_response, redirect
@@ -50,17 +51,20 @@ def page_login():
     return render_template("login.html")
 
 
-@app.route("/suggestions")
-def page_suggestions():
+@app.route("/suggestions", defaults={"suggestion_id": None})
+@app.route("/suggestions/", defaults={"suggestion_id": None})
+@app.route("/suggestions/<string:suggestion_id>")
+def page_suggestions(suggestion_id):
     try:
         decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
     except:
-        return render_template("suggestions.html", title="Homepage", login=login_URL, issues={})
+        return render_template("suggestions.html", title="Homepage", login=login_URL, issues={}, suggestion=None)
 
     if int(decoded["id"]) not in authorized_users:
-        return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False, issues={})
+        return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False, issues={}, suggestion=None)
 
-    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=sort(dict(db_issues.get()), key=lambda x: x[1]["filed"], reverse=True))
+    suggestions = sort(dict(db_issues.get()), key=lambda x: x[1]["filed"], reverse=True)
+    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=suggestions, suggestion=suggestion_id if suggestion_id else list(suggestions.keys())[0])
 
 
 @app.route("/login_get_token")
@@ -96,4 +100,8 @@ def sort(obj: dict, **options):
     return {k:v for (k, v) in sorted(obj.items(), **options)}
 
 
-app.jinja_env.globals.update(get_avatar_link=get_avatar_link)
+def format_date(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp)).strftime("%m/%d/%Y %I:%M %p")
+
+
+app.jinja_env.globals.update(get_avatar_link=get_avatar_link, format_date=format_date)

@@ -155,18 +155,6 @@ $("#toggle_questions").click(() => {
     }
 })
 
-$(".close").click((e)=>{
-    $(e.currentTarget).parent().parent().parent().toggle()
-})
-
-$("#edit__question_textarea").on("input", ()=>{
-    $("#edit__question_textarea").css("height", "auto").height($("#edit__question_textarea").prop("scrollHeight"))
-})
-
-$("#edit__save").click(()=>{
-    $("#edit__wrapper").hide()
-})
-
 // Disord message config stuff
 window.$discordMessage = {
 	profiles: {
@@ -181,74 +169,6 @@ window.$discordMessage = {
 			roleColor: '#ee82ee',
 		},
 	},
-}
-
-// Select Menu
-class SelectMenu{
-    constructor (options, selected, selector) {
-        this.options = options
-        this.selected = selected
-        this.selector = selector
-
-        $(`${this.selector} .select_title`).click(()=>{
-            $(`${this.selector} .select_body`).attr("tabindex", "0").focus()
-        })
-
-        let obj = this;
-
-        $(`${this.selector} .select_select_all`).click(()=>{
-            obj.selected = Object.keys(obj.options)
-            localStorage.filters = JSON.stringify(obj.selected)
-            obj.reconstruct()
-        })
-
-        $(`${this.selector} .select_deselect_all`).click(()=>{
-            obj.selected = []
-            localStorage.filters = JSON.stringify(obj.selected)
-            obj.reconstruct()
-        })
-
-        this.reconstruct()
-    }
-
-    reconstruct(){
-        $(`${this.selector} .select_selected, ${this.selector} .select_body_container`).html("")
-
-        for (let option of this.selected){
-            $(`${this.selector} .select_selected`).append(`<div class="selected_option" data-value="${this.options[option].value}">${this.options[option].emoji}</div>`)
-        }
-
-        for (let option of Object.values(this.options)){
-            $(`${this.selector} .select_body_container`).append(`<div data-value="${option.value}" class="option ${this.selected.includes(option.value) ? 'selected' : ''}"><div class="emoji_container">${option.emoji}</div> <div class="title">${option.name.toCapitalCase()}</div> <div class="check"><i class="fa-solid fa-circle-check"></i></div></div>`)
-        }
-
-        let obj = this
-
-        $(`${this.selector} .select_body_container .option`).click((e)=>{
-            let value = $(e.currentTarget).data("value")
-
-            if (obj.selected.includes(value)){
-                obj.selected.splice(obj.selected.indexOf(value), 1)
-            }else{
-                obj.selected.push(value)
-            }
-
-            localStorage.filters = JSON.stringify(obj.selected)
-
-            obj.selected.sort()
-            obj.reconstruct()
-        })
-
-        twemoji.parse(document.querySelector(this.selector))
-    }
-}
-
-class Option{
-    constructor (emoji, name, value) {
-        this.emoji = emoji
-        this.name = name
-        this.value = value
-    }
 }
 
 let filters;

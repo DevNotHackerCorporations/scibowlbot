@@ -50,6 +50,32 @@ header h1{
 #issues_list{
     height: calc(100vh - 80px - 90px);
     overflow: auto;
+    max-width: 400px;
+    transition: 1s ease;
+    width: 320px;
+}
+
+section{
+    display: flex;
+    transition: 1s;
+}
+
+body.hide{
+    --size: calc(100vw - 40px);
+}
+
+body > *{
+    transition: 1s;
+}
+
+.hide section #issues_list{
+    max-width: 0;
+}
+
+
+main{
+    flex: 1;
+    transition: 1s ease;
 }
 
 .issue{
@@ -59,6 +85,16 @@ header h1{
     column-gap: 15px;
     padding: 10px;
     border-bottom: 1px solid #ebecf0;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.issue:hover{
+    background: whitesmoke;
+}
+
+.issue.highlighted{
+    background: lightgoldenrodyellow;
 }
 
 .issue_info{
@@ -148,9 +184,29 @@ header h1{
     font-size: 16px;
 }
 
-#focused_name{
-    font-weight: 300;
+#focused_name > h1{
+    font-weight: 400;
     font-size: 30px;
+    margin: 0;
+}
+
+#focused_subheader{
+    font-size: 14px;
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#focused_subheader .left{
+    font-weight: 300;
+}
+
+#focused_subheader .right{
+    display: flex;
+    font-weight: 300;
+    column-gap: 0;
+    align-items: center;
 }
 
 section{
@@ -160,6 +216,94 @@ section{
 
 main, section{
     background: white;
+}
+
+#change_status{
+    border: 0;
+    background: #e1e1e1;
+    padding: 10px;
+    margin: 15px 0;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+#change_status:hover{
+    background: #c0c0c0;
+}
+
+#focused_options_up, #focused_options_down, #focused_options_fullscreen{
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+:is(#focused_options_up, #focused_options_down, #focused_options_fullscreen):hover{
+    background: #e1e1e1;
+}
+
+#focused_options_up{
+    margin-left: 10px;
+}
+
+#focused_details{
+    margin-bottom: 10px;
+}
+
+#focused_details > h1{
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    user-select: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#focused_details > h1 i{
+    font-size: 12px;
+    background: #e1e1e1;
+    padding: 5px;
+    border-radius: 100%;
+    transition: 0.5s;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#focused_details.hide > h1 i{
+    transform: rotate(-90deg);
+}
+
+.focused_detail{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 30px;
+    transition: all 0.5s ease-in-out;
+    max-height: 40px;
+    color: black;
+}
+
+#focused_details.hide .focused_detail{
+    overflow: clip;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 30px;
+    color: transparent;
+}
+
+code {
+    background: #2f3136;
+    color: whitesmoke;
+    padding: 5px;
+    border-radius: 4px;
+    margin: 0 3px;
+    cursor: pointer;
 }
 
 @keyframes spin{

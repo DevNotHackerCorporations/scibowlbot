@@ -1,0 +1,67 @@
+.close{
+    display: inline-block;
+    cursor: pointer;
+    color: red;
+}
+
+.close:hover{ /* Since I'm feeling like it */
+    animation: spin 1s infinite ease;
+}
+
+#edit__question_type, #edit__question_subject{
+    border: none;
+    font-size: inherit;
+    font-weight: inherit;
+    color: var(--theme-light);
+    border-bottom: 2px solid var(--theme-light);
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    background: none;
+}
+
+/* We do a little overriding */
+.discord-field-title{
+    color: white !important;
+    font-weight: bolder;
+}
+
+#edit__question_textarea{
+    font-family: inherit;
+    background: none;
+    color: inherit;
+    border: none;
+    border-bottom: 2px solid var(--theme-light);
+    resize: vertical;
+    width: 100%;
+    outline: none;
+}
+
+#edit__answer_textarea{
+    background: #1e1f22;
+    padding: 3px 5px;
+    outline: none;
+    font-family: monospace;
+    border: 2px soid var(--theme-light);
+
+}
+
+#edit__save {
+    margin-top: 20px;
+    background: var(--theme-dark);
+    color: white;
+    padding: 16px;
+    border: 0;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+#edit__save:hover{
+    opacity: 0.8;
+}
+
+#edit__save:active{
+    opacity: 0.5;
+}
