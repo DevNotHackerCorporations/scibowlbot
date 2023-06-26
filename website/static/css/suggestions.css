@@ -288,6 +288,10 @@ main, section{
     color: black;
 }
 
+.focused_detail code{
+    transition: 0.5s ease-in-out;
+}
+
 #focused_details.hide .focused_detail{
     overflow: clip;
     max-height: 0;
@@ -295,6 +299,16 @@ main, section{
     padding-bottom: 0;
     padding-left: 30px;
     color: transparent;
+    background: transparent;
+}
+#focused_details.hide .focused_detail code{
+    overflow: clip;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: transparent;
+    background: transparent;
+
 }
 
 code {
