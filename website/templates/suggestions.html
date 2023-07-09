@@ -67,9 +67,11 @@
                 <option {{ "selected" if issues[suggestion]["open"] else "" }}>Open</option>
                 <option {{ "selected" if not issues[suggestion]["open"] else "" }}>Closed</option>
             </select>
+            {% if true %}
             <div class="warning">
                 <b><i class="fa-solid fa-triangle-exclamation"></i> Warning:</b> This question has been edited since this issue was filed. Some aspects may already be fixed.
             </div>
+            {% endif %}
             <div id="focused_details">
                 <h1 onclick="$('#focused_details').toggleClass('hide')"><i class="fa-solid fa-angle-down"></i> Details</h1>
                 <div class="focused_detail" id="focused_detail_time">
@@ -123,6 +125,7 @@
     <script>
         const issues_list = {{ issues|tojson|safe }}
         const focused_question = `{{ issues[suggestion]["question_id"] }}`
+        const suggestion_name = `{{ suggestion }}`
     </script>
     <script src="/static/js/main.js" defer></script>
     <script src="/static/js/suggestions.js" defer></script>

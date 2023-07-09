@@ -31,3 +31,14 @@ $("code").click((e)=>{
     navigator.clipboard.writeText($(e.currentTarget).data("content"))
     setTimeout(()=>{alert("Copied to clipboard")}, 100)
 })
+
+$("#change_status").change(async ()=>{
+    let raw_response = await fetch("/suggestions/api/toggle_status", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({target: suggestion_name})
+    })
+    location.reload()
+})

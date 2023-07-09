@@ -67,6 +67,32 @@ def page_suggestions(suggestion_id):
     return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=suggestions, suggestion=suggestion_id if suggestion_id else list(suggestions.keys())[0])
 
 
+@app.route("/suggestions/api/toggle_status", methods=["POST"])
+def toggle_status():
+    try:
+        decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
+    except:
+        return "You are not authorized to access this API endpoint", 401
+
+    if int(decoded["id"]) not in authorized_users:
+        return "You are not authorized to access this API endpoint", 401
+
+    target = request.get_json().get("target", None)
+
+    if not target:
+        return "Missing required parameter: 'target'", 400
+
+    if target not in db_issues.get():
+        return f"The target '{target}' does not exist.", 400
+
+    try:
+        db_issues.child(target).child("open").set(not db_issues.child(target).child("open").get())
+    except:
+        return "Something went wrong", 500
+
+    return "Success", 200
+
+
 @app.route("/login_get_token")
 def api_login_get_token():
     key = request.args.get('access_token')
