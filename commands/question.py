@@ -389,8 +389,10 @@ class Question(discord.ui.View):
 
         return curPoints
 
-    def compare(self, str1, str2):
-        return difflib.SequenceMatcher(None, str1, str2).ratio() * 100
+    def compare(string1, string2):
+        intersection = collections.Counter(string1) & collections.Counter(string2)
+        union = collections.Counter(string1) | collections.Counter(string2)
+        return sum(intersection.values()) / sum(union.values())
 
     def calc_timeout(self, string):
         return 5 + readtime.of_text(string).seconds
@@ -409,7 +411,7 @@ class Question(discord.ui.View):
         responder = self.responder.display_name
         algorithm_correct = False
         percent = max(accuracy)
-        if 75 <= percent <= 100 and not self.mc:
+        if 0.6 <= percent <= 1 and not self.mc:
             algorithm_correct = True
 
         if answer in self.answer_list and self.isweird:
@@ -428,7 +430,7 @@ class Question(discord.ui.View):
 
         elif algorithm_correct:
             verdict = f"You may be correct **{responder}**. Our algorithm marked it was \"close enough.\" (Your " \
-                      f"answer got a score of **{round(percent, 3)}**) The answer is `{self.correct_answer}`. You n" \
+                      f"answer got a score of **{round(percent * 100, 3)}**) The answer is `{self.correct_answer}`. You n" \
                       f"ow have **{self.changepoints(self.author, 2 if not self.iscrazy else 0)}** (+" \
                       f"{2 if not self.iscrazy else 0}) points "
             self.add_item(
