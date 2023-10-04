@@ -31,6 +31,7 @@ import asyncio
 import re
 import discord
 import random
+import collections
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 from utils.func import Competition
