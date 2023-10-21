@@ -390,7 +390,7 @@ class Question(discord.ui.View):
 
         return curPoints
 
-    def compare(string1, string2):
+    def compare(self, string1, string2):
         intersection = collections.Counter(string1) & collections.Counter(string2)
         union = collections.Counter(string1) | collections.Counter(string2)
         return sum(intersection.values()) / sum(union.values())
