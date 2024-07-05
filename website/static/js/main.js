@@ -84,7 +84,9 @@ Stars.remove = function(id){
 
 async function fetch_questions(){
     for (let subject of ["astro", "bio", "chem", "crazy", "cs", "eas", "energy", "es", "gen", "math", "phy", "weird"]){
-        let res = await fetch(`https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/questions/${subject}.json`)
+        //let res = await fetch(`https://raw.githubusercontent.com/DevNotHackerCorporations/scibowlbot/main/questions/${subject}.json`)
+        // TODO: Change back
+        let res = await fetch(`/questions/${subject}.json`)
         res = await res.json()
         Questions[subject] = res
     }
@@ -120,13 +122,18 @@ function apply_question_callbacks(){
     })
 }
 
-function format_question(question, stars){
+function format_question(question, stars, user=""){
+    let user_formatted = ""
+    if (user){
+        user_formatted = `<span><b>USER ANSWER: </b> <code data-content="${user}">${user}</code> </span>`
+    }
+
     return `<div class="result${stars.has(question.id.toString()) ? ' starred' : ''}" data-id="${question.id}">
         <div class="result__data">
             <h1>${question.category} - ${question.tossup_format}</h1>
             <b>${question.source} (ID: ${question.id})</b>
             <span>${question.tossup_question.replaceAll("\n", "<br>")}</span>
-            <span><b>ANSWER: </b> ${question.tossup_answer}</span>
+            <span><b>ANSWER: </b> ${question.tossup_answer}</span>${user_formatted}
         </div>
         <div class="result__btns">
             <div class="result__btn edit"><i class="fa-solid fa-pen-to-square"></i> Edit</div>

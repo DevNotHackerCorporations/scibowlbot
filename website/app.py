@@ -111,6 +111,13 @@ def api_login_get_token():
 
     return res
 
+# TODO: DEV DEV DEV
+@app.route("/questions/<string:name>")
+def question(name):
+    with open(f"/Users/andrewchen/PycharmProjects/scibowlbot/questions/{name}") as f:
+        res = f.read()
+    return res
+
 
 def get_avatar_link(data):
     if data["avatar"]:

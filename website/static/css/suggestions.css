@@ -76,6 +76,8 @@ body > *{
 main{
     flex: 1;
     transition: 1s ease;
+    height: calc(100vh - 80px - 90px);
+    overflow: auto;
 }
 
 .issue{
@@ -249,11 +251,11 @@ main, section{
     margin-left: 10px;
 }
 
-#focused_details{
+.focus{
     margin-bottom: 10px;
 }
 
-#focused_details > h1{
+.focus > h1{
     display: flex;
     align-items: center;
     column-gap: 10px;
@@ -262,7 +264,7 @@ main, section{
     margin-bottom: 5px;
 }
 
-#focused_details > h1 i{
+.focus > h1 i{
     font-size: 12px;
     background: #e1e1e1;
     padding: 5px;
@@ -275,7 +277,7 @@ main, section{
     align-items: center;
 }
 
-#focused_details.hide > h1 i{
+.focus.hide > h1 i{
     transform: rotate(-90deg);
 }
 
@@ -309,6 +311,17 @@ main, section{
     color: transparent;
     background: transparent;
 
+}
+
+#focused_additional #focused_question{
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+    margin: 5px 0 5px 30px;
+}
+
+#focused_additional.hide #focused_question{
+    max-height: 0 !important;
 }
 
 code {
