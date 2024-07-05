@@ -39,14 +39,14 @@
                                 {{ data["sender_name"] }}
                             </span>
                             <span class="issue_question">
-                                Question #{{ data["question_id"] }}
+                                Question #{{ str(data["question_id"]).zfill(4) }}
                             </span>
                         </span>
                     </div>
                 </div>
             {% endfor %}
         </aside>
-        {% if suggestion %}
+        {% if true %}
         <main>
             <div id="focused_name">
                 <div id="focused_subheader">
@@ -54,9 +54,9 @@
                         Scibowlbot
                     </div>
                     <div class="right">
-                        <div class="info">1 of {{ issues|length }}</div>
-                        <div id="focused_options_up"><i class="fa-solid fa-angle-up"></i></div>
+                        <div id="focused_info"><span>1</span> of {{ issues|length }}</div>
                         <div id="focused_options_down"><i class="fa-solid fa-angle-down"></i></div>
+                        <div id="focused_options_up"><i class="fa-solid fa-angle-up"></i></div>
                         <div id="focused_options_fullscreen"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
                     </div>
                 </div>
@@ -90,14 +90,23 @@
                     <b>User's Response: </b>
                     <span><code data-content="" id="detail__response"></code></span>
                 </div>
-                <div class="focused_detail">
+                <!--<div class="focused_detail">
                     <b>Issue: </b>
-                    <span>{{ issues[suggestion]["error"] }}</span>
-                </div>
+                    <span>}</span>
+                </div>-->
             </div>
             <div id="focused_additional" class="focus">
                 <h1 onclick="$('#focused_additional').toggleClass('hide')"><i class="fa-solid fa-angle-down"></i> Question</h1>
                 <div id="focused_question"></div>
+            </div>
+            <div id="focused_discussion" class="focus">
+                <h1 onclick="$('#focused_discussion').toggleClass('hide')"><i class="fa-solid fa-angle-down"></i> Discussion</h1>
+                <div id="discussion">
+                    <div id="discussion_messages"></div>
+                    <div id="add_discussion">
+                        <input placeholder="Add to the discussion">
+                    </div>
+                </div>
             </div>
         </main>
         {% endif %}
@@ -126,6 +135,8 @@
     <script>
         const issues_list = {{ issues|tojson|safe }}
         const suggestion_name = `{{ suggestion }}`
+        const me = {{ data|tojson|safe }}
+        let IDS = {{ list(issues.keys())|safe }}
     </script>
     <script src="/static/js/main.js" defer></script>
     <script src="/static/js/suggestions.js" defer></script>

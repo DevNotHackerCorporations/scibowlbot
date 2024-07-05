@@ -1,10 +1,10 @@
-.close{
+.modal .close{
     display: inline-block;
     cursor: pointer;
     color: red;
 }
 
-.close:hover{ /* Since I'm feeling like it */
+.modal .close:hover{ /* Since I'm feeling like it */
     animation: spin 1s infinite ease;
 }
 

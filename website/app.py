@@ -1,4 +1,5 @@
 import datetime
+import time
 import os
 
 from flask import Flask, render_template, request, jsonify, make_response, redirect
@@ -50,7 +51,6 @@ def page_home():
 def page_login():
     return render_template("login.html")
 
-
 @app.route("/suggestions", defaults={"suggestion_id": None})
 @app.route("/suggestions/", defaults={"suggestion_id": None})
 @app.route("/suggestions/<string:suggestion_id>")
@@ -64,11 +64,11 @@ def page_suggestions(suggestion_id):
         return render_template("suggestions.html", title="Homepage", data=decoded, authorized=False, issues={}, suggestion=None)
 
     suggestions = sort(dict(db_issues.get()), key=lambda x: x[1]["filed"], reverse=True)
-    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=suggestions, suggestion=suggestion_id if suggestion_id else list(suggestions.keys())[0])
+    return render_template("suggestions.html", title="Homepage", data=decoded, authorized=True, issues=suggestions, suggestion=suggestion_id if suggestion_id else "")
 
 
 @app.route("/suggestions/api/toggle_status", methods=["POST"])
-def toggle_status():
+def api_toggle_status():
     try:
         decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
     except:
@@ -92,6 +92,44 @@ def toggle_status():
 
     return "Success", 200
 
+@app.route("/suggestions/api/add_discussion", methods=["POST"])
+def api_add_discussion():
+    try:
+        decoded = jwt.decode(request.cookies["token"], os.getenv("JWT_SECRET"), "HS256")
+    except:
+        return "You are not authorized to access this API endpoint", 401
+
+    if int(decoded["id"]) not in authorized_users:
+        return "You are not authorized to access this API endpoint", 401
+
+    id = request.get_json().get("id", None)
+    user_id = request.get_json().get("user_id", None)
+    name = request.get_json().get("name", None)
+    avatar = request.get_json().get("avatar", None)
+    sent = int(datetime.datetime.timestamp(datetime.datetime.now()))
+    message = request.get_json().get("message", None)
+
+    if not id or not name or not avatar or not message or not user_id:
+        return "Missing one or more of the following required parameters: id, name, avatar, user_id, or message", 400
+
+    if id not in db_issues.get():
+        return f"The target '{id}' does not exist.", 400
+
+    encoded = {
+        "name": name,
+        "avatar": avatar,
+        "message": message,
+        "id": user_id,
+        "time": sent
+    }
+
+    ref = db_issues.child(id).child("discussion")
+    arr: list = ref.get()
+    arr.append(encoded)
+    ref.set(arr)
+
+    return jsonify(encoded), 200
+
 
 @app.route("/login_get_token")
 def api_login_get_token():
@@ -109,13 +147,6 @@ def api_login_get_token():
     res = make_response(redirect("/"), 200)
     res.set_cookie("token", token)
 
-    return res
-
-# TODO: DEV DEV DEV
-@app.route("/questions/<string:name>")
-def question(name):
-    with open(f"/Users/andrewchen/PycharmProjects/scibowlbot/questions/{name}") as f:
-        res = f.read()
     return res
 
 
@@ -137,4 +168,4 @@ def format_date(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime("%m/%d/%Y %I:%M %p")
 
 
-app.jinja_env.globals.update(get_avatar_link=get_avatar_link, format_date=format_date)
+app.jinja_env.globals.update(get_avatar_link=get_avatar_link, format_date=format_date, str=str, list=list)

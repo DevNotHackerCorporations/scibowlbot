@@ -105,6 +105,17 @@ main{
     width: 100%;
 }
 
+.issue_sender{
+    width: 135px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-family: monospace;
+}
+
+.issue_question{
+    font-family: monospace;
+}
+
 .issue_open{
     color: red;
 }
@@ -232,8 +243,20 @@ main, section{
     transition: 0.2s ease;
 }
 
+#change_status.open{
+    color: rgb(153 27 27);
+    background: rgb(252 165 165);
+}
+
+#change_status.close{
+    background: rgb(134 239 172);
+    color: rgb(22 101 52);
+}
+
+
 #change_status:hover{
     background: #c0c0c0;
+    color: black;
 }
 
 #focused_options_up, #focused_options_down, #focused_options_fullscreen{
@@ -247,7 +270,7 @@ main, section{
     background: #e1e1e1;
 }
 
-#focused_options_up{
+#focused_options_down{
     margin-left: 10px;
 }
 
@@ -331,6 +354,58 @@ code {
     border-radius: 4px;
     margin: 0 3px;
     cursor: pointer;
+}
+
+#discussion{
+    margin-left: 30px;
+    padding: 7px 10px 15px;
+    background: whitesmoke;
+}
+
+.message{
+    display: flex;
+    flex-direction: row;
+    margin-top: 17px;
+}
+
+.message > .left{
+    padding: 0 16px;
+}
+
+.message > .left img{
+    border-radius: 100%;
+}
+
+.message > .right{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.message > .right > .desc{
+    display: flex;
+    column-gap: 8px;
+    align-items: center;
+}
+
+.message > .right > .desc .time{
+    font-size: 12px;
+}
+
+.message > .right > .desc .author{
+    font-weight: 500;
+}
+
+#add_discussion{
+    margin-left: 16px;
+    margin-top: 17px;
+    margin-right: 16px;
+}
+
+#add_discussion input{
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 10px;
 }
 
 @keyframes spin{
