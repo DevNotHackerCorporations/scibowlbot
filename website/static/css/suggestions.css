@@ -163,7 +163,7 @@ main{
     display: flex;
     flex-direction: column;
     row-gap: 10px;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .result h1{

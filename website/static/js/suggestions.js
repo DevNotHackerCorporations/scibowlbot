@@ -50,8 +50,12 @@ const render_suggestion = async (name) => {
     document.querySelector("#detail__response").setAttribute("data-content", suggestion.response || "<No Response Given>")
     document.querySelector("#detail__response").innerText = suggestion.response || "<No Response Given>"
 
-    document.querySelector("#focused_question").innerHTML = format_question(get_question_by_ID(suggestion.question_id), new Set(Stars), suggestion.response)
+    let quest = get_question_by_ID(suggestion.question_id)
+    document.querySelector("#focused_question").innerHTML = format_question(quest, new Set(Stars), suggestion.response)
     await apply_question_callbacks()
+
+    document.querySelector(".warning").style.display =
+        (quest.category !== suggestion.subject || quest.tossup_question !== suggestion.question ? "block" : "none")
 
     document.querySelector("#discussion_messages").innerHTML = ""
 
