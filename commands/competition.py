@@ -63,8 +63,8 @@ async def new(ctx: commands.Context):
     """
     Create a new competition
     """
-    if ctx.author.id in ctx.bot.in_comp:
-        return await ctx.send("You are already in a competition! You may not create another.", ephemeral=True)
+    #if ctx.author.id in ctx.bot.in_comp:
+    #    return await ctx.send("You are already in a competition! You may not create another.", ephemeral=True)
     embed = discord.Embed(title="New Competition", color=discord.Color.none())
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
     comp = Competition(ctx)
@@ -101,8 +101,8 @@ class NewComp(discord.ui.View):
 
     @discord.ui.button(label="Join", style=discord.ButtonStyle.green)
     async def join(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if interaction.user.id in self.ctx.bot.in_comp and self.ctx.bot.in_comp[self.ctx.author.id] != self.comp.contest_id:
-            return await interaction.response.send_message("You are already in another competition! You may not join this one.", ephemeral=True)
+        #if interaction.user.id in self.ctx.bot.in_comp and self.ctx.bot.in_comp[self.ctx.author.id] != self.comp.contest_id:
+        #    return await interaction.response.send_message("You are already in another competition! You may not join this one.", ephemeral=True)
         if interaction.user.id in self.comp.participants or interaction.user.id in self.comp.queue:
             return await interaction.response.send_message("You already signed up!", ephemeral=True)
 

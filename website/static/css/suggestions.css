@@ -209,6 +209,8 @@ main{
     margin-top: 10px;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    background: white;
 }
 
 #focused_subheader .left{
@@ -229,6 +231,10 @@ section{
 
 main, section{
     background: white;
+}
+
+#focused_name > h1{
+    margin-top: 46px;
 }
 
 #change_status{

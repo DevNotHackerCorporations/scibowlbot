@@ -16,7 +16,6 @@ window.onload = async () => {
 }
 
 const render_suggestion = async (name) => {
-    document.querySelector("#issue_list_" + CURRENT_SUGGESTION).scrollIntoView()
     document.querySelectorAll(".highlighted").forEach(e=>e.classList.remove("highlighted"))
     document.querySelector("#issue_list_" + name).classList.add("highlighted")
 
@@ -62,6 +61,8 @@ const render_suggestion = async (name) => {
     for (let message of suggestion.discussion){
         document.querySelector("#discussion_messages").innerHTML += render_message(message)
     }
+
+    document.querySelector("#issue_list_" + CURRENT_SUGGESTION).scrollIntoView()
 }
 
 const render_message = (message) => {
