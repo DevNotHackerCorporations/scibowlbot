@@ -7,3 +7,4 @@ docstring_parser
 matplotlib
 numpy
 scipy
+requests

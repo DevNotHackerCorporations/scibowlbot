@@ -47,6 +47,9 @@ alertdev_err = [
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+logging.getLogger("discord.ui.modal").setLevel(logging.CRITICAL)
+logging.getLogger("discord.ui.view").setLevel(logging.CRITICAL)
+
 if __name__ == "__main__":
     os.chdir("/opt/app/scibowlbot")
 
@@ -129,7 +132,7 @@ class Sbb(commands.Bot):
         embed = discord.Embed(
             title=f":warning: Warning! :warning:",
             description=
-            "While processing this request, we ran into an unexpected error",
+            "While processing this request, we ran into an error",
             color=0xFFFF00)
 
         embed.set_author(name=ctx.author.display_name,
@@ -142,7 +145,7 @@ class Sbb(commands.Bot):
             embed.set_footer(text="The dev has been notified",
                              icon_url=dev.avatar)
         else:
-            embed.set_footer(text="The dev has blacklisted this error",
+            embed.set_footer(text="This should not be a big problem",
                              icon_url=dev.avatar)
 
         await ctx.send(embed=embed)
@@ -174,7 +177,8 @@ class Sbb(commands.Bot):
 
             with open("error.txt", "w") as file:
                 file.write("".join(traceback.format_exception(type(err), err, err.__traceback__)))
-                await dev.send(embed=embed, file=discord.File("error.txt"))
+                await dev.send("".join(traceback.format_exception(type(err), err, err.__traceback__)), embed=embed)
+        return
 
     @tasks.loop(minutes=5.0)
     async def update_data_from_firebase(self):
