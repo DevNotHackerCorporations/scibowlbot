@@ -1,4 +1,4 @@
-FROM python:3.8-buster
+FROM python:3.8
 WORKDIR /opt/app/scibowlbot
 COPY requirements.txt .
 RUN pip install -r requirements.txt
