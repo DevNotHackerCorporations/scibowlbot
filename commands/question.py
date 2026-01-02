@@ -134,7 +134,7 @@ class Question(discord.ui.View):
         self.achiev = self.ctx.bot.Achievements
         self.subject = subject
         if subject.upper() == "ALL":
-            self.subject = random.choice(self.valid[:-1])
+            self.subject = random.choice(self.valid[:-3])
         self.isweird = subject == "WEIRD"
         self.iscrazy = subject == "CRAZY"
         self.author = ctx.author.id
@@ -275,7 +275,7 @@ class Question(discord.ui.View):
             self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + self.timeout)}:R>",
                                  inline=False)
         else:
-            timeout = 3 + round(max(map(lambda answer: len(answer), self.answer_list))/3.333, 2)
+            timeout = 2*round(max(map(lambda answer: len(answer), self.answer_list))/3.333, 2)
             self.embed.set_field_at(1, name="Timer", value=f"Question expires <t:{math.floor(time.time() + timeout)}:R>",
                                  inline=False)
             return await interaction.response.send_modal(
